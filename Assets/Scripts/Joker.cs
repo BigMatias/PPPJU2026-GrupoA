@@ -1,10 +1,19 @@
-using UnityEngine;
-
-public class Joker : MonoBehaviour
+public class Joker
 {
+    public JokerDataSO jokerData;
+
+    public Joker(JokerDataSO data)
+    {
+        jokerData = data;
+    }
+
     private enum Rarity
     {
-
+        None = -1,
+        Common,
+        Uncommon,
+        Rare,
+        Legendary
     }
 
 
