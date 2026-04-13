@@ -12,12 +12,7 @@ public class PlayerActions : MonoBehaviour
         Hand.onPlayerHandDealt += Hand_onPlayerHandDealt;
     }
 
-    private void Hand_onPlayerHandDealt(Card card)
-    {
-        playerHand.Add(card);
-    }
-
-    void Update()
+    private void Update()
     {
         if (GameManager.Instance.currentState != GameState.PlayerTurn)
             return;
@@ -25,8 +20,9 @@ public class PlayerActions : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 direction = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10);
 
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+            RaycastHit2D hit = Physics2D.Raycast(mousePos, direction);
 
             if (hit.collider != null && hit.collider.gameObject.layer == (int)Layers.Player)
             {
@@ -43,5 +39,10 @@ public class PlayerActions : MonoBehaviour
     private void OnDestroy()
     {
         Hand.onPlayerHandDealt -= Hand_onPlayerHandDealt;
+    }
+
+    private void Hand_onPlayerHandDealt(Card card)
+    {
+        playerHand.Add(card);
     }
 }
