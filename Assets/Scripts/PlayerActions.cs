@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class PlayerActions : MonoBehaviour
 {
+    [SerializeField] private Hand hand;
     public List<Card> playerHand = new List<Card>();
     public static event Action onCardPlayed;
 
     private void Awake()
     {
         Hand.onPlayerHandDealt += Hand_onPlayerHandDealt;
-    }
-
-    private void Hand_onPlayerHandDealt(Card card)
-    {
-        playerHand.Add(card);
     }
 
     void Update()
@@ -34,6 +30,7 @@ public class PlayerActions : MonoBehaviour
                 if (card != null)
                 {
                     card.SetSelected(true);
+                    hand.PlayPlayerCard(card.card);
                     onCardPlayed?.Invoke();
                 }
             }
@@ -44,4 +41,10 @@ public class PlayerActions : MonoBehaviour
     {
         Hand.onPlayerHandDealt -= Hand_onPlayerHandDealt;
     }
+
+    private void Hand_onPlayerHandDealt(Card card)
+    {
+        playerHand.Add(card);
+    }
+
 }

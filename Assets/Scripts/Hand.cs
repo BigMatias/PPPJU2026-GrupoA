@@ -14,6 +14,8 @@ public class Hand : MonoBehaviour
 
     private List<Card> playerHand = new List<Card>();
     private List<Card> enemyHand = new List<Card>();
+    private int playerTableIndex = 0;
+    private int enemyTableIndex = 0;
 
     public static event Action<Card> onPlayerHandDealt;
     public static event Action<Card> onEnemyHandDealt;
@@ -39,6 +41,7 @@ public class Hand : MonoBehaviour
 
         GameObject cardGO = Instantiate(cardPrefab, container);
         CardView view = cardGO.GetComponent<CardView>();
+        card.cardGO = cardGO;
         view.Setup(card);
 
         if (hand == playerHand)
@@ -54,6 +57,53 @@ public class Hand : MonoBehaviour
             view.Flip(card);
         }
     }
+    private void MoveCardToTable(Card card, Transform slot)
+    {
+        GameObject cardGO = card.cardGO;
 
+        cardGO.transform.SetParent(slot);
+        cardGO.transform.localPosition = Vector3.zero;
+        cardGO.transform.localRotation = Quaternion.identity;
 
+        cardGO.layer = (int)Layers.None;
+    }
+
+    public void PlayPlayerCard(Card card)
+    {
+        if (playerTableIndex >= playerHandContainers.Length)
+        {
+            Debug.LogWarning("No hay más slots de jugador");
+            return;
+        }
+
+        Transform slot = playerHandContainers[playerTableIndex];
+
+        MoveCardToTable(card, slot);
+
+        playerHand.Remove(card); 
+
+        playerTableIndex++;
+    }
+
+    public void PlayEnemyCard(Card card)
+    {
+        if (enemyTableIndex >= enemyHandContainers.Length)
+        {
+            Debug.LogWarning("No hay más slots de enemigo");
+            return;
+        }
+
+        Transform slot = enemyHandContainers[enemyTableIndex];
+
+        MoveCardToTable(card, slot);
+
+        enemyHand.Remove(card); 
+
+        enemyTableIndex++;
+    }
+    public void ResetTable()
+    {
+        playerTableIndex = 0;
+        enemyTableIndex = 0;
+    }
 }

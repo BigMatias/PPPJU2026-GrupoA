@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a93ffd4438ee37247b03ba1ccb81d9fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  hand: {fileID: 1332006910}
 --- !u!4 &25719841
 Transform:
   m_ObjectHideFlags: 0
@@ -3857,6 +3858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4db06f90a47adc45a92f9da0e34bb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerActions
+  hand: {fileID: 1332006910}
 --- !u!4 &1311449876
 Transform:
   m_ObjectHideFlags: 0
@@ -4502,6 +4504,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   enemyAI: {fileID: 25719840}
+  gameDataSO: {fileID: 11400000, guid: ab4458b334c5e6f49807dcafc8b7f559, type: 2}
+  runDataSO: {fileID: 11400000, guid: 99fc9c7a7e9217b4390352278560a3f8, type: 2}
   playerActions: {fileID: 1311449875}
   trucoState: 0
   envidoState: 0

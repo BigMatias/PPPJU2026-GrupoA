@@ -8,5 +8,7 @@ public class GameDataSO : ScriptableObject
 {
     public int jokersDiscovered;
     public int roundsWon;
-    public List<Card> playerCardsInHand = new List<Card>();
+    public int trucoPoints;
+    public int envidoPoints;
+    public int totalPoints;
 }

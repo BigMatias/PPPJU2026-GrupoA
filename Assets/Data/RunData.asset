@@ -17,3 +17,10 @@ MonoBehaviour:
   money: 0
   points: 0
   baseMult: 0
+  envidoPointsStat: 2
+  envidoEnvidoPointsStat: 4
+  realEnvidoPointsStat: 7
+  faltaEnvidoPointsStat: 0
+  trucoPointsStat: 2
+  retrucoPointsStat: 3
+  valeCuatroPointsStat: 4

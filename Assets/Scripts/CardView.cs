@@ -3,7 +3,7 @@ using UnityEngine;
 public class CardView : MonoBehaviour
 {
     [SerializeField] private Sprite flippedCardImage;
-    private Card card;
+    public Card card;
     private SpriteRenderer sprite;
     private bool isFlipped = false;
 
@@ -33,9 +33,5 @@ public class CardView : MonoBehaviour
     public void SetSelected(bool value)
     {
         transform.localScale = value ? Vector3.one * 1.2f : Vector3.one;
-    }
-    public void PlayCard()
-    {
-
     }
 }

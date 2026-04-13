@@ -9,4 +9,13 @@ public class RunDataSO : ScriptableObject
     public int money;
     public int points;
     public int baseMult;
+    [Header("Envido")]
+    public int envidoPointsStat;
+    public int envidoEnvidoPointsStat;
+    public int realEnvidoPointsStat;
+    public int faltaEnvidoPointsStat;
+    [Header("Envido")]
+    public int trucoPointsStat;
+    public int retrucoPointsStat;
+    public int valeCuatroPointsStat;
 }

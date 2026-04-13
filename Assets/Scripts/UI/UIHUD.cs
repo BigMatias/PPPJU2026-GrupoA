@@ -77,6 +77,7 @@ public class UIHUD : MonoBehaviour
     private void OnValeCuatroButtonClicked()
     {
         if (gm.trucoState != TrucoState.Retruco) return;
+        if (gm.callOwner != CallOwner.Enemy) return;
 
         Debug.Log("Jugador canta VALE CUATRO");
 
@@ -99,9 +100,16 @@ public class UIHUD : MonoBehaviour
 
     private void OnDenyButtonClicked()
     {
-        Debug.Log("Jugador rechaza");
-
-        gm.EndRound();
+        if (gm.currentCall == CallType.Truco)
+        {
+            Debug.Log("Jugador rechaza el truco");
+            gm.EndRound();
+        }
+        else if (gm.currentCall == CallType.Envido)
+        {
+            Debug.Log("Jugador rechaza el envido");
+            gm.ResolveCall();
+        }
     }
 
     private void OnAcceptButtonClicked()
@@ -141,8 +149,8 @@ public class UIHUD : MonoBehaviour
 
         if (gm.envidoState == EnvidoState.None)
             gm.envidoState = EnvidoState.Envido;
-        else
-            gm.envidoState = EnvidoState.Envido; // redoblar (simplificado)
+        else if (gm.envidoState == EnvidoState.Envido)
+            gm.envidoState = EnvidoState.EnvidoEnvido;
 
         gm.WaitEnemyResponse();
     }
@@ -161,7 +169,7 @@ public class UIHUD : MonoBehaviour
     }
 
     //  ACTUALIZAR HUD
-    void UpdateHUD()
+    private void UpdateHUD()
     {
         ResetAll();
 
@@ -177,9 +185,13 @@ public class UIHUD : MonoBehaviour
         {
             responsePanel.SetActive(true);
         }
+        else
+        {
+            responsePanel.SetActive(false);
+        }
     }
 
-    void ResetAll()
+    private void ResetAll()
     {
         trucoButton.gameObject.SetActive(false);
         envidoButton.gameObject.SetActive(false);
@@ -192,8 +204,11 @@ public class UIHUD : MonoBehaviour
     }
 
     // TRUCO LOGIC
-    void HandleTruco()
+    private void HandleTruco()
     {
+        if (gm.trucoPlayedThisRound)
+            return;
+
         switch (gm.trucoState)
         {
             case TrucoState.None:
@@ -207,16 +222,15 @@ public class UIHUD : MonoBehaviour
             case TrucoState.Retruco:
                 valeCuatroButton.gameObject.SetActive(true);
                 break;
-
-            case TrucoState.ValeCuatro:
-                // ya no hay más escalado
-                break;
         }
     }
 
     // ENVIDO LOGIC
-    void HandleEnvido()
+    private void HandleEnvido()
     {
+        if (gm.envidoResolved)
+            return;
+
         if (gm.trucoState != TrucoState.None && !gm.IsFirstRound())
             return;
 
@@ -229,6 +243,11 @@ public class UIHUD : MonoBehaviour
 
             case EnvidoState.Envido:
                 envidoButton.gameObject.SetActive(true);
+                faltaEnvidoButton.gameObject.SetActive(true);
+                break;
+
+            case EnvidoState.EnvidoEnvido:
+                envidoButton.gameObject.SetActive(false);
                 faltaEnvidoButton.gameObject.SetActive(true);
                 break;
 
