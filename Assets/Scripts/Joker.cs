@@ -2,7 +2,7 @@ public class Joker
 {
     public JokerDataSO jokerData;
 
-    public bool IsActive = true;
+    public bool isActive = true;
 
     public Joker(JokerDataSO data)
     {
@@ -11,7 +11,7 @@ public class Joker
 
     public void ModifyScore(ref int points, ref int mult)
     {
-        if (!IsActive)
+        if (!isActive)
             return;
 
         if (jokerData.bonusPoints > 0)
