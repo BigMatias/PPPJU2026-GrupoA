@@ -1,29 +1,24 @@
+using UnityEngine;
+
 public class Joker
 {
-    public JokerDataSO jokerData;
+    private Sprite _sprite;
+    private Rarity _rarity;
+    private int _pointsEffect;
+    private int _multEffect;
 
     public Joker(JokerDataSO data)
     {
-        jokerData = data;
+        _sprite = data.sprite;
+        _rarity = data.rarity;
+        _pointsEffect = data.pointsEffect;
+        _multEffect = data.multEffect;
     }
 
-    private enum Rarity
+    ~Joker() { }
+
+    public virtual void Init(SpriteRenderer renderer)
     {
-        None = -1,
-        Common,
-        Uncommon,
-        Rare,
-        Legendary
-    }
-
-
-    public void CardInitializer()
-    {
-
-    }
-
-    public void CardDestructor()
-    {
-
+        renderer.sprite = _sprite;
     }
 }
