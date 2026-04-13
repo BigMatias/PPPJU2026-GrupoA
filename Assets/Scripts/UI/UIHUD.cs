@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,6 @@ public class UIHUD : MonoBehaviour
     [Header("Botones base")]
     [SerializeField] private Button trucoButton;
     [SerializeField] private Button envidoButton;
-    [SerializeField] private Button faltaEnvidoButton;
     [SerializeField] private Button florButton;
     [SerializeField] private Button mazoButton;
 
@@ -17,6 +15,7 @@ public class UIHUD : MonoBehaviour
     [SerializeField] private Button denyButton;
 
     [Header("Reemplazos")]
+    [SerializeField] private Button faltaEnvidoButton;
     [SerializeField] private Button retrucoButton;
     [SerializeField] private Button valeCuatroButton;
 
