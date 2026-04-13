@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static event Action<int> OnWinEnvido;
+    public static event Action<TrucoState> OnWinTruco;
+    public static event Action<int> OnWinRound;
+
     [SerializeField] private EnemyAI enemyAI;
     [SerializeField] private GameDataSO gameDataSO;
     [SerializeField] private RunDataSO runDataSO;
@@ -146,7 +151,7 @@ public class GameManager : MonoBehaviour
         if (playerPoints > enemyPoints)
         {
             Debug.Log("Jugador gana el envido");
-            gameDataSO.envidoPoints = envidoPoints;
+            OnWinEnvido?.Invoke(envidoPoints);
         }
         else
         {
