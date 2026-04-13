@@ -2,9 +2,10 @@
 
 [CreateAssetMenu(fileName = "JokerData", menuName = "CardsData/JokerData")]
 
-public class JokerDataSO : ScriptableObject
+public partial class JokerDataSO : ScriptableObject
 {
     public Sprite sprite;
+    public Rarity rarity;
     public int pointsEffect;
     public int multEffect;
 }
