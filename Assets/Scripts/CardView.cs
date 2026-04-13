@@ -34,7 +34,6 @@ public class CardView : MonoBehaviour
     {
         transform.localScale = value ? Vector3.one * 1.2f : Vector3.one;
     }
-
     public void PlayCard()
     {
 
