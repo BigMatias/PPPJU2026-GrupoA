@@ -4,8 +4,18 @@
 
 public partial class JokerDataSO : ScriptableObject
 {
-    public Sprite sprite;
+    public string jokerName;
+
+    [TextArea]
+    public string description;
+
+    public int cost;
+
     public Rarity rarity;
-    public int pointsEffect;
-    public int multEffect;
+
+    public int bonusPoints;
+    public int bonusMultAdd;
+    public int bonusMultX;
+
+    public Sprite sprite;
 }

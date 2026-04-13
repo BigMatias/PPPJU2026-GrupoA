@@ -1,24 +1,26 @@
-using UnityEngine;
-
 public class Joker
 {
-    private Sprite _sprite;
-    private Rarity _rarity;
-    private int _pointsEffect;
-    private int _multEffect;
+    public JokerDataSO jokerData;
+
+    public bool IsActive = true;
 
     public Joker(JokerDataSO data)
     {
-        _sprite = data.sprite;
-        _rarity = data.rarity;
-        _pointsEffect = data.pointsEffect;
-        _multEffect = data.multEffect;
+        jokerData = data;
     }
 
-    ~Joker() { }
-
-    public virtual void Init(SpriteRenderer renderer)
+    public void ModifyScore(ref int points, ref int mult)
     {
-        renderer.sprite = _sprite;
+        if (!IsActive)
+            return;
+
+        if (jokerData.bonusPoints > 0)
+            points += jokerData.bonusPoints;
+
+        if (jokerData.bonusMultAdd > 0)
+            mult += jokerData.bonusMultAdd;
+
+        if (jokerData.bonusMultX > 0)
+            mult *= jokerData.bonusMultX;
     }
 }
