@@ -5110,8 +5110,6 @@ MonoBehaviour:
   callOwner: 0
   trucoPlayedThisRound: 0
   envidoResolved: 0
-  currentRound: 0
-  trucoPoints: 1
 --- !u!4 &1578165142
 Transform:
   m_ObjectHideFlags: 0
@@ -6093,12 +6091,12 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1040737132}
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 1206497612}
   - {fileID: 1332006911}
   - {fileID: 87811186}
-  - {fileID: 1040737132}
   - {fileID: 1311449876}
   - {fileID: 1578165142}
   - {fileID: 25719841}
