@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db8626e9dd76ab849aa39c445329cc4f, type: 3}
-  m_Name: CardDataSO
-  m_EditorClassIdentifier: Assembly-CSharp::CardData
-  value: 0
-  suit: 
-  artwork: {fileID: 0}
+  m_Name: Espada1CardDataSO
+  m_EditorClassIdentifier: Assembly-CSharp::CardDataSO
+  value: 1
+  suit: 3
+  artwork: {fileID: 21300000, guid: 6b18f24983624974088bfefe27a35309, type: 3}

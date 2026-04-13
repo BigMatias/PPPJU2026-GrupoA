@@ -8,7 +8,7 @@ public class Deck : MonoBehaviour
     private List<Card> drawPile = new List<Card>();
     private List<Card> discardPile = new List<Card>();
 
-    void Start()
+    private void Awake()
     {
         InitializeDeck();
         Shuffle(drawPile);
@@ -24,6 +24,22 @@ public class Deck : MonoBehaviour
         }
     }
 
+    private void Reshuffle()
+    {
+        drawPile.AddRange(discardPile);
+        discardPile.Clear();
+        Shuffle(drawPile);
+    }
+
+    public void Shuffle(List<Card> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int rand = Random.Range(i, list.Count);
+            (list[i], list[rand]) = (list[rand], list[i]);
+        }
+    }
+
     public Card DrawCard()
     {
         if (drawPile.Count == 0)
@@ -35,22 +51,6 @@ public class Deck : MonoBehaviour
         drawPile.RemoveAt(0);
 
         return card;
-    }
-
-    void Reshuffle()
-    {
-        drawPile.AddRange(discardPile);
-        discardPile.Clear();
-        Shuffle(drawPile);
-    }
-
-    void Shuffle(List<Card> list)
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            int rand = Random.Range(i, list.Count);
-            (list[i], list[rand]) = (list[rand], list[i]);
-        }
     }
 
     public void Discard(Card card)
