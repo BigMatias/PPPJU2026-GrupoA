@@ -6,4 +6,5 @@ public class RunDataSO : ScriptableObject
 {
     public int totalHands;
     public int handsPlayed;
+    public int money;
 }
