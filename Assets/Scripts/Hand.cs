@@ -20,9 +20,53 @@ public class Hand : MonoBehaviour
     public static event Action<Card> onPlayerHandDealt;
     public static event Action<Card> onEnemyHandDealt;
 
+    private void Awake()
+    {
+        PlayerActions.onPlayerCardPlayed += PlayerActions_onPlayerCardPlayed;
+        EnemyAI.onEnemyCardPlayed += EnemyAI_onEnemyCardPlayed;
+    }
+
     void Start()
     {
         DealCards();
+    }
+
+    private void OnDestroy()
+    {
+        PlayerActions.onPlayerCardPlayed -= PlayerActions_onPlayerCardPlayed;
+    }
+    private void EnemyAI_onEnemyCardPlayed(Card card)
+    {
+        if (enemyTableIndex >= enemyHandContainers.Length)
+        {
+            Debug.LogWarning("No hay más slots de enemigo");
+            return;
+        }
+
+        Transform slot = enemyHandContainers[enemyTableIndex];
+
+        MoveCardToTable(card, slot);
+
+        enemyHand.Remove(card);
+
+        enemyTableIndex++;
+    }
+
+    private void PlayerActions_onPlayerCardPlayed(Card card)
+    {
+        if (playerTableIndex >= playerHandContainers.Length)
+        {
+            Debug.LogWarning("No hay más slots de jugador");
+            return;
+        }
+
+        Transform slot = playerHandContainers[playerTableIndex];
+
+        MoveCardToTable(card, slot);
+
+        playerHand.Remove(card);
+
+        playerTableIndex++;
     }
 
     private void DealCards()
@@ -57,6 +101,7 @@ public class Hand : MonoBehaviour
             view.Flip(card);
         }
     }
+
     private void MoveCardToTable(Card card, Transform slot)
     {
         GameObject cardGO = card.cardGO;
@@ -68,39 +113,6 @@ public class Hand : MonoBehaviour
         cardGO.layer = (int)Layers.None;
     }
 
-    public void PlayPlayerCard(Card card)
-    {
-        if (playerTableIndex >= playerHandContainers.Length)
-        {
-            Debug.LogWarning("No hay más slots de jugador");
-            return;
-        }
-
-        Transform slot = playerHandContainers[playerTableIndex];
-
-        MoveCardToTable(card, slot);
-
-        playerHand.Remove(card); 
-
-        playerTableIndex++;
-    }
-
-    public void PlayEnemyCard(Card card)
-    {
-        if (enemyTableIndex >= enemyHandContainers.Length)
-        {
-            Debug.LogWarning("No hay más slots de enemigo");
-            return;
-        }
-
-        Transform slot = enemyHandContainers[enemyTableIndex];
-
-        MoveCardToTable(card, slot);
-
-        enemyHand.Remove(card); 
-
-        enemyTableIndex++;
-    }
     public void ResetTable()
     {
         playerTableIndex = 0;

@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameDataSO
   jokersDiscovered: 0
   roundsWon: 0
+  trucoPoints: 0
+  envidoPoints: 0
+  totalPoints: 0
+  pointsNeededToWinRound: 30

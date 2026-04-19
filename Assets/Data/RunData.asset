@@ -18,8 +18,8 @@ MonoBehaviour:
   points: 0
   baseMult: 0
   envidoPointsStat: 2
-  envidoEnvidoPointsStat: 4
-  realEnvidoPointsStat: 7
+  envidoEnvidoPointsStat: 2
+  realEnvidoPointsStat: 3
   faltaEnvidoPointsStat: 0
   trucoPointsStat: 2
   retrucoPointsStat: 3
