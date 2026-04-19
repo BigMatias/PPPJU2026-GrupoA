@@ -13,7 +13,7 @@ public class PlayerActions : MonoBehaviour
         Hand.onPlayerHandDealt += Hand_onPlayerHandDealt;
     }
 
-    void Update()
+    private void Update()
     {
         if (GameManager.Instance.currentState != GameState.PlayerTurn)
             return;

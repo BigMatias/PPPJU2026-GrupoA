@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static event Action<int> OnWinEnvido;
+    public static event Action<TrucoState> OnWinTruco;
+    public static event Action<int> OnWinRound;
+
     [SerializeField] private EnemyAI enemyAI;
     [SerializeField] private GameDataSO gameDataSO;
     [SerializeField] private RunDataSO runDataSO;
@@ -87,7 +92,7 @@ public class GameManager : MonoBehaviour
                         }
                     case EnvidoState.FaltaEnvido:
                         {
-                            //Se debería guardar el envido anterior y dar esa cantidad de puntos
+                            //Se deberÃ­a guardar el envido anterior y dar esa cantidad de puntos
                             break;
                         }
                 }
@@ -288,6 +293,8 @@ public class GameManager : MonoBehaviour
                         break;
                     }
             }
+            Debug.Log("Jugador gana el envido");
+            OnWinEnvido?.Invoke(envidoPoints);
         }
         else
         {
