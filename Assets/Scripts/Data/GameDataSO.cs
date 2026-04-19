@@ -11,4 +11,5 @@ public class GameDataSO : ScriptableObject
     public int trucoPoints;
     public int envidoPoints;
     public int totalPoints;
+    public int pointsNeededToWinRound;
 }

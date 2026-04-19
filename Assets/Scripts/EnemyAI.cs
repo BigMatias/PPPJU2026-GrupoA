@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private Hand hand;
     public List<Card> enemyHand = new List<Card>();
+    public static event Action<Card> onEnemyCardPlayed;  
 
     private void Awake()
     {
@@ -25,7 +27,7 @@ public class EnemyAI : MonoBehaviour
     {
         Debug.Log("IA pensando...");
 
-        int decision = Random.Range(0, 100);
+        int decision = UnityEngine.Random.Range(0, 100);
 
         if (gm.trucoState != TrucoState.None)
         {
@@ -57,36 +59,36 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    //  JUGAR CARTA
-    void PlayCard(GameManager gm)
+    private void PlayCard(GameManager gm)
     {
         Card card = enemyHand[0];
         enemyHand.RemoveAt(0);
 
         Debug.Log("IA juega carta: " + card.cardDataSO.value + " de " + card.cardDataSO.suit);
 
-        hand.PlayEnemyCard(card);
+        onEnemyCardPlayed?.Invoke(card);
         CardView cardView = card.cardGO.GetComponent<CardView>();
         cardView.Flip(card);
 
         gm.EndEnemyTurn();
     }
 
-    //  TRUCO
-    void SingTruco(GameManager gm)
+    private void SingTruco(GameManager gm)
     {
         if (gm.trucoState == TrucoState.None)
         {
             gm.trucoState = TrucoState.Truco;
+            gm.currentCall = CallType.Truco;
+            gm.callOwner = CallOwner.Enemy;
             Debug.Log("IA canta TRUCO");
         }
 
         gm.WaitPlayerResponse();
     }
 
-    void RespondToTruco(GameManager gm)
+    private void RespondToTruco(GameManager gm)
     {
-        int decision = Random.Range(0, 100);
+        int decision = UnityEngine.Random.Range(0, 100);
         Debug.Log(decision);
         if (decision < 30)
         {
@@ -105,7 +107,7 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            decision = Random.Range(0, 100);
+            decision = UnityEngine.Random.Range(0, 100);
 
             if (decision < 50)
             {
@@ -121,7 +123,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    void RaiseTruco(GameManager gm)
+    private void RaiseTruco(GameManager gm)
     {
         if (gm.trucoState == TrucoState.Truco)
         {
@@ -139,42 +141,44 @@ public class EnemyAI : MonoBehaviour
         gm.WaitPlayerResponse();
     }
 
-    //  ENVIDO
-    void SingEnvido(GameManager gm)
+    private void SingEnvido(GameManager gm)
     {
-        int decision = Random.Range(0, 3);
+        int decision = UnityEngine.Random.Range(0, 3);
 
         if (decision == 0)
         {
             gm.envidoState = EnvidoState.Envido;
+            gm.callOwner = CallOwner.Enemy;
             Debug.Log("IA canta ENVIDO");
         }
         else if (decision == 1)
         {
             gm.envidoState = EnvidoState.RealEnvido;
+            gm.callOwner = CallOwner.Enemy;
             Debug.Log("IA canta REAL ENVIDO");
         }
         else
         {
             gm.envidoState = EnvidoState.FaltaEnvido;
+            gm.callOwner = CallOwner.Enemy;
             Debug.Log("IA canta FALTA ENVIDO");
         }
-
+        gm.currentCall = CallType.Envido;
         gm.WaitPlayerResponse();
     }
 
-    void RespondToEnvido(GameManager gm)
+    private void RespondToEnvido(GameManager gm)
     {
+        bool envidoSettled;
         gm.currentCall = CallType.Envido; 
 
-        int decision = Random.Range(0, 100);
+        int decision = UnityEngine.Random.Range(0, 100);
 
         if (decision < 30)
         {
             Debug.Log("IA no quiere envido");
 
-            gm.envidoResolved = true;
-            gm.ResolveCall();
+            gm.CallDenied();
             gm.EndEnemyTurn();
             return;
         }
@@ -182,51 +186,60 @@ public class EnemyAI : MonoBehaviour
         if (decision < 60)
         {
             Debug.Log("IA acepta envido");
-
-            gm.ResolveEnvido();
+            envidoSettled = true;
+            gm.EnvidoManager(envidoSettled);
             gm.EndEnemyTurn();
             return;
         }
 
         if (gm.envidoState == EnvidoState.Envido)
         {
-            int subDecision = Random.Range(0, 100);
+            int subDecision = UnityEngine.Random.Range(0, 100);
 
             if (subDecision < 33)
             {
                 Debug.Log("IA canta ENVIDO ENVIDO");
                 gm.envidoState = EnvidoState.EnvidoEnvido;
+                envidoSettled = false;
+                gm.EnvidoManager(envidoSettled);
             }
             else if (subDecision < 66)
             {
                 Debug.Log("IA canta REAL ENVIDO");
                 gm.envidoState = EnvidoState.RealEnvido;
+                envidoSettled = false;
+                gm.EnvidoManager(envidoSettled);
             }
             else
             {
                 Debug.Log("IA canta FALTA ENVIDO");
                 gm.envidoState = EnvidoState.FaltaEnvido;
+                envidoSettled = false;
+                gm.EnvidoManager(envidoSettled);
             }
+            gm.callOwner = CallOwner.Enemy;
         }
         else if (gm.envidoState == EnvidoState.EnvidoEnvido)
         {
-            gm.envidoState = (Random.value < 0.5f)
+            gm.envidoState = (UnityEngine.Random.value < 0.5f)
                 ? EnvidoState.RealEnvido
                 : EnvidoState.FaltaEnvido;
+            gm.callOwner = CallOwner.Enemy;
         }
         else if (gm.envidoState == EnvidoState.RealEnvido)
         {
             gm.envidoState = EnvidoState.FaltaEnvido;
+            gm.callOwner = CallOwner.Enemy;
         }
 
-        gm.callOwner = CallOwner.Enemy;
         gm.WaitPlayerResponse();
     }
 
-    void Fold(GameManager gm)
+    private void Fold(GameManager gm)
     {
         Debug.Log("IA se fue al mazo");
-        gm.ResolveCall();
-        gm.EndRound();
+        gm.CallDenied();
+        bool playerWonHand = true;
+        gm.EndRound(playerWonHand);
     }
 }

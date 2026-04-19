@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class UIHUD : MonoBehaviour
     [Header("Botones base")]
     [SerializeField] private Button trucoButton;
     [SerializeField] private Button envidoButton;
+    [SerializeField] private Button realEnvidoButton;
     [SerializeField] private Button florButton;
     [SerializeField] private Button mazoButton;
 
@@ -20,11 +22,13 @@ public class UIHUD : MonoBehaviour
     [SerializeField] private Button valeCuatroButton;
 
     private GameManager gm;
+    private bool envidoSettled;
 
     private void Awake()
     {
         trucoButton.onClick.AddListener(OnTrucoButtonClicked);
         envidoButton.onClick.AddListener(OnEnvidoButtonClicked);
+        realEnvidoButton.onClick.AddListener(OnRealEnvidoButtonClicked);
         faltaEnvidoButton.onClick.AddListener(OnFaltaEnvidoButtonClicked);
         florButton.onClick.AddListener(OnFlorButtonClicked);
         mazoButton.onClick.AddListener(OnMazoButtonClicked);
@@ -34,6 +38,7 @@ public class UIHUD : MonoBehaviour
         retrucoButton.onClick.AddListener(OnRetrucoButtonClicked);
         valeCuatroButton.onClick.AddListener(OnValeCuatroButtonClicked);
     }
+
     private void Start()
     {
         gm = GameManager.Instance;
@@ -49,6 +54,7 @@ public class UIHUD : MonoBehaviour
     {
         trucoButton.onClick.RemoveListener(OnTrucoButtonClicked);
         envidoButton.onClick.RemoveListener(OnEnvidoButtonClicked);
+        realEnvidoButton.onClick.RemoveListener(OnRealEnvidoButtonClicked);
         faltaEnvidoButton.onClick.RemoveListener(OnFaltaEnvidoButtonClicked);
         florButton.onClick.RemoveListener(OnFlorButtonClicked);
         mazoButton.onClick.RemoveListener(OnMazoButtonClicked);
@@ -59,9 +65,11 @@ public class UIHUD : MonoBehaviour
         valeCuatroButton.onClick.RemoveListener(OnValeCuatroButtonClicked);
     }
 
+    // ------ Truco buttons -------
     private void OnTrucoButtonClicked()
     {
         if (gm.trucoPlayedThisRound) return;
+        if (gm.currentState != GameState.PlayerTurn) return;
 
         gm.trucoPlayedThisRound = true;
 
@@ -78,6 +86,7 @@ public class UIHUD : MonoBehaviour
     {
         if (gm.trucoState != TrucoState.Retruco) return;
         if (gm.callOwner != CallOwner.Enemy) return;
+        if (gm.currentState != GameState.PlayerTurn) return;
 
         Debug.Log("Jugador canta VALE CUATRO");
 
@@ -88,7 +97,8 @@ public class UIHUD : MonoBehaviour
     private void OnRetrucoButtonClicked()
     {
         if (gm.currentCall != CallType.Truco) return;
-        if (gm.callOwner != CallOwner.Enemy) return; 
+        if (gm.callOwner != CallOwner.Enemy) return;
+        if (gm.currentState != GameState.PlayerTurn) return;
 
         gm.callOwner = CallOwner.Player;
         gm.trucoState = TrucoState.Retruco;
@@ -97,24 +107,31 @@ public class UIHUD : MonoBehaviour
 
         gm.WaitEnemyResponse();
     }
-
+    // ------ Aceptar / rechazar buttons -------
     private void OnDenyButtonClicked()
     {
+        if (gm.currentState != GameState.PlayerTurn) return;
+        CallOwner previousOwner = gm.callOwner;
         if (gm.currentCall == CallType.Truco)
         {
             Debug.Log("Jugador rechaza el truco");
-            gm.EndRound();
+            bool playerWonHand = false;
+            gm.EndRound(playerWonHand);
         }
         else if (gm.currentCall == CallType.Envido)
         {
             Debug.Log("Jugador rechaza el envido");
-            gm.ResolveCall();
+            gm.CallDenied();
+            gm.EndPlayerResponse(previousOwner);
         }
     }
 
     private void OnAcceptButtonClicked()
     {
+        if (gm.currentState != GameState.PlayerTurn) return;
         Debug.Log("Jugador acepta");
+
+        CallOwner previousOwner = gm.callOwner;
 
         if (gm.currentCall == CallType.Truco)
         {
@@ -122,22 +139,38 @@ public class UIHUD : MonoBehaviour
         }
         else if (gm.currentCall == CallType.Envido)
         {
-            gm.ResolveEnvido();
+            envidoSettled = true;
+            gm.EnvidoManager(envidoSettled);
         }
 
-        gm.ResolveCall(); 
-        gm.EndPlayerResponse();
+        gm.CallDenied();
+
+        gm.EndPlayerResponse(previousOwner); 
     }
 
     private void OnMazoButtonClicked()
     {
+        if (gm.currentState != GameState.PlayerTurn) return;
         Debug.Log("Jugador se va al mazo");
+        bool playerWonHand = false;
+        gm.EndRound(playerWonHand);
+    }
 
-        gm.EndRound();
+    // ------ Envido buttons ------
+    private void OnRealEnvidoButtonClicked()
+    {
+        if (gm.currentState != GameState.PlayerTurn) return;
+        Debug.Log("Jugador canta Real ENVIDO");
+
+        gm.envidoState = EnvidoState.RealEnvido;
+        envidoSettled = false;
+        gm.EnvidoManager(envidoSettled);
+        gm.WaitEnemyResponse();
     }
 
     private void OnFlorButtonClicked()
     {
+        if (gm.currentState != GameState.PlayerTurn) return;
         Debug.Log("Jugador canta FLOR (no implementado)");
 
         gm.WaitEnemyResponse();
@@ -145,6 +178,7 @@ public class UIHUD : MonoBehaviour
 
     private void OnEnvidoButtonClicked()
     {
+        if (gm.currentState != GameState.PlayerTurn) return;
         Debug.Log("Jugador canta ENVIDO");
 
         if (gm.envidoState == EnvidoState.None)
@@ -152,17 +186,21 @@ public class UIHUD : MonoBehaviour
         else if (gm.envidoState == EnvidoState.Envido)
             gm.envidoState = EnvidoState.EnvidoEnvido;
 
+        envidoSettled = false;
+        gm.EnvidoManager(envidoSettled);
         gm.WaitEnemyResponse();
     }
 
     private void OnFaltaEnvidoButtonClicked()
     {
+        if (gm.currentState != GameState.PlayerTurn) return;
         if (gm.envidoResolved) return;
 
-        gm.currentCall = CallType.Envido;
         gm.callOwner = CallOwner.Player;
         gm.envidoState = EnvidoState.FaltaEnvido;
 
+        envidoSettled = false;
+        gm.EnvidoManager(envidoSettled);
         Debug.Log("Jugador canta FALTA ENVIDO");
 
         gm.WaitEnemyResponse();
@@ -238,16 +276,19 @@ public class UIHUD : MonoBehaviour
         {
             case EnvidoState.None:
                 envidoButton.gameObject.SetActive(true);
+                realEnvidoButton.gameObject.SetActive(true);
                 faltaEnvidoButton.gameObject.SetActive(true);
                 break;
 
             case EnvidoState.Envido:
                 envidoButton.gameObject.SetActive(true);
+                realEnvidoButton.gameObject.SetActive(true);
                 faltaEnvidoButton.gameObject.SetActive(true);
                 break;
 
             case EnvidoState.EnvidoEnvido:
                 envidoButton.gameObject.SetActive(false);
+                realEnvidoButton.gameObject.SetActive(true);
                 faltaEnvidoButton.gameObject.SetActive(true);
                 break;
 
@@ -257,6 +298,9 @@ public class UIHUD : MonoBehaviour
                 break;
 
             case EnvidoState.FaltaEnvido:
+                envidoButton.gameObject.SetActive(false);
+                realEnvidoButton.gameObject.SetActive(false);
+                faltaEnvidoButton.gameObject.SetActive(false);
                 break;
         }
     }

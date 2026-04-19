@@ -24,10 +24,12 @@ public class CardView : MonoBehaviour
         if (!isFlipped)
         {
             sprite.sprite = flippedCardImage;
+            isFlipped = true;
         }
         else
         {
             sprite.sprite = card.cardDataSO.artwork;
+            isFlipped = false;
         }
     }
     public void SetSelected(bool value)

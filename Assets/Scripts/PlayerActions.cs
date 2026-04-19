@@ -6,7 +6,7 @@ public class PlayerActions : MonoBehaviour
 {
     [SerializeField] private Hand hand;
     public List<Card> playerHand = new List<Card>();
-    public static event Action onCardPlayed;
+    public static event Action<Card> onPlayerCardPlayed;
 
     private void Awake()
     {
@@ -30,8 +30,7 @@ public class PlayerActions : MonoBehaviour
                 if (card != null)
                 {
                     card.SetSelected(true);
-                    hand.PlayPlayerCard(card.card);
-                    onCardPlayed?.Invoke();
+                    onPlayerCardPlayed?.Invoke(card.card);
                 }
             }
         }
