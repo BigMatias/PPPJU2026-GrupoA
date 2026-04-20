@@ -15,7 +15,9 @@ public partial class JokerDataSO : ScriptableObject
 
     public int bonusPoints;
     public int bonusMultAdd;
-    public int bonusMultX;
+    public float bonusMultX;
+    public float bonusMultXAdditive;
+    public float bonusMultXAdditiveTotal;
 
     public Sprite sprite;
 }

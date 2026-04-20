@@ -9,7 +9,7 @@ public class Joker
         jokerData = data;
     }
 
-    public void ModifyScore(ref int points, ref int mult)
+    public void ModifyScore(ref int points, ref float mult)
     {
         if (!isActive)
             return;

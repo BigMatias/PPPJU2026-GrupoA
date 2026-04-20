@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: Gaucho
+  m_Name: Messi
   m_EditorClassIdentifier: Assembly-CSharp::JokerDataSO
-  jokerName: Gauchito Gil
-  description: Es alto gil, +5 de mult
-  cost: 3
+  jokerName: Messi
+  description: "Con esa zurda m\xE1gica, solo pod\xE9s jugar la 1ra mano pero ten\xE9s
+    x3 mult"
+  cost: 4
   rarity: 0
   bonusPoints: 0
-  bonusMultAdd: 5
-  bonusMultX: 0
+  bonusMultAdd: 0
+  bonusMultX: 3
   sprite: {fileID: 0}
