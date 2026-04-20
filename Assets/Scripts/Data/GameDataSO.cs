@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GameData", menuName = "GameSettings/GameData")]

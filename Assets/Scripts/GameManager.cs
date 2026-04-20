@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static event Action<int> OnWinEnvido;
+    public static event Action<int, EnvidoState> OnWinEnvido;
     public static event Action<TrucoState> OnWinTruco;
     public static event Action<int> OnWinRound;
 
@@ -30,6 +30,10 @@ public class GameManager : MonoBehaviour
     private bool playerWonHand;
     private List<RoundWon> roundsStateList;
 
+    // COSAS QUE AGREGA FACU EL 19/04:
+    private int _currentEnvidoPoints = 0; // En vez de sumar los puntos a un SO, se van sumando a estas variables
+    private int _currentHandPoints = 0;
+
     private void Awake()
     {
         Instance = this;
@@ -42,6 +46,8 @@ public class GameManager : MonoBehaviour
         roundsStateList = new List<RoundWon>(); 
         gameDataSO.trucoPoints = 0;
         gameDataSO.envidoPoints = 0;
+        _currentEnvidoPoints = 0;
+        _currentHandPoints = 0;
         currentState = GameState.PlayerTurn;
     }
 
@@ -77,17 +83,17 @@ public class GameManager : MonoBehaviour
                 {
                     case EnvidoState.Envido:
                         {
-                            gameDataSO.totalPoints += 1;
+                            _currentEnvidoPoints += 1;
                             break;
                         }
                     case EnvidoState.EnvidoEnvido:
                         {
-                            gameDataSO.totalPoints += 2;
+                            _currentEnvidoPoints += 2;
                             break;
                         }
                     case EnvidoState.RealEnvido:
                         {
-                            gameDataSO.totalPoints += 4;
+                            _currentEnvidoPoints += 4;
                             break;
                         }
                     case EnvidoState.FaltaEnvido:
@@ -96,7 +102,7 @@ public class GameManager : MonoBehaviour
                             break;
                         }
                 }
-                gameDataSO.envidoPoints += 1;
+                _currentEnvidoPoints += 1;
                 envidoState = EnvidoState.None;
                 envidoResolved = true;
             }
@@ -106,17 +112,17 @@ public class GameManager : MonoBehaviour
                 {
                     case TrucoState.Truco:
                         {
-                            gameDataSO.totalPoints += 1;
+                            _currentHandPoints += 1;
                             break;
                         }
                     case TrucoState.Retruco:
                         {
-                            gameDataSO.totalPoints += 2;
+                            _currentHandPoints += 2;
                             break;
                         }
                     case TrucoState.ValeCuatro:
                         {
-                            gameDataSO.totalPoints += 3;
+                            _currentHandPoints += 3;
                             break;
                         }
                 }
@@ -126,7 +132,7 @@ public class GameManager : MonoBehaviour
 
         if (currentState == GameState.EnemyTurn && !trucoPlayedThisRound)
         {
-            gameDataSO.totalPoints += 1;
+            _currentHandPoints += 1;
         }
 
         currentCall = CallType.None;
@@ -274,27 +280,27 @@ public class GameManager : MonoBehaviour
             {
                 case EnvidoState.Envido:
                     {
-                        envidoPoints += runDataSO.envidoPointsStat;
+                        _currentEnvidoPoints += runDataSO.envidoPointsStat;
                         break;
                     }
                 case EnvidoState.EnvidoEnvido:
                     {
-                        envidoPoints += runDataSO.envidoEnvidoPointsStat;
+                        _currentEnvidoPoints += runDataSO.envidoEnvidoPointsStat;
                         break;
                     }
                 case EnvidoState.RealEnvido:
                     {
-                        envidoPoints += runDataSO.realEnvidoPointsStat;
+                        _currentEnvidoPoints += runDataSO.realEnvidoPointsStat;
                         break;
                     }
                 case EnvidoState.FaltaEnvido:
                     {
-                        envidoPoints += (gameDataSO.pointsNeededToWinRound - gameDataSO.totalPoints);
+                        _currentEnvidoPoints += (gameDataSO.pointsNeededToWinRound - gameDataSO.totalPoints);
                         break;
                     }
             }
             Debug.Log("Jugador gana el envido");
-            OnWinEnvido?.Invoke(envidoPoints);
+            OnWinEnvido?.Invoke(_currentEnvidoPoints, envidoState);
         }
         else
         {
@@ -309,7 +315,7 @@ public class GameManager : MonoBehaviour
             if (playerPoints > enemyPoints)
             {
                 Debug.Log("Jugador gana el envido");
-                gameDataSO.envidoPoints = envidoPoints;
+                _currentEnvidoPoints = envidoPoints;
             }
             else
             {
@@ -327,15 +333,15 @@ public class GameManager : MonoBehaviour
         switch (trucoState)
         {
             case TrucoState.Truco:
-                gameDataSO.trucoPoints = runDataSO.trucoPointsStat;
+                _currentHandPoints = runDataSO.trucoPointsStat;
                 break;
 
             case TrucoState.Retruco:
-                gameDataSO.trucoPoints = runDataSO.retrucoPointsStat;
+                _currentHandPoints = runDataSO.retrucoPointsStat;
                 break;
 
             case TrucoState.ValeCuatro:
-                gameDataSO.trucoPoints = runDataSO.valeCuatroPointsStat;
+                _currentHandPoints = runDataSO.valeCuatroPointsStat;
                 break;
         }
         trucoState = TrucoState.None;
@@ -425,15 +431,11 @@ public class GameManager : MonoBehaviour
     public void EndRound(bool playerWonHand)
     {
         Debug.Log("Fin de ronda");
+        float totalPoints = _currentEnvidoPoints + _currentHandPoints;
+        Debug.Log("Jugador suma " + totalPoints + " puntos.");
 
-        gameDataSO.totalPoints += gameDataSO.trucoPoints;
-        gameDataSO.totalPoints += gameDataSO.envidoPoints;
-
-        Debug.Log("Jugador suma " + gameDataSO.totalPoints + " puntos.");
-
-        gameDataSO.trucoPoints = 0;
-        gameDataSO.envidoPoints = 0;
-        gameDataSO.totalPoints = 0;
+        _currentEnvidoPoints = 0;
+        _currentHandPoints = 0;
         currentRound = 0;
 
         trucoPlayedThisRound = false;
