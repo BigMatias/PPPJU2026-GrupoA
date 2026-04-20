@@ -19,7 +19,7 @@ public class JokerManager : MonoBehaviour
         _ownedJokers.Add(joker);
     }
 
-    public void ApplyScoreModifiers(ref int chips, ref int mult)
+    public void ApplyScoreModifiers(ref int chips, ref float mult)
     {
         foreach (var joker in _ownedJokers)
             joker.ModifyScore(ref chips, ref mult);
