@@ -431,15 +431,11 @@ public class GameManager : MonoBehaviour
     public void EndRound(bool playerWonHand)
     {
         Debug.Log("Fin de ronda");
+        float totalPoints = _currentEnvidoPoints + _currentHandPoints;
+        Debug.Log("Jugador suma " + totalPoints + " puntos.");
 
-        gameDataSO.totalPoints += gameDataSO.trucoPoints;
-        gameDataSO.totalPoints += gameDataSO.envidoPoints;
-
-        Debug.Log("Jugador suma " + gameDataSO.totalPoints + " puntos.");
-
-        gameDataSO.trucoPoints = 0;
-        gameDataSO.envidoPoints = 0;
-        gameDataSO.totalPoints = 0;
+        _currentEnvidoPoints = 0;
+        _currentHandPoints = 0;
         currentRound = 0;
 
         trucoPlayedThisRound = false;
