@@ -2,7 +2,7 @@
 
 [CreateAssetMenu(fileName = "JokerData", menuName = "CardsData/JokerData")]
 
-public partial class JokerDataSO : ScriptableObject
+public class JokerDataSO : ScriptableObject
 {
     public string jokerName;
 
@@ -20,4 +20,15 @@ public partial class JokerDataSO : ScriptableObject
     public float bonusMultXAdditiveTotal;
 
     public Sprite sprite;
+
+    public virtual void Execute() { }
+    
+}
+
+public class CardDependantJoker : JokerDataSO
+{
+    public override void Execute()
+    {
+        base.Execute();
+    }
 }
