@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class ShopManager : MonoBehaviour
 {
-    [SerializeField] private RunDataSO _runData;
+   /* [SerializeField] private RunDataSO _runData;
 
     public void ShowJokersToBuy()
     {
-        int rand = (int)(Random.value * JokerManager.Instance.GetJokersList().Count);
+        int rand = (int)(Random.value * GauchosManager.Instance.GetJokersList().Count);
 
-        JokerManager.Instance.GetJokersList()[rand].ToggleJokerOnShop(true);
+        GauchosManager.Instance.GetJokersList()[rand].ToggleJokerOnShop(true);
     }
 
     public void ShowCards()
@@ -23,15 +23,15 @@ public class ShopManager : MonoBehaviour
 
         _runData.money -= joker.jokerData.cost;
 
-        JokerManager.Instance.JokerBoughtAndAddedToHand(joker);
+        GauchosManager.Instance.JokerBoughtAndAddedToHand(joker);
     
         return true;
     }
 
     public void CloseShop()
     {
-        foreach (Joker item in JokerManager.Instance.GetJokersList())
+        foreach (Joker item in GauchosManager.Instance.GetJokersList())
             if (item.isVisibleInShop)
                 item.ToggleJokerOnShop(false);
-    }
+    } */
 }
