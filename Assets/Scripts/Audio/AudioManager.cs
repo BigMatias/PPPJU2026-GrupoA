@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
@@ -22,8 +21,6 @@ public class AudioManager : MonoBehaviour
     public AudioClip buttonUISfx;
     public AudioClip hoverUISfx;
 
-    [Header("-------- Mixer Groups --------")]
-    public UnityEngine.Audio.AudioMixerGroup SfxMixerGroup;
     private void Awake()
     {
         // Destroying duplicates and setting up singleton pattern
