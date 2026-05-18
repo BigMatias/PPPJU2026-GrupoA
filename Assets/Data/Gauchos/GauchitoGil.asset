@@ -13,14 +13,10 @@ MonoBehaviour:
   m_Name: GauchitoGil
   m_EditorClassIdentifier: Assembly-CSharp::JokerDataSO
   prefab: {fileID: 8523803978130920821, guid: 9f4140934d7e6d04a97e4bd142edb2e8, type: 3}
+  sprite: {fileID: 0}
   jokerName: Gauchito Gil
   description: "Su f\xE9 en \xE9l te otorga +5 de mult"
   cost: 3
   rarity: 0
-  bonusPoints: 0
-  bonusMultAdd: 5
-  bonusMultX: 0
-  bonusMultAddAdditive: 0
-  bonusMultAddAdditiveTotal: 0
-  bonusMultXAdditive: 0
-  bonusMultXAdditiveTotal: 0
+  effects:
+  - {fileID: 0}
