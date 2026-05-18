@@ -1,49 +1,90 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UiMainMenuButtons : MonoBehaviour
 {
-    [SerializeField] private string _gameScene;
-    [Header("Buttons")]
-    [SerializeField] private Button _btnStart;
-    [SerializeField] private Button _btnSettings;
-    [SerializeField] private Button _btnCredits;
-    [SerializeField] private Button _btnExit;
+    [Header("Canvas references")]
+    [SerializeField] private GameObject mainCanvas;
+    [SerializeField] private GameObject settingsCanvas;
+    [SerializeField] private GameObject creditsCanvas;
 
-    private void Start()
+    [Header("Buttons reference")]
+    [SerializeField] private Button playBtn;
+    [SerializeField] private Button settingsBtn;
+    [SerializeField] private Button creditsBtn;
+    [SerializeField] private Button quitBtn;
+    [SerializeField] private Button settingsBtnBack;
+    [SerializeField] private Button creditsBtnBack;
+    private void Awake()
     {
-        _btnStart.onClick.AddListener(StartPressed);
-        _btnSettings.onClick.AddListener(SettingsPressed);
-        _btnCredits.onClick.AddListener(CreditsPressed);
-        _btnExit.onClick.AddListener(ExitPressed);
+        playBtn.onClick.AddListener(PlayGame);
+        settingsBtn.onClick.AddListener(OpenSettings);
+        creditsBtn.onClick.AddListener(OpenCredits);
+        quitBtn.onClick.AddListener(QuitGame);
+        settingsBtnBack.onClick.AddListener(CloseSettings);
+        creditsBtnBack.onClick.AddListener(CloseCredits);
+        AddHoverSound(playBtn);
+        AddHoverSound(settingsBtn);
+        AddHoverSound(creditsBtn);
+        AddHoverSound(quitBtn);
+        AddHoverSound(settingsBtnBack);
+        AddHoverSound(creditsBtnBack);
     }
-
     private void OnDestroy()
     {
-        _btnStart.onClick.RemoveAllListeners();
-        _btnSettings.onClick.RemoveAllListeners();
-        _btnCredits.onClick.RemoveAllListeners();
-        _btnExit.onClick.RemoveAllListeners();
+        playBtn.onClick.RemoveAllListeners();
+        settingsBtn.onClick.RemoveAllListeners();
+        quitBtn.onClick.RemoveAllListeners();
+        settingsBtnBack.onClick.RemoveAllListeners();
+        creditsBtnBack.onClick.RemoveAllListeners();
     }
-
-    private void StartPressed()
+    private void PlayGame()
     {
-        SceneManager.LoadScene(_gameScene);
+        SceneManager.LoadScene("MainScene");
     }
-
-    private void SettingsPressed()
+    private void OpenSettings() 
     {
-        return;
+        settingsCanvas.SetActive(true);
+        mainCanvas.SetActive(false);
     }
-
-    private void CreditsPressed()
+    private void OpenCredits()
     {
-        return;
+        creditsCanvas.SetActive(true);
+        mainCanvas.SetActive(false);
     }
-
-    private void ExitPressed()
+    private void QuitGame()
     {
         Application.Quit();
+    }
+    private void CloseSettings()
+    {
+        AudioManager.Instance.PlayUI(AudioManager.Instance.buttonUISfx);
+        settingsCanvas.SetActive(false);
+        mainCanvas.SetActive(true);
+    }
+    private void CloseCredits()
+    {
+        AudioManager.Instance.PlayUI(AudioManager.Instance.buttonUISfx);
+        creditsCanvas.SetActive(false);
+        mainCanvas.SetActive(true);
+    }
+    private void AddHoverSound(Button button)
+    {
+        EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
+
+        if (trigger == null)
+            trigger = button.gameObject.AddComponent<EventTrigger>();
+
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerEnter;
+
+        entry.callback.AddListener
+            (
+                (eventData) => { AudioManager.Instance.PlayUI(AudioManager.Instance.hoverUISfx); ; }
+            );
+
+        trigger.triggers.Add(entry);
     }
 }
