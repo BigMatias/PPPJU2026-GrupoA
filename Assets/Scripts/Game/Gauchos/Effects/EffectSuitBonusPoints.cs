@@ -27,3 +27,16 @@ public class EffectSuitPoints : GauchoEffectSO // 1
             Debug.Log("Suits weren't equal");
     }
 }
+
+[CreateAssetMenu(fileName = "SuitPoints", menuName = "Gauchos/Effects/SuitPoints")]
+public class EffectMultEveryRound : GauchoEffectSO // 9
+{
+    [SerializeField] private int _bonus;
+
+    public override void Execute(GauchoContext context, GauchoInstance owner)
+    {
+        owner.stacks++;
+        context.points *= _bonus * owner.stacks;
+        Debug.Log("Added mult for round played");
+    }
+}

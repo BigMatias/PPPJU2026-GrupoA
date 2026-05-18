@@ -37,7 +37,19 @@ public class GauchosManager : MonoBehaviour
     public void Trigger(GameEvents gameEvents, GauchoContext context)
     {
         foreach (GauchoInstance gaucho in _activeGauchosList)
-            foreach (GauchoEffectSO effect in gaucho.data.effects)
-                effect.Execute(context, gaucho);
+        {
+            if (!gaucho.activatedThisTurn)
+            {
+                foreach (GauchoEffectSO effect in gaucho.data.effects)
+                    effect.Execute(context, gaucho);
+                gaucho.activatedThisTurn = true;
+            }
+        }
+    }
+
+    public void OnRoundEnd_ResetGauchos()
+    {
+        foreach (GauchoInstance gaucho in _activeGauchosList)
+            gaucho.activatedThisTurn = false;
     }
 }

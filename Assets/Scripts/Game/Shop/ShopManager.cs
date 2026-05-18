@@ -48,7 +48,7 @@ public class ShopManager : MonoBehaviour
     {
         foreach (GauchoDataSO item in _showingGauchosInShopList)
         {
-            item.
+            
         }
     }
 }

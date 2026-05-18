@@ -4,6 +4,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/* ----- FACU -----
+ * Es el mismo script de pool genérica que usé con Fede, pero para acá
+ * Lo hice genérico por si queremos poolear más cosas, como las cartas del mazo
+*/
+
 public class PoolManager : MonoBehaviour
 {
     public static PoolManager Instance;

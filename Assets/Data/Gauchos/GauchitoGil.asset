@@ -19,4 +19,4 @@ MonoBehaviour:
   cost: 3
   rarity: 0
   effects:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: a8e54dc78f5a5d046972ce0447dc7b60, type: 2}

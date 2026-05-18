@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MultForFlor", menuName = "Gauchos/Effects/MultForFlor")]
-public class EffectMultForFlor : GauchoEffectSO // 1
+public class EffectMultForFlor : GauchoEffectSO // 8
 {
     [SerializeField] private int _bonus;
 

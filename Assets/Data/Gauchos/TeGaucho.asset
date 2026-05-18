@@ -13,14 +13,10 @@ MonoBehaviour:
   m_Name: TeGaucho
   m_EditorClassIdentifier: Assembly-CSharp::JokerDataSO
   prefab: {fileID: 8523803978130920821, guid: 9f4140934d7e6d04a97e4bd142edb2e8, type: 3}
+  sprite: {fileID: 0}
   jokerName: Te gaucho?
-  description: "Aro aro...\nx0.25 m\xE1s de mult por cada mentira bien hecha"
-  cost: 0
+  description: "Aro aro...\nx3 mult cuando jugas la carta m\xE1s baja de la mano"
+  cost: 5
   rarity: 0
-  bonusPoints: 0
-  bonusMultAdd: 0
-  bonusMultX: 0
-  bonusMultAddAdditive: 0
-  bonusMultAddAdditiveTotal: 0
-  bonusMultXAdditive: 0.25
-  bonusMultXAdditiveTotal: 1
+  effects:
+  - {fileID: 11400000, guid: c64774f4f307bdc4ebb3913a78fec890, type: 2}
