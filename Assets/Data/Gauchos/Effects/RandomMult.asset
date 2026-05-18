@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5842509db9c909d4badd2c63720ba58f, type: 3}
   m_Name: RandomMult
   m_EditorClassIdentifier: Assembly-CSharp::EffectRandomMult
-  _bonus: 0
-  _random: 0
+  _bonus: 15
+  _random: 0.75

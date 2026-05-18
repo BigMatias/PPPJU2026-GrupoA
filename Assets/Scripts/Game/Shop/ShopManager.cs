@@ -10,6 +10,7 @@ public class ShopManager : MonoBehaviour
 
     private List<GauchoDataSO> _gauchosForShopList = new();
     private List<GauchoDataSO> _showingGauchosInShopList = new();
+    private List<GameObject> _gauchosPrefabInShopList = new();
 
     public void SelectGauchosToBuy()
     {
@@ -25,6 +26,7 @@ public class ShopManager : MonoBehaviour
         _showingGauchosInShopList.Add(gaucho);
         GameObject go = Instantiate(gaucho.prefab);
         go.transform.position = _gauchosPositionInShopList[showingPosition];
+        _gauchosPrefabInShopList.Add(go);
     }
 
     public void ShowCards()
@@ -46,9 +48,10 @@ public class ShopManager : MonoBehaviour
 
     public void CloseShop()
     {
-        foreach (GauchoDataSO item in _showingGauchosInShopList)
+        foreach (GameObject item in _gauchosPrefabInShopList)
         {
-            
+            item.SetActive(false);
+            // esto esta MAL y deberia llamar a GauchoInstance.DeActivate(); para desde ahí apagarse
         }
     }
 }
