@@ -7,10 +7,24 @@
  * activatedThisTurn es para saber si ya se activó el joker en la mano, para no hacer los efectos 2 veces
  */
 
-public class GauchoInstance
+public class GauchoInstance : IPooleable
 {
     public GauchoDataSO data;
 
+    public bool isActive;
     public int stacks;
     public bool activatedThisTurn;
+    public bool IsActive { get; set; }
+
+    public GauchoInstance(GauchoDataSO gauchoData) => data = gauchoData;
+
+    public void Activate()
+    {
+        IsActive = true;
+    }
+
+    public void DeActivate()
+    {
+        IsActive = false;
+    }
 }

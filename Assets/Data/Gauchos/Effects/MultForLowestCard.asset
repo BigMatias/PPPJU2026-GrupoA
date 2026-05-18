@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bead2969b9daba4384dbc8ca2c41735, type: 3}
   m_Name: MultForLowestCard
   m_EditorClassIdentifier: Assembly-CSharp::EffectMultForLowestCard
-  _bonus: 0
+  _bonus: 3

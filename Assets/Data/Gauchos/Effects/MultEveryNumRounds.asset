@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 986d11ab1abb5dd4ba8eb613ff415e9a, type: 3}
   m_Name: MultEveryNumRounds
   m_EditorClassIdentifier: Assembly-CSharp::EffectMultEveryNumRounds
-  _roundsToAffect: 0
-  _bonus: 0
+  _roundsToAffect: 3
+  _bonus: 4

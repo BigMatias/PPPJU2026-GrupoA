@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: GauchitoGil
-  m_EditorClassIdentifier: Assembly-CSharp::JokerDataSO
-  prefab: {fileID: 8523803978130920821, guid: 9f4140934d7e6d04a97e4bd142edb2e8, type: 3}
+  m_Name: Guacho
+  m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
+  prefab: {fileID: 0}
   sprite: {fileID: 0}
-  jokerName: Gauchito Gil
-  description: "Su f\xE9 en \xE9l te otorga +5 de mult"
+  jokerName: Guacho
+  description: 1 en 4 chances de +15 de mult
   cost: 3
   rarity: 0
   effects:
-  - {fileID: 11400000, guid: a8e54dc78f5a5d046972ce0447dc7b60, type: 2}
+  - {fileID: 11400000, guid: a642b147fbf3e1c4e962ff574ba56c5d, type: 2}
