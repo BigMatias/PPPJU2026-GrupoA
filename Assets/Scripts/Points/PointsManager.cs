@@ -6,8 +6,9 @@ public class PointsManager : MonoBehaviour
     public static event Action<int> OnPointsCalculated;
     [SerializeField] private RunDataSO _runData;
 
-    private int _points = 0;
-    private float _mult = 0;
+    private float _points = 0;
+    private float _multAdd = 0;
+    private float _multX = 0;
 
     private void OnEnable()
     {
@@ -21,9 +22,31 @@ public class PointsManager : MonoBehaviour
         GameManager.OnWinTruco -= OnWinTruco_AddToMult;
     }
 
-    private void OnWinEnvido_AddToPoints(int envidoValue)
+    private void OnWinEnvido_AddToPoints(int envidoValue, EnvidoState state)
     {
         _points += envidoValue;
+        switch (state) // PASAR DATOS A UN SO
+        {
+            case EnvidoState.None:
+                return;
+
+            case EnvidoState.Envido:
+                _multAdd += 2f;
+                break;
+
+            case EnvidoState.RealEnvido:
+                _multAdd += 3f;
+                break;
+
+            case EnvidoState.EnvidoEnvido:
+                _multAdd += 4f;
+                break;
+
+            case EnvidoState.FaltaEnvido:
+                _multAdd += 15f;
+                break;
+        }
+        CalculatePoints();
     }
 
     private void OnWinTruco_AddToMult(TrucoState state)
@@ -34,23 +57,27 @@ public class PointsManager : MonoBehaviour
                 return;
 
             case TrucoState.Truco:
-                _mult *= 2f;
+                _multX *= 2f;
                 break;
 
             case TrucoState.Retruco:
-                _mult *= 3f;
+                _multX *= 3f;
                 break;
 
             case TrucoState.ValeCuatro:
-                _mult *= 4f;
+                _multX *= 4f;
                 break;
         }
+        CalculatePoints();
     }
 
-    private void CalculatePoints(int points, int multAdd, int multX)
+    private void CalculatePoints()
     {
-        _points *= multAdd * multX;
-        OnPointsCalculated?.Invoke(_points);
+        float mult = _multAdd * _multX;
+        _points *= mult;
+        OnPointsCalculated?.Invoke((int)_points);
         _points = 0;
+        _multAdd = 0;
+        _multX = 0;
     }
 }

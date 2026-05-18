@@ -39,14 +39,10 @@ public class UIHUD : MonoBehaviour
         valeCuatroButton.onClick.AddListener(OnValeCuatroButtonClicked);
     }
 
-    private void Start()
+    private void OnEnable()
     {
         gm = GameManager.Instance;
         UpdateHUD();
-    }
-
-    private void OnEnable()
-    {
         InvokeRepeating(nameof(UpdateHUD), 0f, 0.2f);
     }
 

@@ -161,7 +161,6 @@ MonoBehaviour:
   denyButton: {fileID: 1615091643}
   faltaEnvidoButton: {fileID: 1576594286}
   retrucoButton: {fileID: 1791337804}
-  valeCuatroButton: {fileID: 804205643}
   valeCuatroButton: {fileID: 287850189}
 --- !u!114 &25242167
 MonoBehaviour:
@@ -3170,17 +3169,6 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &804205643 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 109074671967103140, guid: 6889adf1cd2a5394e8193c8fa2a16046, type: 3}
-  m_PrefabInstance: {fileID: 287850187}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1001 &904685497
 PrefabInstance:
   m_ObjectHideFlags: 0
