@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /* ----- FACU -----
@@ -12,6 +13,7 @@ using UnityEngine;
 public class GauchosManager : MonoBehaviour
 {
     private List<GauchoInstance> _activeGauchosList = new List<GauchoInstance>();
+    public GauchoContext Context { get; private set; }
 
     public void AddGauchoToRun(GauchoDataSO gauchoSO)
     {
@@ -32,6 +34,32 @@ public class GauchosManager : MonoBehaviour
     public List<GauchoInstance> GetActiveGauchosList()
     {
         return _activeGauchosList;
+    }
+
+    public void SetContext(int? points = null, float? mult = null, Card playedCard = null, List<Card> hand = null, int? trucosWon = null, bool? wonLastRound = null)
+    {
+        if (points.HasValue)
+            Context.points = points.Value;
+
+        if (mult.HasValue)
+            Context.mult = mult.Value;
+
+        if (playedCard != null)
+            Context.playedCard = playedCard;
+
+        if (hand != null)
+            Context.hand = hand;
+
+        if (trucosWon.HasValue)
+            Context.trucosWon = trucosWon.Value;
+
+        if (wonLastRound.HasValue)
+            Context.wonLastRound = wonLastRound.Value;
+    }
+
+    public GauchoContext GetContext()
+    {
+        return Context;
     }
 
     public void Trigger(GameEvents gameEvents, GauchoContext context)
