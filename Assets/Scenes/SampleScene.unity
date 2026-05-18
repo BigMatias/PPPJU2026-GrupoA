@@ -255,7 +255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 25719841}
-  - component: {fileID: 25719840}
+  - component: {fileID: 25719842}
   m_Layer: 0
   m_Name: EnemyAI
   m_TagString: Untagged
@@ -263,19 +263,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &25719840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 25719839}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a93ffd4438ee37247b03ba1ccb81d9fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  hand: {fileID: 0}
 --- !u!4 &25719841
 Transform:
   m_ObjectHideFlags: 0
@@ -291,6 +278,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &25719842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 25719839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67109deaf1813ab40b739400966289c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  hand: {fileID: 1332006912}
 --- !u!1 &49128898
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,9 +2037,9 @@ RectTransform:
   m_Father: {fileID: 1380379558}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 25, y: 25}
-  m_SizeDelta: {x: 500, y: 1030}
+  m_SizeDelta: {x: 500, y: -41.904}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &359594839
 MonoBehaviour:
@@ -4366,7 +4366,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1206497612}
-  - component: {fileID: 1206497611}
   - component: {fileID: 1206497613}
   m_Layer: 0
   m_Name: Deck
@@ -4375,19 +4374,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1206497611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1206497610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ee85f4e69021b24e84ef98f7b742d5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Deck
-  startingDeck: []
 --- !u!4 &1206497612
 Transform:
   m_ObjectHideFlags: 0
@@ -4415,7 +4401,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb86dc538cea90e45b43a6ef8619409e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Deck
-  startingDeck: []
+  startingDeck:
+  - {fileID: 11400000, guid: b2ee473b37c883846aa225e26137c271, type: 2}
+  - {fileID: 11400000, guid: dbb323f7abe261f47a7ed83fe7b986ce, type: 2}
+  - {fileID: 11400000, guid: 7e0b6291c8ee4624dadfdf0b439d60e3, type: 2}
+  - {fileID: 11400000, guid: 0e828ee739ce0cd409e359c210e24f6b, type: 2}
+  - {fileID: 11400000, guid: d18215c52f4914d45b437ce9cc6fcec0, type: 2}
+  - {fileID: 11400000, guid: 0c1a9da9730498f4f8d7faea74c986fe, type: 2}
+  - {fileID: 11400000, guid: 0af35b45b8a8f514db91ac07c5fbbf1d, type: 2}
+  - {fileID: 11400000, guid: 052382744b802994799d5683da3de57e, type: 2}
+  - {fileID: 11400000, guid: ba6c9b736d1cd1b42a7e0f3bb22d8e2c, type: 2}
+  - {fileID: 11400000, guid: 42b240bc454072542885be7232eb5b0a, type: 2}
+  - {fileID: 11400000, guid: 31981142ba65bde43b2c725607909bae, type: 2}
+  - {fileID: 11400000, guid: 15e1d198de6e3c54782b3a8406ee2d65, type: 2}
+  - {fileID: 11400000, guid: f6b2d884135cc43449309d679f726539, type: 2}
+  - {fileID: 11400000, guid: 718e0dd6392e3cc40ad40a0e8589e96b, type: 2}
+  - {fileID: 11400000, guid: 3a7b4e67b06d2cc41ae235d42c610aef, type: 2}
+  - {fileID: 11400000, guid: b34e3543a78f3aa40be23ad4297f5cfb, type: 2}
+  - {fileID: 11400000, guid: 3c55c7d68546e6a42b9bc959f10720eb, type: 2}
+  - {fileID: 11400000, guid: beb43f162da5deb4f8bcc3138dc774f5, type: 2}
+  - {fileID: 11400000, guid: 5313539c10ff89f418e5d9e29b458b86, type: 2}
+  - {fileID: 11400000, guid: 8a7eaef75635b1b4c8e5f49fc6904e1e, type: 2}
+  - {fileID: 11400000, guid: af69cbe25e437164f8b4d46e732faf10, type: 2}
+  - {fileID: 11400000, guid: 87463fe21f4417745b2e36075d2bf945, type: 2}
+  - {fileID: 11400000, guid: 0bb5abc2cb8a09e4fb2836642166d78b, type: 2}
+  - {fileID: 11400000, guid: de24cf55e78d09446a6ae073cc339952, type: 2}
+  - {fileID: 11400000, guid: bee7ffaee6441544787c276507a4b7fb, type: 2}
+  - {fileID: 11400000, guid: 6be10450deabcd64bb0586fcc8a903c7, type: 2}
+  - {fileID: 11400000, guid: ff8f48c35dd0a974b990cc9162906f78, type: 2}
+  - {fileID: 11400000, guid: fc3af9b545eb9aa44ad79d58196168a8, type: 2}
+  - {fileID: 11400000, guid: 920574f363f52e540a3e42048517c03b, type: 2}
+  - {fileID: 11400000, guid: 5ea14a92f18c5d343a7bc2f07bf72d82, type: 2}
+  - {fileID: 11400000, guid: 1e44740b9a582fb46a1d8e96da55d9d4, type: 2}
+  - {fileID: 11400000, guid: ad87e6ca739d8b54ab7849b99c586e59, type: 2}
+  - {fileID: 11400000, guid: 0a7a1e938f348ad46a857eeb4256dd4a, type: 2}
+  - {fileID: 11400000, guid: afe29c88cb30c7c4eb4e0c3850f2a4ba, type: 2}
+  - {fileID: 11400000, guid: 18a94dcb8e223774884c20e254fca7ab, type: 2}
+  - {fileID: 11400000, guid: c8f36eed3bbc7c94c8ffd845f2d9698b, type: 2}
+  - {fileID: 11400000, guid: ad1d60ee65feb9849be2c0b27357f700, type: 2}
+  - {fileID: 11400000, guid: c07d04ab5c573b9458bdd0b44c91e3fd, type: 2}
+  - {fileID: 11400000, guid: 376adafaaa3f8684ea2f5921edb16297, type: 2}
+  - {fileID: 11400000, guid: 1016899a07da02d4a923833593d47907, type: 2}
 --- !u!1 &1282530174
 GameObject:
   m_ObjectHideFlags: 0
@@ -4667,7 +4693,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1311449876}
-  - component: {fileID: 1311449875}
   - component: {fileID: 1311449877}
   m_Layer: 0
   m_Name: PlayerActions
@@ -4676,19 +4701,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1311449875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1311449874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4db06f90a47adc45a92f9da0e34bb0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerActions
-  hand: {fileID: 0}
 --- !u!4 &1311449876
 Transform:
   m_ObjectHideFlags: 0
@@ -4716,7 +4728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c14cbd29a39c6f4d8d4c530d480acca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerActions
-  hand: {fileID: 0}
+  hand: {fileID: 1332006912}
 --- !u!1 &1332006909
 GameObject:
   m_ObjectHideFlags: 0
@@ -4726,7 +4738,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1332006911}
-  - component: {fileID: 1332006910}
+  - component: {fileID: 1332006912}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -4734,23 +4746,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1332006910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332006909}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e929deb269e09e47874fb84a63cab33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Hand
-  deck: {fileID: 0}
-  cardPrefab: {fileID: 0}
-  gameDataSO: {fileID: 0}
-  playerHandContainers: []
-  enemyHandContainers: []
 --- !u!4 &1332006911
 Transform:
   m_ObjectHideFlags: 0
@@ -4769,6 +4764,29 @@ Transform:
   - {fileID: 49128899}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1332006912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332006909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6eb0095ecfa6e845854908d1935c1b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hand
+  deck: {fileID: 1206497613}
+  cardPrefab: {fileID: 3720970508354619047, guid: 28ea5cd809fa8084abfbd2214c8b4445, type: 3}
+  gameDataSO: {fileID: 11400000, guid: ab4458b334c5e6f49807dcafc8b7f559, type: 2}
+  playerHandContainers:
+  - {fileID: 1449759228}
+  - {fileID: 1087019857}
+  - {fileID: 49128899}
+  enemyHandContainers:
+  - {fileID: 1147246215}
+  - {fileID: 1201544920}
+  - {fileID: 1969309418}
 --- !u!1 &1380379554
 GameObject:
   m_ObjectHideFlags: 0
@@ -5320,7 +5338,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1578165142}
-  - component: {fileID: 1578165141}
+  - component: {fileID: 1578165143}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5328,30 +5346,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1578165141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1578165140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c66490909cf158e4c86c3c0a08a38c94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  enemyAI: {fileID: 0}
-  gameDataSO: {fileID: 11400000, guid: ab4458b334c5e6f49807dcafc8b7f559, type: 2}
-  runDataSO: {fileID: 11400000, guid: 99fc9c7a7e9217b4390352278560a3f8, type: 2}
-  playerActions: {fileID: 0}
-  _hud: {fileID: 1894284450}
-  currentState: 0
-  trucoState: 1
-  envidoState: 1
-  currentCall: 0
-  callOwner: 0
-  trucoPlayedThisRound: 0
-  envidoResolved: 0
 --- !u!4 &1578165142
 Transform:
   m_ObjectHideFlags: 0
@@ -5367,6 +5361,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1578165143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578165140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66490909cf158e4c86c3c0a08a38c94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  enemyAI: {fileID: 25719842}
+  gameDataSO: {fileID: 11400000, guid: ab4458b334c5e6f49807dcafc8b7f559, type: 2}
+  runDataSO: {fileID: 11400000, guid: 99fc9c7a7e9217b4390352278560a3f8, type: 2}
+  playerActions: {fileID: 1311449877}
+  _hud: {fileID: 25242166}
+  currentState: 0
+  trucoState: 1
+  envidoState: 1
+  currentCall: 0
+  callOwner: 0
+  trucoPlayedThisRound: 0
+  envidoResolved: 0
 --- !u!1 &1615091641
 GameObject:
   m_ObjectHideFlags: 0
@@ -6538,9 +6556,8 @@ SceneRoots:
   - {fileID: 1332006911}
   - {fileID: 87811186}
   - {fileID: 1311449876}
-  - {fileID: 1578165142}
-  - {fileID: 1925666050}
   - {fileID: 25719841}
+  - {fileID: 1578165142}
   - {fileID: 799737432}
   - {fileID: 80066787}
   - {fileID: 25242170}
