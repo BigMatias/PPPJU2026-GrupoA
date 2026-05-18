@@ -207,7 +207,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1071635738}
-  - component: {fileID: 1071635737}
   m_Layer: 0
   m_Name: JokerManager
   m_TagString: Untagged
@@ -215,23 +214,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1071635737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1071635736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91d0ce5b831f562449a753830d7ebc2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::JokerManager
-  _jokersDataList:
-  - {fileID: 11400000, guid: 2b29c5b47990ff649b87b5976806fb67, type: 2}
-  - {fileID: 11400000, guid: 8673f12256125594699d7a80957ef26b, type: 2}
-  - {fileID: 11400000, guid: 43fc694406677d24caa7bf19fe2f520f, type: 2}
-  - {fileID: 11400000, guid: fc063422185a5494ab0298af693bdfdd, type: 2}
 --- !u!4 &1071635738
 Transform:
   m_ObjectHideFlags: 0
