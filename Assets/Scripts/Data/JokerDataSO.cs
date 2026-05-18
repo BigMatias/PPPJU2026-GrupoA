@@ -4,6 +4,8 @@
 
 public class JokerDataSO : ScriptableObject
 {
+    public GameObject prefab;
+
     public string jokerName;
 
     [TextArea]
@@ -13,22 +15,20 @@ public class JokerDataSO : ScriptableObject
 
     public Rarity rarity;
 
-    public int bonusPoints;
-    public int bonusMultAdd;
+    [Header("Points to add")]
+    public float bonusPoints;
+
+    [Header("Mult to add")]
+    public float bonusMultAdd;
+
+    [Header("Mult to multiply")]
     public float bonusMultX;
+
+    [Header("Additive mult to add")]
+    public float bonusMultAddAdditive;
+    public float bonusMultAddAdditiveTotal;
+
+    [Header("Additive mult to multiply")]
     public float bonusMultXAdditive;
     public float bonusMultXAdditiveTotal;
-
-    public Sprite sprite;
-
-    public virtual void Execute() { }
-    
-}
-
-public class CardDependantJoker : JokerDataSO
-{
-    public override void Execute()
-    {
-        base.Execute();
-    }
 }
