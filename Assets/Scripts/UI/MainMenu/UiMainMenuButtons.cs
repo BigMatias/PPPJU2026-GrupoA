@@ -73,17 +73,15 @@ public class UiMainMenuButtons : MonoBehaviour
     private void AddHoverSound(Button button)
     {
         EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
-
         if (trigger == null)
             trigger = button.gameObject.AddComponent<EventTrigger>();
 
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerEnter;
-
-        entry.callback.AddListener
-            (
-                (eventData) => { AudioManager.Instance.PlayUI(AudioManager.Instance.hoverUISfx); ; }
-            );
+        entry.callback.AddListener((eventData) =>
+        {
+            AudioManager.Instance?.PlayUI(AudioManager.Instance.hoverUISfx);
+        });
 
         trigger.triggers.Add(entry);
     }
