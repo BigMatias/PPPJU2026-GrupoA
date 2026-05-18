@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RunDataSO runDataSO;
     [SerializeField] private PlayerActions playerActions;
 
+    [Header("References")]
+    [SerializeField] private UIHUD _hud;
+
     public static GameManager Instance;
     public GameState currentState;
     public TrucoState trucoState = TrucoState.None;
@@ -49,6 +52,8 @@ public class GameManager : MonoBehaviour
         _currentEnvidoPoints = 0;
         _currentHandPoints = 0;
         currentState = GameState.PlayerTurn;
+
+        _hud.gameObject.SetActive(true);
     }
 
     private void OnDestroy()
