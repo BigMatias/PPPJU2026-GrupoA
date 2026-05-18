@@ -11,6 +11,7 @@ public class GauchoInstance
 {
     public GauchoDataSO data;
 
+    public bool isActive;
     public int stacks;
     public bool activatedThisTurn;
 }

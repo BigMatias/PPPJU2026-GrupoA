@@ -11,30 +11,40 @@ using UnityEngine;
 
 public class GauchosManager : MonoBehaviour
 {
-    private List<GauchoInstance> _activeGauchos = new List<GauchoInstance>();
+    private List<GauchoInstance> _allGauchosList = new List<GauchoInstance>();
+    private List<GauchoInstance> _activeGauchosList = new List<GauchoInstance>();
 
     public void SetNewGaucho(GauchoInstance instance)
     {
-        _activeGauchos.Add(instance);
+        _activeGauchosList.Add(instance);
     }
 
-    public GauchoInstance GetGaucho(GauchoInstance instance)
+    public GauchoInstance GetInactiveGaucho(GauchoInstance instance)
     {
-        foreach (GauchoInstance item in _activeGauchos)
+        foreach (GauchoInstance item in _allGauchosList)
             if (instance == item)
                 return item;
 
         return null;
     }
 
-    public List<GauchoInstance> GetGaucho()
+    public GauchoInstance GetActiveGaucho(GauchoInstance instance)
     {
-        return _activeGauchos;
+        foreach (GauchoInstance item in _activeGauchosList)
+            if (instance == item)
+                return item;
+
+        return null;
+    }
+
+    public List<GauchoInstance> GetActiveGauchosList()
+    {
+        return _activeGauchosList;
     }
 
     public void Trigger(GameEvents gameEvents, GauchoContext context)
     {
-        foreach (GauchoInstance gaucho in _activeGauchos)
+        foreach (GauchoInstance gaucho in _activeGauchosList)
             foreach (GauchoEffectSO effect in gaucho.data.effects)
                 effect.Execute(context, gaucho);
     }

@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class ShopManager : MonoBehaviour
 {
-   /* [SerializeField] private RunDataSO _runData;
+   [SerializeField] private RunDataSO _runData;
 
     public void ShowJokersToBuy()
     {
-        int rand = (int)(Random.value * GauchosManager.Instance.GetJokersList().Count);
 
-        GauchosManager.Instance.GetJokersList()[rand].ToggleJokerOnShop(true);
     }
 
     public void ShowCards()
@@ -16,22 +14,20 @@ public class ShopManager : MonoBehaviour
         // aca necesitamos la lista de cartas para el random :p
     }
 
-    public bool BuyJoker(Joker joker)
+    public void BuyJoker(GauchoInstance gaucho)
     {
-        if (_runData.money < joker.jokerData.cost)
-            return false;
+        if (_runData.money >= gaucho.data.cost)
+        {
+            _runData.money -= gaucho.data.cost;
+            // algo en UI que reste la plata gastada
+        }
 
-        _runData.money -= joker.jokerData.cost;
-
-        GauchosManager.Instance.JokerBoughtAndAddedToHand(joker);
-    
-        return true;
+        GauchoInstance newGaucho = RunManager.Instance.Gauchos.GetInactiveGaucho(gaucho); // saco el gaucho
+        RunManager.Instance.Gauchos.SetNewGaucho(newGaucho);
     }
 
     public void CloseShop()
     {
-        foreach (Joker item in GauchosManager.Instance.GetJokersList())
-            if (item.isVisibleInShop)
-                item.ToggleJokerOnShop(false);
-    } */
+
+    }
 }
