@@ -11,21 +11,13 @@ using UnityEngine;
 
 public class GauchosManager : MonoBehaviour
 {
-    private List<GauchoInstance> _allGauchosList = new List<GauchoInstance>();
     private List<GauchoInstance> _activeGauchosList = new List<GauchoInstance>();
 
-    public void SetNewGaucho(GauchoInstance instance)
+    public void AddGauchoToRun(GauchoDataSO gauchoSO)
     {
-        _activeGauchosList.Add(instance);
-    }
-
-    public GauchoInstance GetInactiveGaucho(GauchoInstance instance)
-    {
-        foreach (GauchoInstance item in _allGauchosList)
-            if (instance == item)
-                return item;
-
-        return null;
+        GauchoInstance newGaucho = new(gauchoSO);
+        _activeGauchosList.Add(newGaucho);
+        Debug.Log("Se agregó " + newGaucho.data.name + " a los gauchos activos");
     }
 
     public GauchoInstance GetActiveGaucho(GauchoInstance instance)

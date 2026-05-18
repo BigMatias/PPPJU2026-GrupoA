@@ -14,4 +14,6 @@ public class GauchoInstance
     public bool isActive;
     public int stacks;
     public bool activatedThisTurn;
+
+    public GauchoInstance(GauchoDataSO gauchoData) => data = gauchoData;
 }

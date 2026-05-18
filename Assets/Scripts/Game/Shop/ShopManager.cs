@@ -1,12 +1,30 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ShopManager : MonoBehaviour
 {
-   [SerializeField] private RunDataSO _runData;
+    [SerializeField] private RunDataSO _runData;
+    [SerializeField] private int _gauchoSlots;
+    [SerializeField] private int _cardSlots;
+    [SerializeField] private List<Vector3> _gauchosPositionInShopList = new();
 
-    public void ShowJokersToBuy()
+    private List<GauchoDataSO> _gauchosForShopList = new();
+    private List<GauchoDataSO> _showingGauchosInShopList = new();
+
+    public void SelectGauchosToBuy()
     {
+        for (int i = 0; i < _gauchoSlots; i++)
+        {
+            int rand = (int)(Random.value * _gauchosForShopList.Count);
+            ShowGaucho(_gauchosForShopList[rand], i);
+        }
+    }
 
+    public void ShowGaucho(GauchoDataSO gaucho, int showingPosition)
+    {
+        _showingGauchosInShopList.Add(gaucho);
+        GameObject go = Instantiate(gaucho.prefab);
+        go.transform.position = _gauchosPositionInShopList[showingPosition];
     }
 
     public void ShowCards()
@@ -14,20 +32,23 @@ public class ShopManager : MonoBehaviour
         // aca necesitamos la lista de cartas para el random :p
     }
 
-    public void BuyJoker(GauchoInstance gaucho)
+    public void BuyJoker(GauchoDataSO gaucho)
     {
-        if (_runData.money >= gaucho.data.cost)
+        if (_runData.money >= gaucho.cost)
         {
-            _runData.money -= gaucho.data.cost;
+            _runData.money -= gaucho.cost;
+            _gauchosForShopList.Remove(gaucho);
             // algo en UI que reste la plata gastada
         }
 
-        GauchoInstance newGaucho = RunManager.Instance.Gauchos.GetInactiveGaucho(gaucho); // saco el gaucho
-        RunManager.Instance.Gauchos.SetNewGaucho(newGaucho);
+        RunManager.Instance.Gauchos.AddGauchoToRun(gaucho);
     }
 
     public void CloseShop()
     {
-
+        foreach (GauchoDataSO item in _showingGauchosInShopList)
+        {
+            item.
+        }
     }
 }
