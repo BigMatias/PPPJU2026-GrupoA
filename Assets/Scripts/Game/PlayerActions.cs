@@ -4,46 +4,39 @@ using UnityEngine;
 
 public class PlayerActions : MonoBehaviour
 {
-    [SerializeField] private Hand hand;
     public List<Card> playerHand = new List<Card>();
-    public static event Action<Card> onPlayerCardPlayed;
+    public event Action<Card> OnCardPlayed;
 
-    private void Awake()
+    private GameManager _gm;
+
+    public void Initialize(GameManager gm)
     {
-        Hand.onPlayerHandDealt += Hand_onPlayerHandDealt;
+        _gm = gm;
     }
+
+    public void AddCard(Card card) => playerHand.Add(card);
+
+    public void ClearHand() => playerHand.Clear();
 
     private void Update()
     {
-        if (GameManager.Instance.currentState != GameState.PlayerTurn)
-            return;
+        if (_gm.CurrentState != GameState.PlayerTurn) return;
 
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
 
             if (hit.collider != null && hit.collider.gameObject.layer == (int)Layers.Player)
             {
-                CardView card = hit.collider.GetComponent<CardView>();
-                if (card != null)
+                CardView cardView = hit.collider.GetComponent<CardView>();
+                if (cardView != null)
                 {
-                    card.SetSelected(true);
-                    onPlayerCardPlayed?.Invoke(card.card);
+                    cardView.SetSelected(true);
+                    playerHand.Remove(cardView.card);
+                    OnCardPlayed?.Invoke(cardView.card);
                 }
             }
         }
     }
-
-    private void OnDestroy()
-    {
-        Hand.onPlayerHandDealt -= Hand_onPlayerHandDealt;
-    }
-
-    private void Hand_onPlayerHandDealt(Card card)
-    {
-        playerHand.Add(card);
-    }
-
 }

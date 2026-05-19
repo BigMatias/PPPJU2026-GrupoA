@@ -4,146 +4,454 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static event Action<int, EnvidoState> OnWinEnvido;
-    public static event Action<TrucoState> OnWinTruco;
-    public static event Action<int> OnWinRound;
-
     [SerializeField] private EnemyAI enemyAI;
-    [SerializeField] private GameDataSO gameDataSO;
-    [SerializeField] private RunDataSO runDataSO;
+    [SerializeField] private RunDataSO runData;
     [SerializeField] private PlayerActions playerActions;
+    [SerializeField] private Hand hand;
+    [SerializeField] private UIHUD hud;
 
-    [Header("References")]
-    [SerializeField] private UIHUD _hud;
+    public static GameManager Instance { get; private set; }
 
-    public static GameManager Instance;
-    public GameState currentState;
-    public TrucoState trucoState = TrucoState.None;
-    public EnvidoState envidoState = EnvidoState.None;
-    public CallType currentCall = CallType.None;
-    public CallOwner callOwner = CallOwner.None;
+    public GameState CurrentState { get; private set; }
+    public TrucoState TrucoState { get; private set; } = TrucoState.None;
+    public EnvidoState EnvidoState { get; private set; } = EnvidoState.None;
+    public CallType CurrentCall { get; private set; } = CallType.None;
+    public CallOwner CallOwner { get; private set; } = CallOwner.None;
+    public bool TrucoPlayedThisRound { get; private set; } = false;
+    public bool EnvidoResolved { get; private set; } = false;
 
-    private Card playerCardPlayed;
-    private Card enemyCardPlayed;
-    private int roundQuantity = 3;
-    public bool trucoPlayedThisRound = false;
-    public bool envidoResolved = false;
-    private int currentRound = 0;
-    private int envidoPoints;
-    private bool playerWonHand;
-    private List<RoundWon> roundsStateList;
-
-    // COSAS QUE AGREGA FACU EL 19/04:
-    private int _currentEnvidoPoints = 0; // En vez de sumar los puntos a un SO, se van sumando a estas variables
-    private int _currentHandPoints = 0;
+    private ScoreSystem _scoreSystem;
+    private Card _playerCardPlayed;
+    private Card _enemyCardPlayed;
+    private List<RoundWon> _roundResults = new List<RoundWon>();
+    private int _currentRound = 0;
+    private int _handsPlayedThisRun = 0;
 
     private void Awake()
     {
         Instance = this;
-        PlayerActions.onPlayerCardPlayed += OnPlayerCardPlayed;
-        EnemyAI.onEnemyCardPlayed += EnemyAI_onEnemyCardPlayed;
+        playerActions.Initialize(this);
+        playerActions.OnCardPlayed += OnPlayerCardPlayed;
+        enemyAI.OnCardPlayed += OnEnemyCardPlayed;
     }
 
     private void Start()
     {
-        roundsStateList = new List<RoundWon>(); 
-        gameDataSO.trucoPoints = 0;
-        gameDataSO.envidoPoints = 0;
-        _currentEnvidoPoints = 0;
-        _currentHandPoints = 0;
-        currentState = GameState.PlayerTurn;
-
-        _hud.gameObject.SetActive(true);
+        _scoreSystem = new ScoreSystem(runData.basePoints, runData.baseMult);
+        StartHand();
     }
 
     private void OnDestroy()
     {
-        PlayerActions.onPlayerCardPlayed -= OnPlayerCardPlayed;
-        EnemyAI.onEnemyCardPlayed -= EnemyAI_onEnemyCardPlayed;
+        playerActions.OnCardPlayed -= OnPlayerCardPlayed;
+        enemyAI.OnCardPlayed -= OnEnemyCardPlayed;
     }
+
+    private void StartHand()
+    {
+        _scoreSystem.Reset();
+        _roundResults.Clear();
+        _currentRound = 0;
+        TrucoPlayedThisRound = false;
+        EnvidoResolved = false;
+        TrucoState = TrucoState.None;
+        EnvidoState = EnvidoState.None;
+        CurrentCall = CallType.None;
+        CallOwner = CallOwner.None;
+
+        hand.DealCards();
+        hud.gameObject.SetActive(true);
+
+        bool playerIsDealer = UnityEngine.Random.value < runData.chanceToBeDealer;
+        SetState(playerIsDealer ? GameState.PlayerTurn : GameState.EnemyTurn);
+
+        if (CurrentState == GameState.EnemyTurn)
+            Invoke(nameof(TriggerEnemyTurn), 1f);
+    }
+
+    // ── Player actions ─────────────────────────────────────────────
+
+    public void PlayerSingsTruco()
+    {
+        if (TrucoPlayedThisRound || CurrentState != GameState.PlayerTurn) return;
+
+        TrucoState = TrucoState.Truco;
+        CurrentCall = CallType.Truco;
+        CallOwner = CallOwner.Player;
+        TrucoPlayedThisRound = true;
+
+        WaitEnemyResponse();
+    }
+
+    public void PlayerSingsRetruco()
+    {
+        if (CurrentCall != CallType.Truco || CallOwner != CallOwner.Enemy || CurrentState != GameState.PlayerTurn) return;
+
+        TrucoState = TrucoState.Retruco;
+        CallOwner = CallOwner.Player;
+
+        WaitEnemyResponse();
+    }
+
+    public void PlayerSingsValeCuatro()
+    {
+        if (TrucoState != TrucoState.Retruco || CallOwner != CallOwner.Enemy || CurrentState != GameState.PlayerTurn) return;
+
+        TrucoState = TrucoState.ValeCuatro;
+
+        WaitEnemyResponse();
+    }
+
+    public void PlayerSingsEnvido(EnvidoState type)
+    {
+        if (CurrentState != GameState.PlayerTurn || EnvidoResolved) return;
+
+        bool valid = (EnvidoState, type) switch
+        {
+            (EnvidoState.None, _) => true,
+            (EnvidoState.Envido, EnvidoState.Envido) => true,
+            (EnvidoState.Envido, EnvidoState.RealEnvido) => true,
+            (EnvidoState.Envido, EnvidoState.FaltaEnvido) => true,
+            (EnvidoState.EnvidoEnvido, EnvidoState.RealEnvido) => true,
+            (EnvidoState.EnvidoEnvido, EnvidoState.FaltaEnvido) => true,
+            (EnvidoState.RealEnvido, EnvidoState.FaltaEnvido) => true,
+            _ => false
+        };
+
+        if (!valid) return;
+
+        EnvidoState = type;
+        CurrentCall = CallType.Envido;
+        CallOwner = CallOwner.Player;
+
+        _scoreSystem.AddPoints(GetEnvidoPoints());
+
+        WaitEnemyResponse();
+    }
+
+    public void PlayerAccepts()
+    {
+        if (CurrentState != GameState.PlayerTurn) return;
+
+        CallOwner previousOwner = CallOwner;
+
+        if (CurrentCall == CallType.Truco)
+            AcceptTruco();
+        else if (CurrentCall == CallType.Envido)
+            AcceptEnvido();
+
+        ResolveCallEnd(previousOwner);
+    }
+
+    public void PlayerDenies()
+    {
+        if (CurrentState != GameState.PlayerTurn) return;
+
+        CallOwner previousOwner = CallOwner;
+
+        if (CurrentCall == CallType.Truco)
+        {
+            EndRound(false);
+            return;
+        }
+
+        if (CurrentCall == CallType.Envido)
+        {
+            DenyEnvido();
+            ResolveCallEnd(previousOwner);
+        }
+    }
+
+    public void PlayerFolds()
+    {
+        if (CurrentState != GameState.PlayerTurn) return;
+        EndRound(false);
+    }
+
+    // ── Enemy actions ──────────────────────────────────────────────
+
+    public void EnemySingsTruco()
+    {
+        TrucoState = TrucoState.Truco;
+        CurrentCall = CallType.Truco;
+        CallOwner = CallOwner.Enemy;
+        SetState(GameState.PlayerTurn);
+    }
+
+    public void EnemyRaisesTruco()
+    {
+        if (TrucoState == TrucoState.Truco)
+            TrucoState = TrucoState.Retruco;
+        else if (TrucoState == TrucoState.Retruco)
+            TrucoState = TrucoState.ValeCuatro;
+
+        CallOwner = CallOwner.Enemy;
+        SetState(GameState.PlayerTurn);
+    }
+
+    public void EnemySingsEnvido(EnvidoState type)
+    {
+        bool valid = (EnvidoState, type) switch
+        {
+            (EnvidoState.None, _) => true,
+            (EnvidoState.Envido, EnvidoState.Envido) => true,
+            (EnvidoState.Envido, EnvidoState.RealEnvido) => true,
+            (EnvidoState.Envido, EnvidoState.FaltaEnvido) => true,
+            (EnvidoState.EnvidoEnvido, EnvidoState.RealEnvido) => true,
+            (EnvidoState.EnvidoEnvido, EnvidoState.FaltaEnvido) => true,
+            (EnvidoState.RealEnvido, EnvidoState.FaltaEnvido) => true,
+            _ => false
+        };
+
+        if (!valid) return;
+
+        EnvidoState = type;
+        CurrentCall = CallType.Envido;
+        CallOwner = CallOwner.Enemy;
+        SetState(GameState.PlayerTurn);
+    }
+
+    public void EnemyAccepts()
+    {
+        if (CurrentCall == CallType.Truco)
+            AcceptTruco();
+        else if (CurrentCall == CallType.Envido)
+            AcceptEnvido();
+
+        ResolveCallEnd(CallOwner.Player);
+        SetState(GameState.EnemyTurn);
+        Invoke(nameof(TriggerEnemyTurn), 1f);
+    }
+
+    public void EnemyDenies()
+    {
+        if (CurrentCall == CallType.Truco)
+        {
+            EndRound(true);
+            return;
+        }
+
+        if (CurrentCall == CallType.Envido)
+        {
+            DenyEnvido();
+            SetState(GameState.EnemyTurn);
+            Invoke(nameof(TriggerEnemyTurn), 1f);
+        }
+    }
+
+    public void EnemyFolds() => EndRound(true);
+
+    public void EnemyPlaysCard(Card card)
+    {
+        _enemyCardPlayed = card;
+        AfterCardPlayed();
+    }
+
+    // ── Card resolution ────────────────────────────────────────────
 
     private void OnPlayerCardPlayed(Card card)
     {
-        if (currentState != GameState.PlayerTurn)
+        if (CurrentState != GameState.PlayerTurn) return;
+        _scoreSystem.AddPoints(GetCardPoints(card));
+        _playerCardPlayed = card;
+        AfterCardPlayed();
+    }
+
+    private void OnEnemyCardPlayed(Card card)
+    {
+        EnemyPlaysCard(card);
+    }
+
+    private void AfterCardPlayed()
+    {
+        if (_playerCardPlayed == null || _enemyCardPlayed == null)
+        {
+            if (_playerCardPlayed != null)
+            {
+                SetState(GameState.WaitingEnemyResponse);
+                Invoke(nameof(TriggerEnemyTurn), 1f);
+            }
+            else if (_enemyCardPlayed != null)
+            {
+                SetState(GameState.PlayerTurn);
+            }
             return;
-        playerCardPlayed = card;
+        }
 
-        AfterCardPlayed();
-    }
+        int playerStrength = GetCardStrength(_playerCardPlayed);
+        int enemyStrength = GetCardStrength(_enemyCardPlayed);
 
-    private void EnemyAI_onEnemyCardPlayed(Card card)
-    {
-        enemyCardPlayed = card;
-
-        AfterCardPlayed();
-    }
-
-    public void CallDenied()
-    {
-        if (callOwner == CallOwner.Player)
+        if (playerStrength > enemyStrength)
         {
-            if (currentCall == CallType.Envido)
+            _roundResults.Add(RoundWon.Player);
+            SetState(GameState.PlayerTurn);
+        }
+        else if (enemyStrength > playerStrength)
+        {
+            _roundResults.Add(RoundWon.Enemy);
+            SetState(GameState.EnemyTurn);
+        }
+        else
+        {
+            _roundResults.Add(RoundWon.Tie);
+        }
+
+        _playerCardPlayed = null;
+        _enemyCardPlayed = null;
+        _currentRound++;
+
+        CheckHandWinner();
+    }
+
+    private void CheckHandWinner()
+    {
+        if (_roundResults.Count > 0)
+        {
+            RoundWon last = _roundResults[_roundResults.Count - 1];
+
+            if (last != RoundWon.Tie)
             {
-                switch (envidoState)
+                for (int i = _roundResults.Count - 2; i >= 0; i--)
                 {
-                    case EnvidoState.Envido:
-                        {
-                            _currentEnvidoPoints += 1;
-                            break;
-                        }
-                    case EnvidoState.EnvidoEnvido:
-                        {
-                            _currentEnvidoPoints += 2;
-                            break;
-                        }
-                    case EnvidoState.RealEnvido:
-                        {
-                            _currentEnvidoPoints += 4;
-                            break;
-                        }
-                    case EnvidoState.FaltaEnvido:
-                        {
-                            //Se debería guardar el envido anterior y dar esa cantidad de puntos
-                            break;
-                        }
+                    if (_roundResults[i] == RoundWon.Tie)
+                    {
+                        EndRound(last == RoundWon.Player);
+                        return;
+                    }
+                    if (_roundResults[i] != last) break;
                 }
-                _currentEnvidoPoints += 1;
-                envidoState = EnvidoState.None;
-                envidoResolved = true;
-            }
-            if (currentCall == CallType.Truco)
-            {
-                switch (trucoState)
+
+                if (_roundResults.Count >= 2 && _roundResults[_roundResults.Count - 2] == last)
                 {
-                    case TrucoState.Truco:
-                        {
-                            _currentHandPoints += 1;
-                            break;
-                        }
-                    case TrucoState.Retruco:
-                        {
-                            _currentHandPoints += 2;
-                            break;
-                        }
-                    case TrucoState.ValeCuatro:
-                        {
-                            _currentHandPoints += 3;
-                            break;
-                        }
+                    EndRound(last == RoundWon.Player);
+                    return;
                 }
-                trucoPlayedThisRound = true;
             }
         }
 
-        if (currentState == GameState.EnemyTurn && !trucoPlayedThisRound)
+        if (_currentRound >= 3)
         {
-            _currentHandPoints += 1;
+            foreach (var round in _roundResults)
+            {
+                if (round == RoundWon.Player) { EndRound(true); return; }
+                if (round == RoundWon.Enemy) { EndRound(false); return; }
+            }
+            EndRound(true);
+            return;
         }
 
-        currentCall = CallType.None;
-        callOwner = CallOwner.None;
-
+        SetState(GameState.PlayerTurn);
     }
+
+    public void EndRound(bool playerWon)
+    {
+        hud.gameObject.SetActive(false); // agregá esta línea
+
+        if (playerWon)
+        {
+            _scoreSystem.AddPoints(10f);
+            runData.points += (int)_scoreSystem.TotalScore;
+        }
+
+        _handsPlayedThisRun++;
+
+        if (runData.points >= runData.pointsNeededToWin || _handsPlayedThisRun >= runData.handsPerRound)
+            return;
+
+        StartHand();
+    }
+
+    // ── Truco / Envido helpers ─────────────────────────────────────
+
+    private void AcceptTruco()
+    {
+        switch (TrucoState)
+        {
+            case TrucoState.Truco: _scoreSystem.MultiplyMult(runData.trucoMult); break;
+            case TrucoState.Retruco: _scoreSystem.MultiplyMult(runData.retrucoMult); break;
+            case TrucoState.ValeCuatro: _scoreSystem.MultiplyMult(runData.valeCuatroMult); break;
+        }
+        TrucoState = TrucoState.None;
+        TrucoPlayedThisRound = true;
+        CurrentCall = CallType.None;
+        CallOwner = CallOwner.None;
+    }
+
+    private void AcceptEnvido()
+    {
+        int playerPoints = CalculateEnvido(playerActions.playerHand);
+        int enemyPoints = CalculateEnvido(enemyAI.enemyHand);
+
+        if (playerPoints >= enemyPoints)
+            _scoreSystem.AddPoints(GetEnvidoPoints());
+
+        EnvidoState = EnvidoState.None;
+        EnvidoResolved = true;
+        CurrentCall = CallType.None;
+        CallOwner = CallOwner.None;
+    }
+
+    private void DenyEnvido()
+    {
+        if (CallOwner == CallOwner.Player)
+            _scoreSystem.AddPoints(GetEnvidoDeniedPoints());
+
+        EnvidoState = EnvidoState.None;
+        EnvidoResolved = true;
+        CurrentCall = CallType.None;
+        CallOwner = CallOwner.None;
+    }
+
+    private void ResolveCallEnd(CallOwner previousOwner)
+    {
+        if (previousOwner == CallOwner.Enemy)
+        {
+            SetState(GameState.EnemyTurn);
+            Invoke(nameof(TriggerEnemyTurn), 1f);
+        }
+        else
+        {
+            SetState(GameState.PlayerTurn);
+        }
+    }
+
+    // ── Enemy trigger ──────────────────────────────────────────────
+
+    private void WaitEnemyResponse()
+    {
+        SetState(GameState.WaitingEnemyResponse);
+        Invoke(nameof(TriggerEnemyTurn), 1.5f);
+    }
+
+    private void TriggerEnemyTurn()
+    {
+        Debug.Log($"TriggerEnemyTurn - State: {CurrentState}, TrucoState: {TrucoState}, CallOwner: {CallOwner}");
+        SetState(GameState.EnemyTurn);
+        enemyAI.RespondToPlayer(this);
+    }
+
+    public void WaitPlayerResponse() => SetState(GameState.PlayerTurn);
+
+    // ── Score helpers ──────────────────────────────────────────────
+
+    private float GetCardPoints(Card card) => GetCardStrength(card) * runData.cardPointMultiplier;
+
+    private float GetEnvidoPoints() => EnvidoState switch
+    {
+        EnvidoState.Envido => runData.envidoPoints,
+        EnvidoState.EnvidoEnvido => runData.envidoEnvidoPoints,
+        EnvidoState.RealEnvido => runData.realEnvidoPoints,
+        EnvidoState.FaltaEnvido => runData.faltaEnvidoPoints,
+        _ => 0f
+    };
+
+    private float GetEnvidoDeniedPoints() => EnvidoState switch
+    {
+        EnvidoState.Envido => 1f,
+        EnvidoState.EnvidoEnvido => 2f,
+        EnvidoState.RealEnvido => 4f,
+        _ => 0f
+    };
 
     private int GetCardStrength(Card card)
     {
@@ -154,203 +462,17 @@ public class GameManager : MonoBehaviour
         if (value == 1 && suit == Suit.Basto) return 13;
         if (value == 7 && suit == Suit.Espada) return 12;
         if (value == 7 && suit == Suit.Oro) return 11;
-
         if (value == 3) return 10;
         if (value == 2) return 9;
         if (value == 1) return 8;
-
         if (value == 12) return 7;
         if (value == 11) return 6;
         if (value == 10) return 5;
-
         if (value == 7) return 4;
         if (value == 6) return 3;
         if (value == 5) return 2;
         if (value == 4) return 1;
-
         return 0;
-    }
-
-    private void AfterCardPlayed()
-    {
-        if (playerCardPlayed != null && enemyCardPlayed != null)
-        {
-            int playerStrength = GetCardStrength(playerCardPlayed);
-            int enemyStrength = GetCardStrength(enemyCardPlayed);
-
-            Debug.Log($"Player: {playerStrength} vs Enemy: {enemyStrength}");
-
-            if (playerStrength > enemyStrength)
-            {
-                Debug.Log("Jugador gana la ronda");
-                roundsStateList.Add(RoundWon.Player);
-                currentState = GameState.PlayerTurn;
-            }
-            else if (enemyStrength > playerStrength)
-            {
-                Debug.Log("Enemigo gana la ronda");
-                roundsStateList.Add(RoundWon.Enemy);
-                currentState = GameState.EnemyTurn;
-            }
-            else
-            {
-                Debug.Log("Parda (empate)");
-                roundsStateList.Add(RoundWon.Tie);
-            }
-
-            playerCardPlayed = null;
-            enemyCardPlayed = null;
-
-            currentRound++;
-
-            CheckHandWinner();
-        }
-        else if (playerCardPlayed != null && enemyCardPlayed == null)
-        {
-            currentState = GameState.WaitingEnemyResponse;
-            Invoke(nameof(EnemyTurn), 1f);
-        }
-        else if (playerCardPlayed == null && enemyCardPlayed != null)
-        {
-            EndEnemyTurn();
-        }
-    }
-
-    private void CheckHandWinner()
-    {
-        if (roundsStateList.Count > 0)
-        {
-            RoundWon last = roundsStateList[roundsStateList.Count - 1];
-
-            if (last != RoundWon.Tie)
-            {
-                for (int i = roundsStateList.Count - 2; i >= 0; i--)
-                {
-                    if (roundsStateList[i] == RoundWon.Tie)
-                    {
-                        playerWonHand = (last == RoundWon.Player);
-                        EndRound(playerWonHand);
-                        return;
-                    }
-
-                    if (roundsStateList[i] != last)
-                        break;
-                }
-
-                if (roundsStateList.Count >= 2 &&
-                    roundsStateList[roundsStateList.Count - 2] == last)
-                {
-                    playerWonHand = (last == RoundWon.Player);
-                    EndRound(playerWonHand);
-                    return;
-                }
-            }
-        }
-
-        if (currentRound >= roundQuantity)
-        {
-            foreach (var round in roundsStateList)
-            {
-                if (round == RoundWon.Player)
-                {
-                    EndRound(true);
-                    return;
-                }
-                else if (round == RoundWon.Enemy)
-                {
-                    EndRound(false);
-                    return;
-                }
-            }
-
-            EndRound(true);
-            return;
-        }
-
-        currentState = GameState.PlayerTurn;
-    }
-
-    private void EnemyTurn()
-    {
-        currentState = GameState.EnemyTurn;
-
-        enemyAI.RespondToPlayer(this);
-    }
-
-    public void EnvidoManager(bool envidoSettled)
-    {
-        if (!envidoSettled)
-        {
-            switch (envidoState)
-            {
-                case EnvidoState.Envido:
-                    {
-                        _currentEnvidoPoints += runDataSO.envidoPointsStat;
-                        break;
-                    }
-                case EnvidoState.EnvidoEnvido:
-                    {
-                        _currentEnvidoPoints += runDataSO.envidoEnvidoPointsStat;
-                        break;
-                    }
-                case EnvidoState.RealEnvido:
-                    {
-                        _currentEnvidoPoints += runDataSO.realEnvidoPointsStat;
-                        break;
-                    }
-                case EnvidoState.FaltaEnvido:
-                    {
-                        _currentEnvidoPoints += (gameDataSO.pointsNeededToWinRound - gameDataSO.totalPoints);
-                        break;
-                    }
-            }
-            Debug.Log("Jugador gana el envido");
-            OnWinEnvido?.Invoke(_currentEnvidoPoints, envidoState);
-        }
-        else
-        {
-            Debug.Log("Resolviendo ENVIDO");
-
-            int playerPoints = CalculateEnvido(playerActions.playerHand);
-            int enemyPoints = CalculateEnvido(enemyAI.enemyHand);
-
-            Debug.Log("Jugador: " + playerPoints);
-            Debug.Log("Enemigo: " + enemyPoints);
-
-            if (playerPoints > enemyPoints)
-            {
-                Debug.Log("Jugador gana el envido");
-                _currentEnvidoPoints = envidoPoints;
-            }
-            else
-            {
-                Debug.Log("Enemigo gana el envido");
-            }
-            envidoState = EnvidoState.None;
-            envidoResolved = true;
-        }
-    }
-
-    public void ResolveTruco()
-    {
-        Debug.Log("Truco aceptado");
-
-        switch (trucoState)
-        {
-            case TrucoState.Truco:
-                _currentHandPoints = runDataSO.trucoPointsStat;
-                break;
-
-            case TrucoState.Retruco:
-                _currentHandPoints = runDataSO.retrucoPointsStat;
-                break;
-
-            case TrucoState.ValeCuatro:
-                _currentHandPoints = runDataSO.valeCuatroPointsStat;
-                break;
-        }
-        trucoState = TrucoState.None;
-        trucoPlayedThisRound = true;
     }
 
     private int CalculateEnvido(List<Card> hand)
@@ -358,97 +480,27 @@ public class GameManager : MonoBehaviour
         int maxEnvido = 0;
 
         for (int i = 0; i < hand.Count; i++)
-        {
             for (int j = i + 1; j < hand.Count; j++)
-            {
-                Card c1 = hand[i];
-                Card c2 = hand[j];
-
-                if (c1.cardDataSO.suit == c2.cardDataSO.suit)
+                if (hand[i].cardDataSO.suit == hand[j].cardDataSO.suit)
                 {
-                    int v1 = GetEnvidoValue(c1.cardDataSO.value);
-                    int v2 = GetEnvidoValue(c2.cardDataSO.value);
-
-                    int total = v1 + v2 + 20;
-
-                    if (total > maxEnvido)
-                        maxEnvido = total;
+                    int total = GetEnvidoValue(hand[i].cardDataSO.value) +
+                                GetEnvidoValue(hand[j].cardDataSO.value) + 20;
+                    if (total > maxEnvido) maxEnvido = total;
                 }
-            }
-        }
 
         if (maxEnvido == 0)
-        {
             foreach (var card in hand)
             {
-                int value = GetEnvidoValue(card.cardDataSO.value);
-
-                if (value > maxEnvido)
-                    maxEnvido = value;
+                int v = GetEnvidoValue(card.cardDataSO.value);
+                if (v > maxEnvido) maxEnvido = v;
             }
-        }
 
         return maxEnvido;
     }
 
-    private int GetEnvidoValue(int value)
-    {
-        if (value >= 10)
-            return 0;
+    private int GetEnvidoValue(int value) => value >= 10 ? 0 : value;
 
-        return value;
-    }
+    private void SetState(GameState state) => CurrentState = state;
 
-    public bool IsFirstRound()
-    {
-        return currentRound == 0;
-    }
-
-    public void WaitEnemyResponse()
-    {
-        currentState = GameState.WaitingEnemyResponse;
-        Invoke(nameof(EnemyTurn), 1.5f);
-    }
-
-    public void EndPlayerResponse(CallOwner previousOwner)
-    {
-        if (previousOwner == CallOwner.Enemy)
-        {
-            currentState = GameState.EnemyTurn;
-            Invoke(nameof(EnemyTurn), 1f);
-        }
-        else
-        {
-            currentState = GameState.PlayerTurn;
-        }
-    }
-
-    public void EndEnemyTurn()
-    {
-        currentState = GameState.PlayerTurn;
-    }
-
-    public void WaitPlayerResponse()
-    {
-        currentState = GameState.PlayerTurn;
-    }
-
-    public void EndRound(bool playerWonHand)
-    {
-        Debug.Log("Fin de ronda");
-        float totalPoints = _currentEnvidoPoints + _currentHandPoints;
-        Debug.Log("Jugador suma " + totalPoints + " puntos.");
-
-        _currentEnvidoPoints = 0;
-        _currentHandPoints = 0;
-        currentRound = 0;
-
-        trucoPlayedThisRound = false;
-        envidoResolved = false;
-
-        trucoState = TrucoState.None;
-        envidoState = EnvidoState.None;
-
-        // repartir de nuevo
-    }
+    public bool IsFirstRound() => _currentRound == 0;
 }
