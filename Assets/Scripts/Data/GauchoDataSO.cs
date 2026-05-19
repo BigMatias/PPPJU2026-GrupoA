@@ -14,7 +14,8 @@ public class GauchoDataSO : ScriptableObject
 
     public string jokerName;
 
-    [TextArea] public string description;
+    [TextArea] public string effectDescription;
+    [TextArea] public string funDescription;
 
     public int cost;
 

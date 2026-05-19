@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: Guacho
+  m_Name: Orejon
   m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
   prefab: {fileID: 0}
   sprite: {fileID: 0}
-  jokerName: Guacho
-  effectDescription: 1 en 4 chances de otorgar x8 de mult
-  funDescription: Alto guacho, hace lo que quiere
-  cost: 3
+  jokerName: "Orej\xF3n"
+  effectDescription: +8 puntos por cada ORO jugado
+  funDescription: 
+  cost: 2
   rarity: 0
   effects:
-  - {fileID: 11400000, guid: a642b147fbf3e1c4e962ff574ba56c5d, type: 2}
+  - {fileID: 11400000, guid: 233777ba6b458664fa90b1d9636918a1, type: 2}
