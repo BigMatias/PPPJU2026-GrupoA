@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: Guacho
+  m_Name: LaManoDeDios
   m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
   prefab: {fileID: 0}
   sprite: {fileID: 0}
-  jokerName: Guacho
-  effectDescription: 1 en 4 chances de otorgar x8 de mult
-  funDescription: Alto guacho, hace lo que quiere
+  jokerName: La Mano de Dios
+  effectDescription: "+10 puntos si se perdi\xF3 en la mano anterior"
+  funDescription: Diegooo, Diegooo
   cost: 3
   rarity: 0
   effects:
-  - {fileID: 11400000, guid: a642b147fbf3e1c4e962ff574ba56c5d, type: 2}
+  - {fileID: 11400000, guid: 7bcfb6b4555ba69468263de276fe40f1, type: 2}

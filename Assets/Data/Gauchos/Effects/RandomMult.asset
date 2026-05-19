@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: RandomMult
   m_EditorClassIdentifier: Assembly-CSharp::EffectRandomMult
   _random: 0.75
-  _bonus: 15
+  _bonus: 5
