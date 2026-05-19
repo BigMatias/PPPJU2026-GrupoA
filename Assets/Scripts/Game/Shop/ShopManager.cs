@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/* ----- FACU -----
+ * El ShopManager aparece entre rondas de truco
+ * Tiene sus listas que
+*/
+
 public class ShopManager : MonoBehaviour
 {
     [SerializeField] private RunDataSO _runData;

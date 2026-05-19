@@ -11,20 +11,23 @@ public class GauchoInstance : IPooleable
 {
     public GauchoDataSO data;
 
-    public bool isActive;
-    public int stacks;
+    public int stack;
     public bool activatedThisTurn;
-    public bool IsActive { get; set; }
+
+    private bool isActive;
+    public bool IsActive => isActive;
 
     public GauchoInstance(GauchoDataSO gauchoData) => data = gauchoData;
 
     public void Activate()
     {
-        IsActive = true;
+        isActive = true;
     }
 
     public void DeActivate()
     {
-        IsActive = false;
+        isActive = false;
     }
+
+    public virtual void Reset() { }
 }

@@ -11,17 +11,19 @@ using UnityEngine;
 
 public class RunManager : MonoBehaviour
 {
-
     public static RunManager Instance;
 
+    public GauchoContext gauchoContext { get; private set; }
+
     // MANAGERS
-    public GauchosManager Gauchos {  get; private set; }
+    public GauchosManager Gauchos { get; private set; }
     public ShopManager ShopManager { get; private set; }
 
     private void Awake()
     {
         Instance = this;
 
+        gauchoContext = new();
         Gauchos = GetComponent<GauchosManager>();
         ShopManager = GetComponent<ShopManager>();
     }
