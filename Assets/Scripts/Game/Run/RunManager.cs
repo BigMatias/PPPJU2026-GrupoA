@@ -13,7 +13,8 @@ public class RunManager : MonoBehaviour
 {
     public static RunManager Instance;
 
-    public GauchoContext gauchoContext { get; private set; }
+    public GauchoContext GauchoContext { get; private set; }
+    public GameEvents GameEvent { get; private set; }
 
     // MANAGERS
     public GauchosManager Gauchos { get; private set; }
@@ -23,8 +24,15 @@ public class RunManager : MonoBehaviour
     {
         Instance = this;
 
-        gauchoContext = new();
+        GauchoContext = new();
+        GameEvent = GameEvents.None;
         Gauchos = GetComponent<GauchosManager>();
         ShopManager = GetComponent<ShopManager>();
+    }
+
+    public void UpdateGameEvent(GameEvents gameEvent)
+    {
+        GameEvent = gameEvent;
+        Gauchos.Trigger(GameEvent);
     }
 }

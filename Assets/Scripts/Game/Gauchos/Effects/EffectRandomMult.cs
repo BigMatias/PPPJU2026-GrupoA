@@ -1,10 +1,10 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RandomMult", menuName = "Gauchos/Effects/RandomMult")]
-public class EffectRandomMult : EffectExtraMult // 3
+public class EffectRandomMult : GauchoEffectSO // 3
 {
-    [SerializeField] private float _bonus;
     [SerializeField] [Range(0f, 1f)] private float _random;
+    [SerializeField] private float _bonus;
 
     public override void Execute(GauchoContext context, GauchoInstance owner)
     {   

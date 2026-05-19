@@ -12,7 +12,7 @@ using UnityEngine;
 
 public class GauchosManager : MonoBehaviour
 {
-    private List<GauchoInstance> _activeGauchosList = new List<GauchoInstance>();
+    private List<GauchoInstance> _activeGauchosList = new();
     public GauchoContext Context { get; private set; }
 
     public void AddGauchoToRun(GauchoDataSO gauchoSO)
@@ -31,10 +31,7 @@ public class GauchosManager : MonoBehaviour
         return null;
     }
 
-    public List<GauchoInstance> GetActiveGauchosList()
-    {
-        return _activeGauchosList;
-    }
+    public List<GauchoInstance> GetActiveGauchosList() => _activeGauchosList;
 
     public void SetContext(int? points = null, float? mult = null, Card playedCard = null, List<Card> hand = null, int? trucosWon = null, bool? wonLastRound = null)
     {
@@ -57,22 +54,17 @@ public class GauchosManager : MonoBehaviour
             Context.wonLastRound = wonLastRound.Value;
     }
 
-    public GauchoContext GetContext()
-    {
-        return Context;
-    }
+    public GauchoContext GetContext() => Context;
 
     public void Trigger(GameEvents gameEvents)
     {
         foreach (GauchoInstance gaucho in _activeGauchosList)
-        {
             if (!gaucho.activatedThisTurn)
             {
                 foreach (GauchoEffectSO effect in gaucho.data.effects)
-                    effect.Execute(RunManager.Instance.gauchoContext, gaucho);
+                    effect.Execute(RunManager.Instance.GauchoContext, gaucho);
                 gaucho.activatedThisTurn = true;
             }
-        }
     }
 
     public void OnRoundEnd_ResetGauchos()
