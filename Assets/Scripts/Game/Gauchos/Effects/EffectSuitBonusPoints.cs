@@ -35,8 +35,8 @@ public class EffectMultEveryRound : GauchoEffectSO // 9
 
     public override void Execute(GauchoContext context, GauchoInstance owner)
     {
-        owner.stacks++;
-        context.points *= _bonus * owner.stacks;
+        owner.stack++;
+        context.points *= _bonus * owner.stack;
         Debug.Log("Added mult for round played");
     }
 }

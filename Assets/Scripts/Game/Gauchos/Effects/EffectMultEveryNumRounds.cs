@@ -8,14 +8,14 @@ public class EffectMultEveryNumRounds : GauchoEffectSO // 4
 
     public override void Execute(GauchoContext context, GauchoInstance owner)
     {
-        owner.stacks++;
-        if (owner.stacks == _roundsToAffect)
+        owner.stack++;
+        if (owner.stack == _roundsToAffect)
         {
             context.mult *= _bonus;
-            owner.stacks = 0;
+            owner.stack = 0;
             Debug.Log("Rounds mult effect was successfull");
         }
         else
-            Debug.Log("Wait " + (_roundsToAffect - owner.stacks) + " rounds for the effect...");
+            Debug.Log("Wait " + (_roundsToAffect - owner.stack) + " rounds for the effect...");
     }
 }
