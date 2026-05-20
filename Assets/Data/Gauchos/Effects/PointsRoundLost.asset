@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ab221dac3956c44be95f9c3b1bb5ae, type: 3}
   m_Name: PointsRoundLost
   m_EditorClassIdentifier: Assembly-CSharp::EffectPointsRoundLost
-  _bonus: 0
+  _bonus: 10
