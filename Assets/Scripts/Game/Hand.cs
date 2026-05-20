@@ -1,84 +1,65 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Hand : MonoBehaviour
 {
     [SerializeField] private Deck deck;
+    [SerializeField] private PlayerActions playerActions;
+    [SerializeField] private EnemyAI enemyAI;
 
     [Header("UI")]
     [SerializeField] private GameObject cardPrefab;
-    [SerializeField] private GameDataSO gameDataSO;
     [SerializeField] private Transform[] playerHandContainers;
     [SerializeField] private Transform[] enemyHandContainers;
 
-    private List<Card> playerHand = new List<Card>();
-    private List<Card> enemyHand = new List<Card>();
-    private int playerTableIndex = 0;
-    private int enemyTableIndex = 0;
-
-    public static event Action<Card> onPlayerHandDealt;
-    public static event Action<Card> onEnemyHandDealt;
+    private List<Card> _playerHand = new List<Card>();
+    private List<Card> _enemyHand = new List<Card>();
+    private int _playerTableIndex = 0;
+    private int _enemyTableIndex = 0;
 
     private void Awake()
     {
-        PlayerActions.onPlayerCardPlayed += PlayerActions_onPlayerCardPlayed;
-        EnemyAI.onEnemyCardPlayed += EnemyAI_onEnemyCardPlayed;
-    }
-
-    void Start()
-    {
-        DealCards();
+        playerActions.OnCardPlayed += OnPlayerCardPlayed;
+        enemyAI.OnCardPlayed += OnEnemyCardPlayed;
     }
 
     private void OnDestroy()
     {
-        PlayerActions.onPlayerCardPlayed -= PlayerActions_onPlayerCardPlayed;
-    }
-    private void EnemyAI_onEnemyCardPlayed(Card card)
-    {
-        if (enemyTableIndex >= enemyHandContainers.Length)
-        {
-            Debug.LogWarning("No hay más slots de enemigo");
-            return;
-        }
-
-        Transform slot = enemyHandContainers[enemyTableIndex];
-
-        MoveCardToTable(card, slot);
-
-        enemyHand.Remove(card);
-
-        enemyTableIndex++;
+        playerActions.OnCardPlayed -= OnPlayerCardPlayed;
+        enemyAI.OnCardPlayed -= OnEnemyCardPlayed;
     }
 
-    private void PlayerActions_onPlayerCardPlayed(Card card)
+    public void DealCards()
     {
-        if (playerTableIndex >= playerHandContainers.Length)
-        {
-            Debug.LogWarning("No hay más slots de jugador");
-            return;
-        }
+        ClearTable();
+        playerActions.ClearHand();
+        enemyAI.ClearHand();
 
-        Transform slot = playerHandContainers[playerTableIndex];
-
-        MoveCardToTable(card, slot);
-
-        playerHand.Remove(card);
-
-        playerTableIndex++;
-    }
-
-    private void DealCards()
-    {
         for (int i = 0; i < 3; i++)
         {
-            DrawCard(playerHand, playerHandContainers[i]);
-            DrawCard(enemyHand, enemyHandContainers[i]);
+            DrawCard(_playerHand, playerHandContainers[i], true);
+            DrawCard(_enemyHand, enemyHandContainers[i], false);
         }
+
+        _playerTableIndex = 0;
+        _enemyTableIndex = 0;
     }
 
-    private void DrawCard(List<Card> hand, Transform container)
+    private void ClearTable()
+    {
+        foreach (Transform container in playerHandContainers)
+            foreach (Transform child in container)
+                Destroy(child.gameObject);
+
+        foreach (Transform container in enemyHandContainers)
+            foreach (Transform child in container)
+                Destroy(child.gameObject);
+
+        _playerHand.Clear();
+        _enemyHand.Clear();
+    }
+
+    private void DrawCard(List<Card> hand, Transform container, bool isPlayer)
     {
         Card card = deck.DrawCard();
         hand.Add(card);
@@ -88,34 +69,40 @@ public class Hand : MonoBehaviour
         card.cardGO = cardGO;
         view.Setup(card);
 
-        if (hand == playerHand)
+        if (isPlayer)
         {
             cardGO.layer = (int)Layers.Player;
-            onPlayerHandDealt?.Invoke(card);
+            playerActions.AddCard(card);
         }
-
-        if (hand == enemyHand)
+        else
         {
-            onEnemyHandDealt?.Invoke(card);
             cardGO.layer = (int)Layers.None;
             view.Flip(card);
+            enemyAI.AddCard(card);
         }
+    }
+
+    private void OnPlayerCardPlayed(Card card)
+    {
+        if (_playerTableIndex >= playerHandContainers.Length) return;
+        MoveCardToTable(card, playerHandContainers[_playerTableIndex]);
+        _playerHand.Remove(card);
+        _playerTableIndex++;
+    }
+
+    private void OnEnemyCardPlayed(Card card)
+    {
+        if (_enemyTableIndex >= enemyHandContainers.Length) return;
+        MoveCardToTable(card, enemyHandContainers[_enemyTableIndex]);
+        _enemyHand.Remove(card);
+        _enemyTableIndex++;
     }
 
     private void MoveCardToTable(Card card, Transform slot)
     {
-        GameObject cardGO = card.cardGO;
-
-        cardGO.transform.SetParent(slot);
-        cardGO.transform.localPosition = Vector3.zero;
-        cardGO.transform.localRotation = Quaternion.identity;
-
-        cardGO.layer = (int)Layers.None;
-    }
-
-    public void ResetTable()
-    {
-        playerTableIndex = 0;
-        enemyTableIndex = 0;
+        card.cardGO.transform.SetParent(slot);
+        card.cardGO.transform.localPosition = Vector3.zero;
+        card.cardGO.transform.localRotation = Quaternion.identity;
+        card.cardGO.layer = (int)Layers.None;
     }
 }
