@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerActions playerActions;
     [SerializeField] private Hand hand;
     [SerializeField] private UIHUD hud;
-
+    
     public static GameManager Instance { get; private set; }
 
     public GameState CurrentState { get; private set; }
@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     private List<RoundWon> _roundResults = new List<RoundWon>();
     private int _currentRound = 0;
     private int _handsPlayedThisRun = 0;
+    private bool _playerIsDealer = false;
 
     private void Awake()
     {
@@ -59,11 +60,12 @@ public class GameManager : MonoBehaviour
         CurrentCall = CallType.None;
         CallOwner = CallOwner.None;
 
+        _playerIsDealer = UnityEngine.Random.value < runData.chanceToBeDealer;
+
         hand.DealCards();
         hud.gameObject.SetActive(true);
 
-        bool playerIsDealer = UnityEngine.Random.value < runData.chanceToBeDealer;
-        SetState(playerIsDealer ? GameState.PlayerTurn : GameState.EnemyTurn);
+        SetState(_playerIsDealer ? GameState.PlayerTurn : GameState.EnemyTurn);
 
         if (CurrentState == GameState.EnemyTurn)
             Invoke(nameof(TriggerEnemyTurn), 1f);
@@ -213,14 +215,14 @@ public class GameManager : MonoBehaviour
 
     public void EnemyAccepts()
     {
+        CallOwner previousOwner = CallOwner;
+
         if (CurrentCall == CallType.Truco)
             AcceptTruco();
         else if (CurrentCall == CallType.Envido)
             AcceptEnvido();
 
-        ResolveCallEnd(CallOwner.Player);
-        SetState(GameState.EnemyTurn);
-        Invoke(nameof(TriggerEnemyTurn), 1f);
+        ResolveCallEnd(previousOwner);
     }
 
     public void EnemyDenies()
@@ -281,29 +283,23 @@ public class GameManager : MonoBehaviour
         int playerStrength = GetCardStrength(_playerCardPlayed);
         int enemyStrength = GetCardStrength(_enemyCardPlayed);
 
+        RoundWon result;
         if (playerStrength > enemyStrength)
-        {
-            _roundResults.Add(RoundWon.Player);
-            SetState(GameState.PlayerTurn);
-        }
+            result = RoundWon.Player;
         else if (enemyStrength > playerStrength)
-        {
-            _roundResults.Add(RoundWon.Enemy);
-            SetState(GameState.EnemyTurn);
-        }
+            result = RoundWon.Enemy;
         else
-        {
-            _roundResults.Add(RoundWon.Tie);
-        }
+            result = RoundWon.Tie;
 
+        _roundResults.Add(result);
         _playerCardPlayed = null;
         _enemyCardPlayed = null;
         _currentRound++;
 
-        CheckHandWinner();
+        CheckHandWinner(result);
     }
 
-    private void CheckHandWinner()
+    private void CheckHandWinner(RoundWon lastRoundResult)
     {
         if (_roundResults.Count > 0)
         {
@@ -336,11 +332,20 @@ public class GameManager : MonoBehaviour
                 if (round == RoundWon.Player) { EndRound(true); return; }
                 if (round == RoundWon.Enemy) { EndRound(false); return; }
             }
-            EndRound(true);
+            // TODO: puede ser modificado por joker
+            EndRound(_playerIsDealer);
             return;
         }
 
-        SetState(GameState.PlayerTurn);
+        if (lastRoundResult == RoundWon.Enemy)
+        {
+            SetState(GameState.EnemyTurn);
+            Invoke(nameof(TriggerEnemyTurn), 1f);
+        }
+        else
+        {
+            SetState(GameState.PlayerTurn);
+        }
     }
 
     public void EndRound(bool playerWon)
@@ -371,7 +376,6 @@ public class GameManager : MonoBehaviour
             case TrucoState.Retruco: _scoreSystem.MultiplyMult(runData.retrucoMult); break;
             case TrucoState.ValeCuatro: _scoreSystem.MultiplyMult(runData.valeCuatroMult); break;
         }
-        TrucoState = TrucoState.None;
         TrucoPlayedThisRound = true;
         CurrentCall = CallType.None;
         CallOwner = CallOwner.None;

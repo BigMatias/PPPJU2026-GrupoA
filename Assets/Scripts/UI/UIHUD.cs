@@ -94,7 +94,6 @@ public class UIHUD : MonoBehaviour
     private void HandleTruco()
     {
         if (_gm.CurrentCall == CallType.Envido) return;
-        if (_gm.TrucoPlayedThisRound && _gm.CallOwner != CallOwner.Enemy) return;
 
         switch (_gm.TrucoState)
         {

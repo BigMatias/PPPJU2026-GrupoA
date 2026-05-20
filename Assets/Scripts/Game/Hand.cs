@@ -31,25 +31,32 @@ public class Hand : MonoBehaviour
 
     public void DealCards()
     {
-        ClearHands();
+        ClearTable();
+        playerActions.ClearHand();
+        enemyAI.ClearHand();
+
         for (int i = 0; i < 3; i++)
         {
             DrawCard(_playerHand, playerHandContainers[i], true);
             DrawCard(_enemyHand, enemyHandContainers[i], false);
         }
+
+        _playerTableIndex = 0;
+        _enemyTableIndex = 0;
     }
 
-    private void ClearHands()
+    private void ClearTable()
     {
-        foreach (var card in _playerHand)
-            if (card.cardGO != null) Destroy(card.cardGO);
-        foreach (var card in _enemyHand)
-            if (card.cardGO != null) Destroy(card.cardGO);
+        foreach (Transform container in playerHandContainers)
+            foreach (Transform child in container)
+                Destroy(child.gameObject);
+
+        foreach (Transform container in enemyHandContainers)
+            foreach (Transform child in container)
+                Destroy(child.gameObject);
 
         _playerHand.Clear();
         _enemyHand.Clear();
-        _playerTableIndex = 0;
-        _enemyTableIndex = 0;
     }
 
     private void DrawCard(List<Card> hand, Transform container, bool isPlayer)
@@ -97,11 +104,5 @@ public class Hand : MonoBehaviour
         card.cardGO.transform.localPosition = Vector3.zero;
         card.cardGO.transform.localRotation = Quaternion.identity;
         card.cardGO.layer = (int)Layers.None;
-    }
-
-    public void ResetTable()
-    {
-        _playerTableIndex = 0;
-        _enemyTableIndex = 0;
     }
 }
