@@ -16,9 +16,6 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private int _gauchoSlots = 3;
     [SerializeField] private int _rerollCost = 5;
 
-    [Header("Positions")]
-    [SerializeField] private List<Transform> _gauchoPositions = new();
-
     [Header("Gaucho Pool")]
     [SerializeField] private List<GauchoDataSO> _gauchosPool = new();
 
@@ -53,7 +50,6 @@ public class ShopManager : MonoBehaviour
     private void ShowGaucho(GauchoDataSO gaucho, int slotIndex)
     {
         GameObject go = Instantiate(gaucho.prefabShop);
-        go.transform.position = _gauchoPositions[slotIndex].position;
 
         ShopGauchoSlot slot = new()
         {
