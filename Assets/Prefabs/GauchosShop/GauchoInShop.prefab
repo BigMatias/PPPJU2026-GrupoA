@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -25}
+  m_AnchoredPosition: {x: 0, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4231399067918222928
 CanvasRenderer:
@@ -171,8 +171,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -25}
+  m_AnchoredPosition: {x: 0, y: -50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8357873267392297003
 CanvasRenderer:
@@ -284,6 +284,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6907176438270668494}
   - component: {fileID: 1476779340446396868}
+  - component: {fileID: 1301353979675149897}
   m_Layer: 0
   m_Name: GauchoInShop
   m_TagString: Untagged
@@ -319,6 +320,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c5de09b8933894a8b3f6ab758e31ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
+--- !u!114 &1301353979675149897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2772210342026132627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9daad2cfcd63c641a763938af8e79aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UiShopItem
+  _btnBuy: {fileID: 1193406622109418749}
+  _textName: {fileID: 3282632705638514879}
+  _textCost: {fileID: 7236270857506458869}
 --- !u!1 &6408239112459883016
 GameObject:
   m_ObjectHideFlags: 0
