@@ -9,10 +9,15 @@ using TMPro;
 
 public class UiShopItem : MonoBehaviour
 {
-    [SerializeField] private Button _btnBuy;
     [SerializeField] private TMP_Text _textCost;
     [SerializeField] private TMP_Text _textName;
+    private Button _btnBuy;
     private ShopItem _shopItem;
+
+    private void Awake()
+    {
+        _btnBuy = GetComponent<Button>();
+    }
 
     private void Start()
     {
