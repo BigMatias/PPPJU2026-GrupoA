@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Copa10CardDataSO
   m_EditorClassIdentifier: Assembly-CSharp::CardDataSO
   value: 10
+  strength: 5
   suit: 2
   artwork: {fileID: 21300000, guid: ec065bf9af7656d4ab8a4cf8f9a06378, type: 3}

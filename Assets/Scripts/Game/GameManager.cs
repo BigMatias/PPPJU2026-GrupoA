@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public event Action OnEnemySingTruco;
     public event Action OnEnemySingEnvido;
+    public event Action OnRoundEnd;
 
     [SerializeField] private EnemyAI enemyAI;
     [SerializeField] private RunDataSO runData;
@@ -101,7 +102,7 @@ public class GameManager : MonoBehaviour
         _playerIsMano = !_playerIsDealer;
 
         hand.DealCards();
-        hud.gameObject.SetActive(true);
+        
 
         SetState(_playerIsDealer ? GameState.PlayerTurn : GameState.EnemyTurn);
 
@@ -421,6 +422,7 @@ public class GameManager : MonoBehaviour
         if (runData.points >= runData.pointsNeededToWin || _handsPlayedThisRun >= runData.handsPerRound)
             return;
 
+        OnRoundEnd?.Invoke();
         StartHand();
     }
 
@@ -489,12 +491,6 @@ public class GameManager : MonoBehaviour
         ScheduleEnemyTurn(1.5f);
     }
 
-    public void WaitPlayerResponse()
-    {
-        CancelEnemyTurn();
-        SetState(GameState.PlayerTurn);
-    }
-
     // ── Score helpers ──────────────────────────────────────────────
 
     private float GetCardPoints(Card card) => GetCardStrength(card) * runData.cardPointMultiplier;
@@ -516,27 +512,7 @@ public class GameManager : MonoBehaviour
         _ => 0f
     };
 
-    private int GetCardStrength(Card card)
-    {
-        int value = card.cardDataSO.value;
-        Suit suit = card.cardDataSO.suit;
-
-        if (value == 1 && suit == Suit.Espada) return 14;
-        if (value == 1 && suit == Suit.Basto) return 13;
-        if (value == 7 && suit == Suit.Espada) return 12;
-        if (value == 7 && suit == Suit.Oro) return 11;
-        if (value == 3) return 10;
-        if (value == 2) return 9;
-        if (value == 1) return 8;
-        if (value == 12) return 7;
-        if (value == 11) return 6;
-        if (value == 10) return 5;
-        if (value == 7) return 4;
-        if (value == 6) return 3;
-        if (value == 5) return 2;
-        if (value == 4) return 1;
-        return 0;
-    }
+    private int GetCardStrength(Card card) => card.cardDataSO.strength;
 
     private int CalculateEnvido(List<Card> hand)
     {

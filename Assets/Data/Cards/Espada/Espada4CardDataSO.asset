@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Espada4CardDataSO
   m_EditorClassIdentifier: Assembly-CSharp::CardDataSO
   value: 4
+  strength: 1
   suit: 3
   artwork: {fileID: 21300000, guid: 3caeb0be138d4b04b9c8f908342e5682, type: 3}

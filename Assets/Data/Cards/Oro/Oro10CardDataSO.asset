@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Oro10CardDataSO
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   value: 10
+  strength: 5
   suit: 0
   artwork: {fileID: 21300000, guid: 90952ae8ebaaed142b1d246266783338, type: 3}
