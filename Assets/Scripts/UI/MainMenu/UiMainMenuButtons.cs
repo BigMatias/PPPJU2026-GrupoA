@@ -13,6 +13,7 @@ public class UiMainMenuButtons : MonoBehaviour
     [Header("Buttons reference")]
     [SerializeField] private Button playBtn;
     [SerializeField] private Button settingsBtn;
+    [SerializeField] private Button tutorialBtn;
     [SerializeField] private Button creditsBtn;
     [SerializeField] private Button quitBtn;
     [SerializeField] private Button settingsBtnBack;
@@ -21,6 +22,7 @@ public class UiMainMenuButtons : MonoBehaviour
     {
         playBtn.onClick.AddListener(PlayGame);
         settingsBtn.onClick.AddListener(OpenSettings);
+        tutorialBtn.onClick.AddListener(GoToTutorialScreen);
         creditsBtn.onClick.AddListener(OpenCredits);
         quitBtn.onClick.AddListener(QuitGame);
         settingsBtnBack.onClick.AddListener(CloseSettings);
@@ -36,6 +38,7 @@ public class UiMainMenuButtons : MonoBehaviour
     {
         playBtn.onClick.RemoveAllListeners();
         settingsBtn.onClick.RemoveAllListeners();
+        tutorialBtn.onClick.RemoveAllListeners();
         quitBtn.onClick.RemoveAllListeners();
         settingsBtnBack.onClick.RemoveAllListeners();
         creditsBtnBack.onClick.RemoveAllListeners();
@@ -49,6 +52,9 @@ public class UiMainMenuButtons : MonoBehaviour
         settingsCanvas.SetActive(true);
         mainCanvas.SetActive(false);
     }
+
+    private void GoToTutorialScreen() => SceneManager.LoadScene("Tutorial");
+
     private void OpenCredits()
     {
         creditsCanvas.SetActive(true);
@@ -73,17 +79,15 @@ public class UiMainMenuButtons : MonoBehaviour
     private void AddHoverSound(Button button)
     {
         EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
-
         if (trigger == null)
             trigger = button.gameObject.AddComponent<EventTrigger>();
 
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerEnter;
-
-        entry.callback.AddListener
-            (
-                (eventData) => { AudioManager.Instance.PlayUI(AudioManager.Instance.hoverUISfx); ; }
-            );
+        entry.callback.AddListener((eventData) =>
+        {
+            AudioManager.Instance?.PlayUI(AudioManager.Instance.hoverUISfx);
+        });
 
         trigger.triggers.Add(entry);
     }

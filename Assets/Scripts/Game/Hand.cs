@@ -10,7 +10,9 @@ public class Hand : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private Transform[] playerHandContainers;
+    [SerializeField] private Transform[] playerPlayedCardContainers;
     [SerializeField] private Transform[] enemyHandContainers;
+    [SerializeField] private Transform[] enemyPlayedCardContainers;
 
     private List<Card> _playerHand = new List<Card>();
     private List<Card> _enemyHand = new List<Card>();
@@ -85,7 +87,7 @@ public class Hand : MonoBehaviour
     private void OnPlayerCardPlayed(Card card)
     {
         if (_playerTableIndex >= playerHandContainers.Length) return;
-        MoveCardToTable(card, playerHandContainers[_playerTableIndex]);
+        MoveCardToTable(card, playerPlayedCardContainers[_playerTableIndex]);
         _playerHand.Remove(card);
         _playerTableIndex++;
     }
@@ -93,7 +95,7 @@ public class Hand : MonoBehaviour
     private void OnEnemyCardPlayed(Card card)
     {
         if (_enemyTableIndex >= enemyHandContainers.Length) return;
-        MoveCardToTable(card, enemyHandContainers[_enemyTableIndex]);
+        MoveCardToTable(card, enemyPlayedCardContainers[_enemyTableIndex]);
         _enemyHand.Remove(card);
         _enemyTableIndex++;
     }

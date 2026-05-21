@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 577c84c594eabd444ba8b57cd1d6e7be, type: 3}
   m_Name: MultForFlor
   m_EditorClassIdentifier: Assembly-CSharp::EffectMultForFlor
-  _bonus: 0
+  _bonus: 10

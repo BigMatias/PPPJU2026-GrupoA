@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public event Action OnEnemySingTruco;
+    public event Action OnEnemySingEnvido;
+
     [SerializeField] private EnemyAI enemyAI;
     [SerializeField] private RunDataSO runData;
     [SerializeField] private PlayerActions playerActions;
@@ -186,6 +189,7 @@ public class GameManager : MonoBehaviour
         CurrentCall = CallType.Truco;
         CallOwner = CallOwner.Enemy;
         SetState(GameState.PlayerTurn);
+        OnEnemySingTruco?.Invoke();
     }
 
     public void EnemyRaisesTruco()
@@ -220,6 +224,7 @@ public class GameManager : MonoBehaviour
         CallOwner = CallOwner.Enemy;
         CancelInvoke(nameof(TriggerEnemyTurn));
         SetState(GameState.PlayerTurn);
+        OnEnemySingEnvido?.Invoke();
     }
 
     public void EnemyAccepts()

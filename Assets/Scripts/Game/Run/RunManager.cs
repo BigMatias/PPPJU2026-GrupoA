@@ -11,18 +11,28 @@ using UnityEngine;
 
 public class RunManager : MonoBehaviour
 {
-
     public static RunManager Instance;
 
+    public GauchoContext GauchoContext { get; private set; }
+    public GameEvents GameEvent { get; private set; }
+
     // MANAGERS
-    public GauchosManager Gauchos {  get; private set; }
+    public GauchosManager Gauchos { get; private set; }
     public ShopManager ShopManager { get; private set; }
 
     private void Awake()
     {
         Instance = this;
 
+        GauchoContext = new();
+        GameEvent = GameEvents.None;
         Gauchos = GetComponent<GauchosManager>();
         ShopManager = GetComponent<ShopManager>();
+    }
+
+    public void UpdateGameEvent(GameEvents gameEvent)
+    {
+        GameEvent = gameEvent;
+        Gauchos.Trigger(GameEvent);
     }
 }

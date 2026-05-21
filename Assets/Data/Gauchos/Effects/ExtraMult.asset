@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8541ab7cb03909b48bde95e55f249dd6, type: 3}
   m_Name: ExtraMult
   m_EditorClassIdentifier: Assembly-CSharp::EffectExtraMult
-  _bonus: 0
+  _bonus: 4

@@ -14,7 +14,7 @@ public class PoolManager : MonoBehaviour
     public static PoolManager Instance;
 
     [SerializeField] private PoolSettingsSO _prefabs;
-    private Dictionary<Type, List<IPooleable>> _pooleablesDictionary = new Dictionary<Type, List<IPooleable>>();
+    private Dictionary<Type, List<IPooleable>> _pooleablesDictionary = new();
 
     private void Awake()
     {

@@ -15,7 +15,8 @@ MonoBehaviour:
   prefab: {fileID: 8523803978130920821, guid: 9f4140934d7e6d04a97e4bd142edb2e8, type: 3}
   sprite: {fileID: 0}
   jokerName: Te gaucho?
-  description: "Aro aro...\nx3 mult cuando jugas la carta m\xE1s baja de la mano"
+  effectDescription: x3 de mult cuando juegas la carta de menor valor
+  funDescription: Aro aro...
   cost: 5
   rarity: 0
   effects:
