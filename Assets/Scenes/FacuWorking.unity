@@ -290,9 +290,93 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2052640658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2052640662}
+  - component: {fileID: 2052640661}
+  - component: {fileID: 2052640660}
+  - component: {fileID: 2052640659}
+  m_Layer: 0
+  m_Name: RunManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2052640659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052640658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63e42ceaba33afa4ca4b44569a72a6e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopManager
+  _runData: {fileID: 11400000, guid: 99fc9c7a7e9217b4390352278560a3f8, type: 2}
+  _gauchoSlots: 3
+  _rerollCost: 5
+  _gauchoPositions: []
+  _gauchosPool:
+  - {fileID: 11400000, guid: 43fc694406677d24caa7bf19fe2f520f, type: 2}
+  - {fileID: 11400000, guid: 2aeb085a72db8d742a3406f147183d60, type: 2}
+  - {fileID: 11400000, guid: 2b29c5b47990ff649b87b5976806fb67, type: 2}
+  - {fileID: 11400000, guid: 90b110e78d9b7214f8af4d86424b199b, type: 2}
+  - {fileID: 11400000, guid: 3f6b69374c7f7a34282565790d89e9e0, type: 2}
+  - {fileID: 11400000, guid: 8673f12256125594699d7a80957ef26b, type: 2}
+  - {fileID: 11400000, guid: 23f6b29e3b5e44c49b096a0a149590ea, type: 2}
+  - {fileID: 11400000, guid: fc063422185a5494ab0298af693bdfdd, type: 2}
+--- !u!114 &2052640660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052640658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44a56c22efb19c54f9f8f9072467dcf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GauchosManager
+--- !u!114 &2052640661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052640658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c01e8ad065d6f3488fd509f1679e83b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RunManager
+--- !u!4 &2052640662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052640658}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 540702533}
   - {fileID: 1830913526}
+  - {fileID: 2052640662}
