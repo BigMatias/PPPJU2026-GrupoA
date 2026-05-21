@@ -10,6 +10,7 @@ using UnityEngine;
 public class GauchoDataSO : ScriptableObject
 {
     public GameObject prefab;
+    public GameObject prefabShop;
     public Sprite sprite;
 
     public string jokerName;
