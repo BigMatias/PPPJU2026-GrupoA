@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Basto6CardDataSO
   m_EditorClassIdentifier: Assembly-CSharp::CardDataSO
   value: 6
+  strength: 3
   suit: 1
   artwork: {fileID: 21300000, guid: c86395c0c1858c841960fe1bfecb5574, type: 3}

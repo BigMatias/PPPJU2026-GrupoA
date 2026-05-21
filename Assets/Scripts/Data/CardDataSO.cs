@@ -4,6 +4,7 @@ using UnityEngine;
 public partial class CardDataSO : ScriptableObject
 {
     public int value;
+    public int strength;
     public Suit suit;
     public Sprite artwork;
 }

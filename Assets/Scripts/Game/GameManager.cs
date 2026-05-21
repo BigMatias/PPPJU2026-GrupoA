@@ -518,27 +518,7 @@ public class GameManager : MonoBehaviour
         _ => 0f
     };
 
-    private int GetCardStrength(Card card)
-    {
-        int value = card.cardDataSO.value;
-        Suit suit = card.cardDataSO.suit;
-
-        if (value == 1 && suit == Suit.Espada) return 14;
-        if (value == 1 && suit == Suit.Basto) return 13;
-        if (value == 7 && suit == Suit.Espada) return 12;
-        if (value == 7 && suit == Suit.Oro) return 11;
-        if (value == 3) return 10;
-        if (value == 2) return 9;
-        if (value == 1) return 8;
-        if (value == 12) return 7;
-        if (value == 11) return 6;
-        if (value == 10) return 5;
-        if (value == 7) return 4;
-        if (value == 6) return 3;
-        if (value == 5) return 2;
-        if (value == 4) return 1;
-        return 0;
-    }
+    private int GetCardStrength(Card card) => card.cardDataSO.strength;
 
     private int CalculateEnvido(List<Card> hand)
     {
