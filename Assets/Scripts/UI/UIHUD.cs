@@ -157,6 +157,74 @@ public class UIHUD : MonoBehaviour
         _gm.PlayerSingsEnvido(EnvidoState.RealEnvido);
     }
 
+        ResetAll();
+        mazoButton.gameObject.SetActive(true);
+
+        if (_gm.CurrentState == GameState.PlayerTurn)
+        {
+            HandleTruco();
+            HandleEnvido();
+            if (_gm.TrucoState != TrucoState.None || _gm.EnvidoState  != EnvidoState.None)
+                responsePanel.SetActive(_gm.TrucoState != TrucoState.None || _gm.EnvidoState != EnvidoState.None);
+        }
+
+    }
+
+    private void ResetAll()
+    {
+        trucoButton.gameObject.SetActive(false);
+        envidoButton.gameObject.SetActive(false);
+        florButton.gameObject.SetActive(false);
+        retrucoButton.gameObject.SetActive(false);
+        valeCuatroButton.gameObject.SetActive(false);
+        responsePanel.SetActive(false);
+    }
+
+    private void HandleTruco()
+    {
+        if (_gm.CurrentCall == CallType.Envido) return;
+
+        switch (_gm.TrucoState)
+        {
+            case TrucoState.None:
+                if (!_gm.TrucoPlayedThisRound)
+                    trucoButton.gameObject.SetActive(true);
+                break;
+            case TrucoState.Truco:
+                if (_gm.CallOwner == CallOwner.Enemy)
+                    retrucoButton.gameObject.SetActive(true);
+                break;
+            case TrucoState.Retruco:
+                if (_gm.CallOwner == CallOwner.Enemy)
+                    valeCuatroButton.gameObject.SetActive(true);
+                break;
+        }
+    }
+
+    private void HandleEnvido()
+    {
+        if (_gm.EnvidoResolved) return;
+        if (_gm.CurrentCall == CallType.Truco && _gm.CallOwner == CallOwner.Player) return;
+        if (_gm.TrucoState != TrucoState.None && !_gm.IsFirstRound()) return;
+
+        switch (_gm.EnvidoState)
+        {
+            case EnvidoState.None:
+            case EnvidoState.Envido:
+                envidoButton.gameObject.SetActive(true);
+                realEnvidoButton.gameObject.SetActive(true);
+                faltaEnvidoButton.gameObject.SetActive(true);
+                break;
+            case EnvidoState.EnvidoEnvido:
+                realEnvidoButton.gameObject.SetActive(true);
+                faltaEnvidoButton.gameObject.SetActive(true);
+                break;
+            case EnvidoState.RealEnvido:
+                faltaEnvidoButton.gameObject.SetActive(true);
+                break;
+            case EnvidoState.FaltaEnvido:
+                break;
+        }
     private void FaltaEnvidoClicked()
     {
         ResetSections();
