@@ -76,9 +76,10 @@ public class UIHUD : MonoBehaviour
         {
             HandleTruco();
             HandleEnvido();
+            if (_gm.TrucoState != TrucoState.None || _gm.EnvidoState  != EnvidoState.None)
+                responsePanel.SetActive(_gm.TrucoState != TrucoState.None || _gm.EnvidoState != EnvidoState.None);
         }
 
-        responsePanel.SetActive(_gm.TrucoState != TrucoState.None || _gm.EnvidoState != EnvidoState.None);
     }
 
     private void ResetAll()
