@@ -42,23 +42,31 @@ public class Hand : MonoBehaviour
             DrawCard(_playerHand, playerHandContainers[i], true);
             DrawCard(_enemyHand, enemyHandContainers[i], false);
         }
-
-        _playerTableIndex = 0;
-        _enemyTableIndex = 0;
     }
 
     private void ClearTable()
     {
         foreach (Transform container in playerHandContainers)
-            foreach (Transform child in container)
-                Destroy(child.gameObject);
+        foreach (Transform child in container)
+            Destroy(child.gameObject);
 
         foreach (Transform container in enemyHandContainers)
-            foreach (Transform child in container)
-                Destroy(child.gameObject);
+        foreach (Transform child in container)
+            Destroy(child.gameObject);
+
+        foreach (Transform container in playerPlayedCardContainers)
+        foreach (Transform child in container)
+            Destroy(child.gameObject);
+
+        foreach (Transform container in enemyPlayedCardContainers)
+        foreach (Transform child in container)
+            Destroy(child.gameObject);
 
         _playerHand.Clear();
         _enemyHand.Clear();
+
+        _playerTableIndex = 0; 
+        _enemyTableIndex = 0;  
     }
 
     private void DrawCard(List<Card> hand, Transform container, bool isPlayer)
@@ -86,7 +94,7 @@ public class Hand : MonoBehaviour
 
     private void OnPlayerCardPlayed(Card card)
     {
-        if (_playerTableIndex >= playerHandContainers.Length) return;
+        if (_playerTableIndex >= playerPlayedCardContainers.Length) return;
         MoveCardToTable(card, playerPlayedCardContainers[_playerTableIndex]);
         _playerHand.Remove(card);
         _playerTableIndex++;
@@ -94,7 +102,7 @@ public class Hand : MonoBehaviour
 
     private void OnEnemyCardPlayed(Card card)
     {
-        if (_enemyTableIndex >= enemyHandContainers.Length) return;
+        if (_enemyTableIndex >= enemyPlayedCardContainers.Length) return; 
         MoveCardToTable(card, enemyPlayedCardContainers[_enemyTableIndex]);
         _enemyHand.Remove(card);
         _enemyTableIndex++;

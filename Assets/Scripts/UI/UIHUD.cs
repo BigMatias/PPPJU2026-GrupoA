@@ -90,6 +90,9 @@ public class UIHUD : MonoBehaviour
         _trucoSection.SetActive(false);
         _responsePanel.SetActive(false);
 
+        _envidoButton.gameObject.SetActive(!_gm.EnvidoResolved);
+        _trucoButton.gameObject.SetActive(!_gm.TrucoPlayedThisRound);
+        
         Debug.Log($"TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
@@ -111,7 +114,7 @@ public class UIHUD : MonoBehaviour
         _retrucoButton.interactable = (_gm.TrucoState == TrucoState.Truco);
         _valeCuatroButton.interactable = (_gm.TrucoState == TrucoState.Retruco);
 
-        Debug.Log($"UpdateHUD - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
+        Debug.Log($"TrucoSangByEnemy - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void EnvidoSangByEnemy_ShowUi()
@@ -125,21 +128,21 @@ public class UIHUD : MonoBehaviour
         _faltaEnvidoButton.interactable = (_gm.EnvidoState != EnvidoState.FaltaEnvido);
         _goBackButton.interactable = false;
 
-        Debug.Log($"UpdateHUD - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
+        Debug.Log($"EnvidoSangByEnemy - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void RetrucoClicked()
     {
         ResetSections();
         _gm.PlayerSingsRetruco();
-        Debug.Log($"UpdateHUD - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
+        Debug.Log($"RetrucoClicked - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void ValeCuatroClicked()
     {
         ResetSections();
         _gm.PlayerSingsValeCuatro();
-        Debug.Log($"UpdateHUD - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
+        Debug.Log($"ValeCuatroClicked - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void EnvidoButtonClicked()
@@ -157,74 +160,6 @@ public class UIHUD : MonoBehaviour
         _gm.PlayerSingsEnvido(EnvidoState.RealEnvido);
     }
 
-        ResetAll();
-        mazoButton.gameObject.SetActive(true);
-
-        if (_gm.CurrentState == GameState.PlayerTurn)
-        {
-            HandleTruco();
-            HandleEnvido();
-            if (_gm.TrucoState != TrucoState.None || _gm.EnvidoState  != EnvidoState.None)
-                responsePanel.SetActive(_gm.TrucoState != TrucoState.None || _gm.EnvidoState != EnvidoState.None);
-        }
-
-    }
-
-    private void ResetAll()
-    {
-        trucoButton.gameObject.SetActive(false);
-        envidoButton.gameObject.SetActive(false);
-        florButton.gameObject.SetActive(false);
-        retrucoButton.gameObject.SetActive(false);
-        valeCuatroButton.gameObject.SetActive(false);
-        responsePanel.SetActive(false);
-    }
-
-    private void HandleTruco()
-    {
-        if (_gm.CurrentCall == CallType.Envido) return;
-
-        switch (_gm.TrucoState)
-        {
-            case TrucoState.None:
-                if (!_gm.TrucoPlayedThisRound)
-                    trucoButton.gameObject.SetActive(true);
-                break;
-            case TrucoState.Truco:
-                if (_gm.CallOwner == CallOwner.Enemy)
-                    retrucoButton.gameObject.SetActive(true);
-                break;
-            case TrucoState.Retruco:
-                if (_gm.CallOwner == CallOwner.Enemy)
-                    valeCuatroButton.gameObject.SetActive(true);
-                break;
-        }
-    }
-
-    private void HandleEnvido()
-    {
-        if (_gm.EnvidoResolved) return;
-        if (_gm.CurrentCall == CallType.Truco && _gm.CallOwner == CallOwner.Player) return;
-        if (_gm.TrucoState != TrucoState.None && !_gm.IsFirstRound()) return;
-
-        switch (_gm.EnvidoState)
-        {
-            case EnvidoState.None:
-            case EnvidoState.Envido:
-                envidoButton.gameObject.SetActive(true);
-                realEnvidoButton.gameObject.SetActive(true);
-                faltaEnvidoButton.gameObject.SetActive(true);
-                break;
-            case EnvidoState.EnvidoEnvido:
-                realEnvidoButton.gameObject.SetActive(true);
-                faltaEnvidoButton.gameObject.SetActive(true);
-                break;
-            case EnvidoState.RealEnvido:
-                faltaEnvidoButton.gameObject.SetActive(true);
-                break;
-            case EnvidoState.FaltaEnvido:
-                break;
-        }
     private void FaltaEnvidoClicked()
     {
         ResetSections();
@@ -248,82 +183,4 @@ public class UIHUD : MonoBehaviour
         ResetSections();
         _gm.PlayerDenies();
     }
-
-    /* //private void UpdateHUD()
-    //{
-    //    if (_gm == null) return;
-    //    Debug.Log($"UpdateHUD - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
-
-    //    ResetAll();
-    //    _mazoButton.gameObject.SetActive(true);
-
-    //    if (_gm.CurrentState == GameState.PlayerTurn)
-    //    {
-    //        HandleTruco();
-    //        HandleEnvido();
-    //    }
-
-    //    _responsePanel.SetActive(_gm.TrucoState != TrucoState.None || _gm.EnvidoState != EnvidoState.None);
-    //}
-
-    //private void ResetAll()
-    //{
-    //    _trucoButton.gameObject.SetActive(false);
-    //    _envidoButton.gameObject.SetActive(false);
-    //    _retrucoButton.gameObject.SetActive(false);
-    //    _valeCuatroButton.gameObject.SetActive(false);
-    //    _responsePanel.SetActive(false);
-    //}
-
-    //private void HandleTruco()
-    //{
-    //    if (_gm.CurrentCall == CallType.Envido) return;
-
-    //    switch (_gm.TrucoState)
-    //    {
-    //        case TrucoState.None:
-    //            if (!_gm.TrucoPlayedThisRound)
-    //                _trucoButton.gameObject.SetActive(true);
-    //            break;
-    //        case TrucoState.Truco:
-    //            if (_gm.CallOwner == CallOwner.Enemy)
-    //                _retrucoButton.gameObject.SetActive(true);
-    //            break;
-    //        case TrucoState.Retruco:
-    //            if (_gm.CallOwner == CallOwner.Enemy)
-    //                _valeCuatroButton.gameObject.SetActive(true);
-    //            break;
-    //    }
-    //}
-
-    //private void HandleEnvido()
-    //{
-    //    if (_gm.EnvidoResolved) return;
-    //    if (_gm.CurrentCall == CallType.Truco && _gm.CallOwner == CallOwner.Player) return;
-    //    if (_gm.TrucoState != TrucoState.None && !_gm.IsFirstRound()) return;
-
-    //    switch (_gm.EnvidoState)
-    //    {
-    //        case EnvidoState.None:
-    //            break;
-
-    //        case EnvidoState.Envido:
-    //            _envidoButton.gameObject.SetActive(true);
-    //            _realEnvidoButton.gameObject.SetActive(true);
-    //            _faltaEnvidoButton.gameObject.SetActive(true);
-    //            break;
-
-    //        case EnvidoState.EnvidoEnvido:
-    //            _realEnvidoButton.gameObject.SetActive(true);
-    //            _faltaEnvidoButton.gameObject.SetActive(true);
-    //            break;
-
-    //        case EnvidoState.RealEnvido:
-    //            _faltaEnvidoButton.gameObject.SetActive(true);
-    //            break;
-
-    //        case EnvidoState.FaltaEnvido:
-    //            break;
-    //    }
-    //} */
 }
