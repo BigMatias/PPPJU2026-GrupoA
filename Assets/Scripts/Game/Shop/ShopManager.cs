@@ -3,7 +3,8 @@ using UnityEngine;
 
 /* ----- FACU -----
  * El ShopManager aparece entre rondas de truco
- * Tiene sus listas que
+ * En el se pueden comprar gauchos (faltan agregar las cartas)
+ * Tiene un metodo extra sin usar que es para rerollear, que estaria bueno agregarlo post-parcial 1
 */
 
 public class ShopManager : MonoBehaviour

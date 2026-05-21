@@ -2,6 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/* ----- FACU -----
+ * Este script es la parte de UI de cada carta en la tienda
+ * Tiene el botón, el texto del nombre y el texto del coste
+*/
+
 public class UiShopItem : MonoBehaviour
 {
     [SerializeField] private Button _btnBuy;
