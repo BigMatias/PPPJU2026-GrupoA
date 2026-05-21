@@ -4,14 +4,28 @@ using TMPro;
 
 public class UiShopItem : MonoBehaviour
 {
-    [SerializeField] private Image _icon;
-    [SerializeField] private TMP_Text _nameText;
-    [SerializeField] private TMP_Text _costText;
+    [SerializeField] private Button _btnBuy;
+    [SerializeField] private TMP_Text _textCost;
+    [SerializeField] private TMP_Text _textName;
+    private ShopItem _shopItem;
 
-    public void Setup(GauchoDataSO data)
+    private void Start()
     {
-        _icon.sprite = data.sprite;
-        _nameText.text = data.name;
-        _costText.text = "$" + data.cost.ToString();
+        _btnBuy.onClick.AddListener(ButtonClicked);
     }
+
+    private void OnDestroy()
+    {
+        _btnBuy.onClick.RemoveAllListeners();
+    }
+
+    public void Setup(GauchoDataSO data, ShopItem shopItem)
+    {
+        _shopItem = shopItem;
+        _btnBuy.image.sprite = data.sprite;
+        _textCost.text = "$" + data.cost.ToString();
+        _textName.text = data.name;
+    }
+
+    private void ButtonClicked() => _shopItem.Buy();
 }

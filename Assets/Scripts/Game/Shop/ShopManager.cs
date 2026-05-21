@@ -63,12 +63,10 @@ public class ShopManager : MonoBehaviour
 
         _showingGauchos.Add(slot);
         ShopItem shopItem = go.GetComponent<ShopItem>();
-
-        if (shopItem != null)
-            shopItem.Setup(this, slot);
+        shopItem.Setup(this, slot);
 
         UiShopItem visual = go.GetComponent<UiShopItem>();
-        visual.Setup(gaucho);
+        visual.Setup(gaucho, shopItem);
     }
 
     public void BuyGaucho(ShopGauchoSlot slot)
