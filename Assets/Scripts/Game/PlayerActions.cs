@@ -9,10 +9,7 @@ public class PlayerActions : MonoBehaviour
 
     private GameManager _gm;
 
-    public void Initialize(GameManager gm)
-    {
-        _gm = gm;
-    }
+    public void Initialize(GameManager gm) => _gm = gm;
 
     public void AddCard(Card card) => playerHand.Add(card);
 
@@ -29,8 +26,7 @@ public class PlayerActions : MonoBehaviour
 
             if (hit.collider != null && hit.collider.gameObject.layer == (int)Layers.Player)
             {
-                CardView cardView = hit.collider.GetComponent<CardView>();
-                if (cardView != null)
+                if (hit.collider.TryGetComponent<CardView>(out var cardView))
                 {
                     cardView.SetSelected(true);
                     playerHand.Remove(cardView.card);
