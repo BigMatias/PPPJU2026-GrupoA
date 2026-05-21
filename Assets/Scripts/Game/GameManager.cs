@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public event Action OnEnemySingTruco;
     public event Action OnEnemySingEnvido;
+    public event Action OnRoundEnd;
 
     [SerializeField] private EnemyAI enemyAI;
     [SerializeField] private RunDataSO runData;
@@ -101,7 +102,7 @@ public class GameManager : MonoBehaviour
         _playerIsMano = !_playerIsDealer;
 
         hand.DealCards();
-        hud.gameObject.SetActive(true);
+        
 
         SetState(_playerIsDealer ? GameState.PlayerTurn : GameState.EnemyTurn);
 
@@ -421,6 +422,7 @@ public class GameManager : MonoBehaviour
         if (runData.points >= runData.pointsNeededToWin || _handsPlayedThisRun >= runData.handsPerRound)
             return;
 
+        OnRoundEnd?.Invoke();
         StartHand();
     }
 

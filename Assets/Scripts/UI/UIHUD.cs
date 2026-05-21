@@ -37,6 +37,7 @@ public class UIHUD : MonoBehaviour
     {
         _gm.OnEnemySingTruco += TrucoSangByEnemy_ShowUi;
         _gm.OnEnemySingEnvido += EnvidoSangByEnemy_ShowUi;
+        _gm.OnRoundEnd += OnRoundEnd_ResetHUD;
     }
 
     private void Start()
@@ -63,6 +64,7 @@ public class UIHUD : MonoBehaviour
     {
         _gm.OnEnemySingTruco -= TrucoSangByEnemy_ShowUi;
         _gm.OnEnemySingEnvido -= EnvidoSangByEnemy_ShowUi;
+        _gm.OnRoundEnd -= OnRoundEnd_ResetHUD;
     }
 
     private void OnDestroy()
@@ -183,4 +185,6 @@ public class UIHUD : MonoBehaviour
         ResetSections();
         _gm.PlayerDenies();
     }
+
+    private void OnRoundEnd_ResetHUD() => ResetSections();
 }
