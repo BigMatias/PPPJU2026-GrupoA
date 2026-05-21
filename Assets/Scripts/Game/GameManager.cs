@@ -491,12 +491,6 @@ public class GameManager : MonoBehaviour
         ScheduleEnemyTurn(1.5f);
     }
 
-    public void WaitPlayerResponse()
-    {
-        CancelEnemyTurn();
-        SetState(GameState.PlayerTurn);
-    }
-
     // ── Score helpers ──────────────────────────────────────────────
 
     private float GetCardPoints(Card card) => GetCardStrength(card) * runData.cardPointMultiplier;
