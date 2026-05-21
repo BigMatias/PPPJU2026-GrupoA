@@ -2,5 +2,6 @@ public enum GameState
 {
     PlayerTurn,
     WaitingEnemyResponse,
-    EnemyTurn
+    EnemyTurn,
+    HandOver
 }

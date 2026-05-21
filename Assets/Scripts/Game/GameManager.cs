@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,6 +31,10 @@ public class GameManager : MonoBehaviour
     private int _currentRound = 0;
     private int _handsPlayedThisRun = 0;
     private bool _playerIsDealer = false;
+    private bool _playerIsMano = false;
+    private GameState _stateBeforeCall = GameState.PlayerTurn;
+
+    private Coroutine _enemyTurnCoroutine;
 
     private void Awake()
     {
@@ -51,8 +56,37 @@ public class GameManager : MonoBehaviour
         enemyAI.OnCardPlayed -= OnEnemyCardPlayed;
     }
 
+    // ── Coroutine helpers ──────────────────────────────────────────
+
+    private void ScheduleEnemyTurn(float delay)
+    {
+        if (_enemyTurnCoroutine != null)
+            StopCoroutine(_enemyTurnCoroutine);
+        _enemyTurnCoroutine = StartCoroutine(EnemyTurnCoroutine(delay));
+    }
+
+    private void CancelEnemyTurn()
+    {
+        if (_enemyTurnCoroutine != null)
+        {
+            StopCoroutine(_enemyTurnCoroutine);
+            _enemyTurnCoroutine = null;
+        }
+    }
+
+    private IEnumerator EnemyTurnCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _enemyTurnCoroutine = null;
+        SetState(GameState.EnemyTurn);
+        enemyAI.RespondToPlayer(this);
+    }
+
+    // ── Hand ───────────────────────────────────────────────────────
+
     private void StartHand()
     {
+        CancelEnemyTurn();
         _scoreSystem.Reset();
         _roundResults.Clear();
         _currentRound = 0;
@@ -64,6 +98,7 @@ public class GameManager : MonoBehaviour
         CallOwner = CallOwner.None;
 
         _playerIsDealer = UnityEngine.Random.value < runData.chanceToBeDealer;
+        _playerIsMano = !_playerIsDealer;
 
         hand.DealCards();
         hud.gameObject.SetActive(true);
@@ -71,7 +106,7 @@ public class GameManager : MonoBehaviour
         SetState(_playerIsDealer ? GameState.PlayerTurn : GameState.EnemyTurn);
 
         if (CurrentState == GameState.EnemyTurn)
-            Invoke(nameof(TriggerEnemyTurn), 1f);
+            ScheduleEnemyTurn(1f);
     }
 
     // ── Player actions ─────────────────────────────────────────────
@@ -140,14 +175,13 @@ public class GameManager : MonoBehaviour
 
         if (CurrentCall == CallType.Truco)
         {
-            CallOwner previousOwner = CallOwner;
             AcceptTruco();
-            ResolveCallEnd(previousOwner);
+            ResolveCallEnd();
         }
         else if (CurrentCall == CallType.Envido)
         {
             AcceptEnvido();
-            SetState(GameState.PlayerTurn);
+            ResolveCallEnd();
         }
     }
 
@@ -160,18 +194,10 @@ public class GameManager : MonoBehaviour
             EndRound(false);
             return;
         }
-
         if (CurrentCall == CallType.Envido)
         {
-            CallOwner previousOwner = CallOwner;
             DenyEnvido();
-            if (previousOwner == CallOwner.Player)
-                SetState(GameState.PlayerTurn);
-            else
-            {
-                SetState(GameState.EnemyTurn);
-                Invoke(nameof(TriggerEnemyTurn), 1f);
-            }
+            ResolveCallEnd();
         }
     }
 
@@ -188,6 +214,8 @@ public class GameManager : MonoBehaviour
         TrucoState = TrucoState.Truco;
         CurrentCall = CallType.Truco;
         CallOwner = CallOwner.Enemy;
+        _stateBeforeCall = GameState.EnemyTurn;
+        CancelEnemyTurn();
         SetState(GameState.PlayerTurn);
         OnEnemySingTruco?.Invoke();
     }
@@ -200,11 +228,15 @@ public class GameManager : MonoBehaviour
             TrucoState = TrucoState.ValeCuatro;
 
         CallOwner = CallOwner.Enemy;
+        CancelEnemyTurn();
         SetState(GameState.PlayerTurn);
+        OnEnemySingTruco?.Invoke();
     }
 
     public void EnemySingsEnvido(EnvidoState type)
     {
+        _stateBeforeCall = GameState.EnemyTurn;
+
         bool valid = (EnvidoState, type) switch
         {
             (EnvidoState.None, _) => true,
@@ -222,30 +254,22 @@ public class GameManager : MonoBehaviour
         EnvidoState = type;
         CurrentCall = CallType.Envido;
         CallOwner = CallOwner.Enemy;
-        CancelInvoke(nameof(TriggerEnemyTurn));
+        CancelEnemyTurn();
         SetState(GameState.PlayerTurn);
         OnEnemySingEnvido?.Invoke();
     }
 
     public void EnemyAccepts()
     {
-        CallOwner previousOwner = CallOwner;
-
         if (CurrentCall == CallType.Truco)
         {
             AcceptTruco();
-            ResolveCallEnd(previousOwner);
+            ResolveCallEnd();
         }
         else if (CurrentCall == CallType.Envido)
         {
             AcceptEnvido();
-            if (previousOwner == CallOwner.Player)
-                SetState(GameState.PlayerTurn);
-            else
-            {
-                SetState(GameState.EnemyTurn);
-                Invoke(nameof(TriggerEnemyTurn), 1f);
-            }
+            ResolveCallEnd();
         }
     }
 
@@ -256,18 +280,10 @@ public class GameManager : MonoBehaviour
             EndRound(true);
             return;
         }
-
         if (CurrentCall == CallType.Envido)
         {
-            CallOwner previousOwner = CallOwner;
             DenyEnvido();
-            if (previousOwner == CallOwner.Player)
-                SetState(GameState.PlayerTurn);
-            else
-            {
-                SetState(GameState.EnemyTurn);
-                Invoke(nameof(TriggerEnemyTurn), 1f);
-            }
+            ResolveCallEnd();
         }
     }
 
@@ -301,10 +317,11 @@ public class GameManager : MonoBehaviour
             if (_playerCardPlayed != null)
             {
                 SetState(GameState.WaitingEnemyResponse);
-                Invoke(nameof(TriggerEnemyTurn), 1f);
+                ScheduleEnemyTurn(1f);
             }
             else if (_enemyCardPlayed != null)
             {
+                CancelEnemyTurn();
                 SetState(GameState.PlayerTurn);
             }
             return;
@@ -362,14 +379,24 @@ public class GameManager : MonoBehaviour
                 if (round == RoundWon.Player) { EndRound(true); return; }
                 if (round == RoundWon.Enemy) { EndRound(false); return; }
             }
-            EndRound(_playerIsDealer);
+            EndRound(_playerIsMano);
             return;
         }
 
         if (lastRoundResult == RoundWon.Enemy)
         {
             SetState(GameState.EnemyTurn);
-            Invoke(nameof(TriggerEnemyTurn), 1f);
+            ScheduleEnemyTurn(1f);
+        }
+        else if (lastRoundResult == RoundWon.Tie)
+        {
+            if (_playerIsMano)
+                SetState(GameState.PlayerTurn);
+            else
+            {
+                SetState(GameState.EnemyTurn);
+                ScheduleEnemyTurn(1f);
+            }
         }
         else
         {
@@ -379,6 +406,8 @@ public class GameManager : MonoBehaviour
 
     public void EndRound(bool playerWon)
     {
+        CancelEnemyTurn();
+        SetState(GameState.HandOver);
         hud.gameObject.SetActive(false);
 
         if (playerWon)
@@ -435,38 +464,34 @@ public class GameManager : MonoBehaviour
         CallOwner = CallOwner.None;
     }
 
-    private void ResolveCallEnd(CallOwner previousOwner)
+    private void ResolveCallEnd()
     {
-        if (previousOwner == CallOwner.Enemy)
+        if (_stateBeforeCall == GameState.EnemyTurn)
         {
+            CancelEnemyTurn();
             SetState(GameState.EnemyTurn);
-            Invoke(nameof(TriggerEnemyTurn), 1f);
+            ScheduleEnemyTurn(1f);
         }
         else
         {
+            CancelEnemyTurn();
             SetState(GameState.PlayerTurn);
         }
     }
-    
+
     // ── Enemy trigger ──────────────────────────────────────────────
 
     private void WaitEnemyResponse()
     {
-        CancelInvoke(nameof(TriggerEnemyTurn));
+        _stateBeforeCall = GameState.PlayerTurn;
+        CancelEnemyTurn();
         SetState(GameState.WaitingEnemyResponse);
-        Invoke(nameof(TriggerEnemyTurn), 1.5f);
-    }
-
-    private void TriggerEnemyTurn()
-    {
-        CancelInvoke(nameof(TriggerEnemyTurn));
-        SetState(GameState.EnemyTurn);
-        enemyAI.RespondToPlayer(this);
+        ScheduleEnemyTurn(1.5f);
     }
 
     public void WaitPlayerResponse()
     {
-        CancelInvoke(nameof(TriggerEnemyTurn));
+        CancelEnemyTurn();
         SetState(GameState.PlayerTurn);
     }
 

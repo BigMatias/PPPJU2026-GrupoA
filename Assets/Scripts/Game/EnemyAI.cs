@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour
 
     public void RespondToPlayer(GameManager gm)
     {
+        Debug.Log($"RespondToPlayer - TrucoState: {gm.TrucoState}, EnvidoState: {gm.EnvidoState}, CurrentCall: {gm.CurrentCall}");
         int decision = UnityEngine.Random.Range(0, 100);
 
         if (gm.TrucoState != TrucoState.None) { RespondToTruco(gm); return; }
