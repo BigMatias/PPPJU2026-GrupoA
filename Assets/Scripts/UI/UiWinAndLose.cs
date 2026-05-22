@@ -20,14 +20,14 @@ public class WinAndLoseScreen : MonoBehaviour
 
     private void OnEnable()
     {
-       //RunManager.Instance.RoundManager.OnWinGame += OnWinGame_ShowUI;
-       //RunManager.Instance.RoundManager.OnLoseGame += OnLoseGame_ShowUI;
+        RunManager.Instance.RoundManager.OnWinGame += OnWinGame_ShowUI;
+        RunManager.Instance.RoundManager.OnLoseGame += OnLoseGame_ShowUI;
     }
 
     private void OnDisable()
     {
-        //RunManager.Instance.RoundManager.OnWinGame -= OnWinGame_ShowUI;
-        //RunManager.Instance.RoundManager.OnLoseGame -= OnLoseGame_ShowUI;
+        RunManager.Instance.RoundManager.OnWinGame -= OnWinGame_ShowUI;
+        RunManager.Instance.RoundManager.OnLoseGame -= OnLoseGame_ShowUI;
     }
 
     private void OnDestroy()
