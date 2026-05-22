@@ -12,8 +12,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private EnemyAI enemyAI;
     [SerializeField] private RunDataSO runData;
     [SerializeField] private PlayerActions playerActions;
+    [SerializeField] private UIConsole uiConsole;
     [SerializeField] private Hand hand;
     [SerializeField] private UIHUD hud;
+    
     
     public static GameManager Instance { get; private set; }
 
@@ -34,7 +36,9 @@ public class GameManager : MonoBehaviour
     private bool _playerIsDealer = false;
     private bool _playerIsMano = false;
     private GameState _stateBeforeCall = GameState.PlayerTurn;
-
+    private bool _enemyPlayedThisRound = false;
+    private bool _playerPlayedThisRound = false;
+    
     private Coroutine _enemyTurnCoroutine;
 
     private void Awake()
@@ -74,7 +78,7 @@ public class GameManager : MonoBehaviour
             _enemyTurnCoroutine = null;
         }
     }
-
+    
     private IEnumerator EnemyTurnCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -103,6 +107,8 @@ public class GameManager : MonoBehaviour
 
         hand.DealCards();
         
+        _enemyPlayedThisRound = false;
+        _playerPlayedThisRound = false;
 
         SetState(_playerIsDealer ? GameState.PlayerTurn : GameState.EnemyTurn);
 
@@ -120,7 +126,8 @@ public class GameManager : MonoBehaviour
         CurrentCall = CallType.Truco;
         CallOwner = CallOwner.Player;
         TrucoPlayedThisRound = true;
-
+        uiConsole.Write("¡Truco!", ConsoleOwner.Player);
+        
         WaitEnemyResponse();
     }
 
@@ -130,6 +137,7 @@ public class GameManager : MonoBehaviour
 
         TrucoState = TrucoState.Retruco;
         CallOwner = CallOwner.Player;
+        uiConsole.Write("¡Retruco!", ConsoleOwner.Player);
 
         WaitEnemyResponse();
     }
@@ -139,6 +147,7 @@ public class GameManager : MonoBehaviour
         if (TrucoState != TrucoState.Retruco || CallOwner != CallOwner.Enemy || CurrentState != GameState.PlayerTurn) return;
 
         TrucoState = TrucoState.ValeCuatro;
+        uiConsole.Write("¡Vale Cuatro!", ConsoleOwner.Player);
 
         WaitEnemyResponse();
     }
@@ -161,12 +170,20 @@ public class GameManager : MonoBehaviour
 
         if (!valid) return;
 
+        string message = type switch
+        {
+            EnvidoState.Envido => EnvidoState == EnvidoState.Envido ? "¡Envido Envido!" : "¡Envido!",
+            EnvidoState.EnvidoEnvido => "¡Envido Envido!",
+            EnvidoState.RealEnvido => "¡Real Envido!",
+            EnvidoState.FaltaEnvido => "¡Falta Envido!",
+            _ => ""
+        };
+
+        uiConsole.Write(message, ConsoleOwner.Player);
         EnvidoState = type;
         CurrentCall = CallType.Envido;
         CallOwner = CallOwner.Player;
-
         _scoreSystem.AddPoints(GetEnvidoPoints());
-
         WaitEnemyResponse();
     }
 
@@ -174,6 +191,7 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentState != GameState.PlayerTurn) return;
 
+        uiConsole.Write("Quiero", ConsoleOwner.Player);
         if (CurrentCall == CallType.Truco)
         {
             AcceptTruco();
@@ -184,12 +202,14 @@ public class GameManager : MonoBehaviour
             AcceptEnvido();
             ResolveCallEnd();
         }
+        
     }
 
     public void PlayerDenies()
     {
         if (CurrentState != GameState.PlayerTurn) return;
 
+        uiConsole.Write("No quiero", ConsoleOwner.Player);
         if (CurrentCall == CallType.Truco)
         {
             EndRound(false);
@@ -200,11 +220,13 @@ public class GameManager : MonoBehaviour
             DenyEnvido();
             ResolveCallEnd();
         }
+        
     }
 
     public void PlayerFolds()
     {
         if (CurrentState != GameState.PlayerTurn) return;
+        uiConsole.Write("Me voy al mazo..", ConsoleOwner.Player);
         EndRound(false);
     }
 
@@ -218,15 +240,22 @@ public class GameManager : MonoBehaviour
         _stateBeforeCall = GameState.EnemyTurn;
         CancelEnemyTurn();
         SetState(GameState.PlayerTurn);
+        uiConsole.Write("¡Truco!", ConsoleOwner.Enemy);
         OnEnemySingTruco?.Invoke();
     }
 
     public void EnemyRaisesTruco()
     {
         if (TrucoState == TrucoState.Truco)
+        {
+            uiConsole.Write("¡Retruco!", ConsoleOwner.Enemy);
             TrucoState = TrucoState.Retruco;
+        }
         else if (TrucoState == TrucoState.Retruco)
+        {
+            uiConsole.Write("¡Vale Cuatro!", ConsoleOwner.Enemy);
             TrucoState = TrucoState.ValeCuatro;
+        }
 
         CallOwner = CallOwner.Enemy;
         CancelEnemyTurn();
@@ -252,6 +281,16 @@ public class GameManager : MonoBehaviour
 
         if (!valid) return;
 
+        string message = type switch
+        {
+            EnvidoState.Envido => EnvidoState == EnvidoState.Envido ? "¡Envido Envido!" : "¡Envido!",
+            EnvidoState.EnvidoEnvido => "¡Envido Envido!",
+            EnvidoState.RealEnvido => "¡Real Envido!",
+            EnvidoState.FaltaEnvido => "¡Falta Envido!",
+            _ => ""
+        };
+
+        uiConsole.Write(message, ConsoleOwner.Enemy);
         EnvidoState = type;
         CurrentCall = CallType.Envido;
         CallOwner = CallOwner.Enemy;
@@ -262,6 +301,7 @@ public class GameManager : MonoBehaviour
 
     public void EnemyAccepts()
     {
+        uiConsole.Write("Quiero", ConsoleOwner.Enemy);
         if (CurrentCall == CallType.Truco)
         {
             AcceptTruco();
@@ -271,11 +311,12 @@ public class GameManager : MonoBehaviour
         {
             AcceptEnvido();
             ResolveCallEnd();
-        }
+        } 
     }
 
     public void EnemyDenies()
     {
+        uiConsole.Write("No quiero", ConsoleOwner.Enemy);
         if (CurrentCall == CallType.Truco)
         {
             EndRound(true);
@@ -285,14 +326,20 @@ public class GameManager : MonoBehaviour
         {
             DenyEnvido();
             ResolveCallEnd();
-        }
+        } 
     }
 
-    public void EnemyFolds() => EndRound(true);
+    public void EnemyFolds()
+    {
+        uiConsole.Write("Me voy al mazo...", ConsoleOwner.Enemy);
+        EndRound(true);
+    } 
 
     public void EnemyPlaysCard(Card card)
     {
+        if (_enemyPlayedThisRound) return; 
         _enemyCardPlayed = card;
+        _enemyPlayedThisRound = true;
         AfterCardPlayed();
     }
 
@@ -301,8 +348,10 @@ public class GameManager : MonoBehaviour
     private void OnPlayerCardPlayed(Card card)
     {
         if (CurrentState != GameState.PlayerTurn) return;
+        if (_playerPlayedThisRound) return; 
         _scoreSystem.AddPoints(GetCardPoints(card));
         _playerCardPlayed = card;
+        _playerPlayedThisRound = true;
         AfterCardPlayed();
     }
 
@@ -342,6 +391,8 @@ public class GameManager : MonoBehaviour
         _roundResults.Add(result);
         _playerCardPlayed = null;
         _enemyCardPlayed = null;
+        _playerPlayedThisRound = false; 
+        _enemyPlayedThisRound = false;  
         _currentRound++;
 
         CheckHandWinner(result);
@@ -412,9 +463,14 @@ public class GameManager : MonoBehaviour
         hud.gameObject.SetActive(false);
 
         if (playerWon)
-        {
+        { 
+            uiConsole.Write("You won the hand", ConsoleOwner.Player);
             _scoreSystem.AddPoints(10f);
             runData.points += (int)_scoreSystem.TotalScore;
+        }
+        else
+        {
+            uiConsole.Write("The enemy won the hand", ConsoleOwner.Player);
         }
 
         _handsPlayedThisRun++;
@@ -439,16 +495,27 @@ public class GameManager : MonoBehaviour
         TrucoPlayedThisRound = true;
         CurrentCall = CallType.None;
         CallOwner = CallOwner.None;
+        TrucoState = TrucoState.None;
     }
 
     private void AcceptEnvido()
     {
         int playerPoints = CalculateEnvido(playerActions.playerHand);
         int enemyPoints = CalculateEnvido(enemyAI.enemyHand);
-
+        
+        uiConsole.Write($"Your points: {playerPoints} ", ConsoleOwner.Player);
+        uiConsole.Write($"Enemy points: {enemyPoints} ", ConsoleOwner.Enemy);
+        
         if (playerPoints >= enemyPoints)
+        {
+            uiConsole.Write("You win!", ConsoleOwner.Player);
             _scoreSystem.AddPoints(GetEnvidoPoints());
-
+        }
+        else
+        {
+            uiConsole.Write("Enemy wins!", ConsoleOwner.Enemy);
+        }
+        
         EnvidoState = EnvidoState.None;
         EnvidoResolved = true;
         CurrentCall = CallType.None;
@@ -533,7 +600,7 @@ public class GameManager : MonoBehaviour
                 int v = GetEnvidoValue(card.cardDataSO.value);
                 if (v > maxEnvido) maxEnvido = v;
             }
-
+        
         return maxEnvido;
     }
 
