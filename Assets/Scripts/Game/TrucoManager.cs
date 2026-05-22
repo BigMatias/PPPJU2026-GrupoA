@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class TrucoManager : MonoBehaviour
 {
-    public event Action OnEnemySingTruco;
-
     [SerializeField] private GameManager _gm;
     [SerializeField] private RunDataSO _runData;
     [SerializeField] private UIConsole _uiConsole;
     [SerializeField] private ScoreManager _scoreManager;
 
+    public event Action OnEnemySingTruco;
+    
     public TrucoState TrucoState { get; private set; } = TrucoState.None;
     public bool TrucoPlayedThisRound { get; private set; } = false;
 

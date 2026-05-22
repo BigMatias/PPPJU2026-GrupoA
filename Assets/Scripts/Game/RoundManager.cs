@@ -3,17 +3,13 @@ using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
-    public static RoundManager Instance { get; private set; }
-
+    [SerializeField] private GameManager _gameManager;
+    [SerializeField] private RunDataSO _runData;
     public event Action OnMesaWon;
     public event Action OnMesaLost;
     public event Action OnChicoWon;
     public event Action<int, int, int> OnInfoUpdated; // mesa, chico, manosRestantes
     public event Action<float> OnSetNeededScore;
-
-    [SerializeField] private GameManager _gameManager;
-    [SerializeField] private RunDataSO _runData;
-
     // Mesa
     private int _currentMesaPoints;
     private int _manosPlayedThisMesa;
@@ -30,7 +26,6 @@ public class RoundManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
         _gameManager.OnRoundEnd += OnManoEnd;
     }
 
