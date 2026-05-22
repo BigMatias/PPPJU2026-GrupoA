@@ -470,7 +470,7 @@ public class GameManager : MonoBehaviour
         if (playerWon)
         {
             uiConsole.Write("You won the hand", ConsoleOwner.Player);
-            _scoreSystem.AddPoints(10f);
+            _scoreSystem.AddPoints(15f);
             runData.points += (int)_scoreSystem.TotalScore;
             RunManager.Instance.UpdateGameEvent(GameEvents.RoundEnd);
         }
@@ -511,10 +511,6 @@ public class GameManager : MonoBehaviour
     {
         if (playerWon)
         {
-            runData.pointsNeededToWin += 100;
-            _ante++;
-            OnSetRoundInfo?.Invoke(_currentRound, _ante, 0); // change 0 for money
-
             if (_handsPlayedThisRun >= 10)
             {
                 // ui win screen
@@ -522,6 +518,9 @@ public class GameManager : MonoBehaviour
             else
             {
                 RunManager.Instance.MoneySystem.AddMoneyForWinningRound(0); // aca hay q pasarle cuantas rounds sobraron, pero no se cual es la variable para hacer la cuenta
+                runData.pointsNeededToWin += 100;
+                _ante++;
+                OnSetRoundInfo?.Invoke(_currentRound, _ante, RunManager.Instance.MoneySystem.CurrentMoney); // change 0 for money
                 // open shop
                 StartHand(); // esto deberia llamarse despues, desde el shop, esta aca para probar q ande nomas
             }

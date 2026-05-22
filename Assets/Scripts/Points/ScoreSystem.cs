@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class ScoreSystem
 {
     private float _basePoints;

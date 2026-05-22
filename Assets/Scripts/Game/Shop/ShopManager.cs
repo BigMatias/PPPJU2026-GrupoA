@@ -9,9 +9,6 @@ using UnityEngine;
 
 public class ShopManager : MonoBehaviour
 {
-    [Header("Run Data")]
-    [SerializeField] private RunDataSO _runData;
-
     [Header("Shop Settings")]
     [SerializeField] private int _gauchoSlots = 3;
     [SerializeField] private int _rerollCost = 5;
@@ -68,13 +65,13 @@ public class ShopManager : MonoBehaviour
 
     public void BuyGaucho(ShopGauchoSlot slot)
     {
-        if (_runData.money < slot.data.cost)
+        if (RunManager.Instance.MoneySystem.CurrentMoney < slot.data.cost)
         {
             Debug.Log("No hay plata");
             return;
         }
 
-        _runData.money -= slot.data.cost;
+        RunManager.Instance.MoneySystem.SubstractMoney(slot.data.cost);
         RunManager.Instance.Gauchos.AddGauchoToRun(slot.data);
 
         if (slot.go != null)
@@ -86,10 +83,10 @@ public class ShopManager : MonoBehaviour
 
     public void Reroll()
     {
-        if (_runData.money < _rerollCost)
+        if (RunManager.Instance.MoneySystem.CurrentMoney < _rerollCost)
             return;
 
-        _runData.money -= _rerollCost;
+        RunManager.Instance.MoneySystem.SubstractMoney(_rerollCost);
         CloseShop();
         OpenShop();
     }
