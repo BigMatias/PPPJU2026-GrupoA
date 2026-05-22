@@ -25,6 +25,7 @@ public class RunManager : MonoBehaviour
     public GameManager GameManager { get; private set; }
     public TrucoManager TrucoManager { get; private set; }
     public EnvidoManager EnvidoManager { get; private set; }
+    public PauseManager PauseManager { get; private set; }
 
     private void Awake()
     {
@@ -40,6 +41,7 @@ public class RunManager : MonoBehaviour
         GameManager = GetComponent<GameManager>();
         TrucoManager = GetComponent<TrucoManager>();
         EnvidoManager = GetComponent<EnvidoManager>();
+        PauseManager = GetComponent<PauseManager>();
     }
 
     public void UpdateGameEvent(GameEvents gameEvent)

@@ -11,9 +11,9 @@ public class PlayerActions : MonoBehaviour
 
     private GameManager _gm;
 
-    private void OnEnable()
+    private void Start()
     {
-        PauseManager.Instance.OnChangePause += OnChangePause_ChangePause;
+        RunManager.Instance.PauseManager.OnChangePause += OnChangePause_ChangePause;
     }
 
     private void Update()
@@ -37,9 +37,9 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        PauseManager.Instance.OnChangePause -= OnChangePause_ChangePause;
+        RunManager.Instance.PauseManager.OnChangePause -= OnChangePause_ChangePause;
     }
 
     public void Initialize(GameManager gm) => _gm = gm;

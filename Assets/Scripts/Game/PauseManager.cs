@@ -5,14 +5,7 @@ public class PauseManager : MonoBehaviour
 {
     public event Action<bool> OnChangePause; // IsPause
 
-    public static PauseManager Instance;
-
     private bool _isPause;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void Start()
     {
