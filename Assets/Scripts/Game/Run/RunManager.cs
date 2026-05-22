@@ -17,6 +17,7 @@ public class RunManager : MonoBehaviour
     public GameEvents GameEvent { get; private set; }
 
     // MANAGERS
+    public Deck Deck { get; private set; }
     public CardSwapManager CardSwapManager { get; private set; }
     public GauchosManager Gauchos { get; private set; }
     public ShopManager ShopManager { get; private set; }
@@ -34,6 +35,7 @@ public class RunManager : MonoBehaviour
 
         GauchoContext = new();
         GameEvent = GameEvents.None;
+        Deck = FindFirstObjectByType<Deck>();
         Gauchos = GetComponent<GauchosManager>();
         ShopManager = GetComponent<ShopManager>();
         MoneySystem = GetComponent<MoneySystem>();

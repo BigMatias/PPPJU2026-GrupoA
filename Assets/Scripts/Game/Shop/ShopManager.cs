@@ -12,12 +12,15 @@ public class ShopManager : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private UIShop _uiShop;
+
     [Header("Gaucho Settings")]
+    [SerializeField] private Transform _gauchossSectionParent;
     [SerializeField] private int _gauchoSlots = 3;
     [SerializeField] private int _rerollCost = 5;
     [SerializeField] private List<GauchoDataSO> _gauchosPool = new();
 
     [Header("Card Settings")]
+    [SerializeField] private Transform _cardsSectionParent;
     [SerializeField] private int _cardSlots = 2;
     [SerializeField] private int _baseCardCost = 5;
     [SerializeField] private List<CardDataSO> _cardsPool = new();
@@ -58,7 +61,7 @@ public class ShopManager : MonoBehaviour
     }
     private void ShowGaucho(GauchoDataSO gaucho, int slotIndex)
     {
-        GameObject go = Instantiate(gaucho.prefabShop);
+        GameObject go = Instantiate(gaucho.prefabShop, _gauchossSectionParent);
         ShopGauchoSlot slot = new()
         {
             data = gaucho,
@@ -105,8 +108,7 @@ public class ShopManager : MonoBehaviour
     }
     private void ShowCard(CardDataSO cardData, int slotIndex)
     {
-        GameObject go = Instantiate(_cardShopItemPrefab);
-
+        GameObject go = Instantiate(_cardShopItemPrefab, _cardsSectionParent);
         CardShopSlot slot = new()
         {
             data = cardData,
@@ -126,24 +128,15 @@ public class ShopManager : MonoBehaviour
     {
         if (RunManager.Instance.MoneySystem.CurrentMoney < slot.cost)
         {
-            Debug.Log("No hay plata para comprar la carta");
-            return;
-        }
-
-        // ¿Ya hay una carta pendiente? Por ahora solo permitimos una a la vez
-        if (RunManager.Instance.CardSwapManager.HasPendingCard)
-        {
-            Debug.Log("Ya tenés una carta pendiente de intercambio");
+            Debug.Log("No hay plata");
             return;
         }
 
         RunManager.Instance.MoneySystem.SubstractMoney(slot.cost);
-        RunManager.Instance.CardSwapManager.SetPendingCard(slot.data);
+        RunManager.Instance.Deck.AddCardToDeck(slot.data);  // Adds to deck
 
         if (slot.go != null) Destroy(slot.go);
         _showingCards.Remove(slot);
-
         _uiShop.RefreshMoney();
-        Debug.Log($"Compraste la carta: {slot.data.name}");
     }
 }

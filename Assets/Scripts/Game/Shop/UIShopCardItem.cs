@@ -11,22 +11,30 @@ public class UIShopCardItem : MonoBehaviour
     private ShopCardItem _shopCardItem;
     private void Awake()
     {
-        _btnBuy = GetComponent<Button>();
+        _btnBuy = GetComponentInChildren<Button>();
     }
     private void Start()
     {
+        if (_btnBuy == null)
+            _btnBuy = GetComponent<Button>();
         _btnBuy.onClick.AddListener(OnBuyClicked);
     }
     private void OnDestroy()
     {
-        _btnBuy.onClick.RemoveAllListeners();
+        if (_btnBuy != null)
+            _btnBuy.onClick.RemoveAllListeners();
     }
     public void Setup(CardDataSO data, int cost, ShopCardItem shopCardItem)
     {
+        if (_btnBuy == null)
+            _btnBuy = GetComponentInChildren<Button>();
+
         _shopCardItem = shopCardItem;
-        _cardImage.sprite = data.artwork;
-        _textName.text = data.name;
-        _textCost.text = "$" + cost;
+
+        if (_cardImage != null) _cardImage.sprite = data.artwork;
+        if (_textName != null)
+            _textName.text = data.name.Replace("CardDataSO", "");
+        if (_textCost != null) _textCost.text = "$" + cost;
     }
     private void OnBuyClicked() => _shopCardItem.Buy();
 }

@@ -13,7 +13,6 @@ public class Deck : MonoBehaviour
         InitializeDeck();
         Shuffle(drawPile);
     }
-
     void InitializeDeck()
     {
         drawPile.Clear();
@@ -23,14 +22,12 @@ public class Deck : MonoBehaviour
             drawPile.Add(new Card(cardData));
         }
     }
-
     private void Reshuffle()
     {
         drawPile.AddRange(discardPile);
         discardPile.Clear();
         Shuffle(drawPile);
     }
-
     public void Shuffle(List<Card> list)
     {
         for (int i = 0; i < list.Count; i++)
@@ -39,7 +36,6 @@ public class Deck : MonoBehaviour
             (list[i], list[rand]) = (list[rand], list[i]);
         }
     }
-
     public Card DrawCard()
     {
         if (drawPile.Count == 0)
@@ -52,7 +48,13 @@ public class Deck : MonoBehaviour
 
         return card;
     }
-
+    public void AddCardToDeck(CardDataSO cardData)
+    {
+        Card newCard = new Card(cardData);
+        int insertIndex = Random.Range(0, drawPile.Count + 1);
+        drawPile.Insert(insertIndex, newCard);
+        Debug.Log($"[Deck] Carta agregada: {cardData.name} en posición {insertIndex}/{drawPile.Count}");
+    }
     public void Discard(Card card)
     {
         discardPile.Add(card);
