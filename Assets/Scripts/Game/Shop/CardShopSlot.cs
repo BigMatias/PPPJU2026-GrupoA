@@ -1,16 +1,8 @@
 using UnityEngine;
-
-public class CardShopSlot : MonoBehaviour
+public class CardShopSlot
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public CardDataSO data;
+    public GameObject go;
+    public int slotIndex;
+    public int cost;
 }

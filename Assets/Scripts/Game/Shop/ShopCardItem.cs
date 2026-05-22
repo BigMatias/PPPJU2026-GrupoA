@@ -1,16 +1,12 @@
 using UnityEngine;
-
 public class ShopCardItem : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private ShopManager shopManager;
+    private CardShopSlot slot;
+    public void Setup(ShopManager shopManager, CardShopSlot slot)
     {
-        
+        this.shopManager = shopManager;
+        this.slot = slot;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public void Buy() => shopManager.BuyCard(slot);
 }

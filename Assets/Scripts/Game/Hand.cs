@@ -122,7 +122,6 @@ public class Hand : MonoBehaviour
         _enemyPlayedCards.Add(card);
         _enemyTableIndex++;
     }
-
     private void MoveCardToTable(Card card, Transform slot)
     {
         if (card.cardGO == null)
@@ -137,5 +136,40 @@ public class Hand : MonoBehaviour
         card.cardGO.transform.localPosition = Vector3.zero;
         card.cardGO.transform.localRotation = Quaternion.identity;
         card.cardGO.layer = (int)Layers.None;
+    }
+    public bool SwapPlayerCard(Card oldCard, CardDataSO newCardData)
+    {
+        // Buscar en qué slot visual está la carta
+        foreach (Transform container in playerHandContainers)
+        {
+            CardView view = container.GetComponentInChildren<CardView>();
+            if (view != null && view.card == oldCard)
+            {
+                // Crear la nueva carta con el mismo GameObject
+                Card newCard = new Card(newCardData)
+                {
+                    cardGO = oldCard.cardGO
+                };
+
+                // Actualizar el visual sin cambiar el GameObject
+                view.Setup(newCard);
+                newCard.cardGO.layer = (int)Layers.Player;
+
+                // Actualizar la lista interna de Hand
+                int idx = _playerHand.IndexOf(oldCard);
+                if (idx >= 0) _playerHand[idx] = newCard;
+
+                // Actualizar la lista en PlayerActions
+                playerActions.ReplaceCard(oldCard, newCard);
+
+                // Descartar la carta vieja al mazo
+                deck.Discard(oldCard);
+
+                Debug.Log($"[Hand] Swap: {oldCard.cardDataSO.name} → {newCardData.name}");
+                return true;
+            }
+        }
+        Debug.LogWarning("[Hand] SwapPlayerCard: no se encontró la carta en los containers.");
+        return false;
     }
 }

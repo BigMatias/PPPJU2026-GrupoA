@@ -17,6 +17,7 @@ public class RunManager : MonoBehaviour
     public GameEvents GameEvent { get; private set; }
 
     // MANAGERS
+    public CardSwapManager CardSwapManager { get; private set; }
     public GauchosManager Gauchos { get; private set; }
     public ShopManager ShopManager { get; private set; }
     public MoneySystem MoneySystem { get; private set; }
@@ -38,6 +39,7 @@ public class RunManager : MonoBehaviour
         MoneySystem = GetComponent<MoneySystem>();
         RoundManager = GetComponent<RoundManager>();
         ScoreManager = GetComponent<ScoreManager>();
+        CardSwapManager = GetComponent<CardSwapManager>();
         GameManager = GetComponent<GameManager>();
         TrucoManager = GetComponent<TrucoManager>();
         EnvidoManager = GetComponent<EnvidoManager>();
