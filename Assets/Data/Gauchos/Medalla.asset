@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: Orejon
+  m_Name: Medalla
   m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
   prefab: {fileID: 0}
+  prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
   sprite: {fileID: 0}
-  jokerName: "Orej\xF3n"
+  jokerName: Medalla
   effectDescription: +8 puntos por cada ORO jugado
-  funDescription: 
-  cost: 2
+  funDescription: El oro lo es todo
+  cost: 3
   rarity: 0
   effects:
   - {fileID: 11400000, guid: 233777ba6b458664fa90b1d9636918a1, type: 2}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Guacho
   m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
   prefab: {fileID: 0}
+  prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
   sprite: {fileID: 0}
   jokerName: Guacho
   effectDescription: 1 en 4 chances de otorgar x8 de mult
