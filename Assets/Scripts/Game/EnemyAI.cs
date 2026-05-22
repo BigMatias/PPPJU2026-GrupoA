@@ -15,8 +15,8 @@ public class EnemyAI : MonoBehaviour
         Debug.Log($"RespondToPlayer - TrucoState: {gm.TrucoState}, EnvidoState: {gm.EnvidoState}, CurrentCall: {gm.CurrentCall}");
         int decision = UnityEngine.Random.Range(0, 100);
 
-        if (gm.TrucoState != TrucoState.None) { RespondToTruco(gm); return; }
-        if (gm.EnvidoState != EnvidoState.None) { RespondToEnvido(gm); return; }
+        if (gm.CurrentCall == CallType.Truco) { RespondToTruco(gm); return; }
+        if (gm.CurrentCall == CallType.Envido) { RespondToEnvido(gm); return; }
 
         if (decision < 40) PlayCard(gm);
         else if (decision < 60 && !gm.TrucoPlayedThisRound) gm.EnemySingsTruco();
