@@ -19,6 +19,7 @@ public class RunManager : MonoBehaviour
     // MANAGERS
     public GauchosManager Gauchos { get; private set; }
     public ShopManager ShopManager { get; private set; }
+    public MoneySystem MoneySystem { get; private set; }
 
     private void Awake()
     {
@@ -28,6 +29,7 @@ public class RunManager : MonoBehaviour
         GameEvent = GameEvents.None;
         Gauchos = GetComponent<GauchosManager>();
         ShopManager = GetComponent<ShopManager>();
+        MoneySystem = GetComponent<MoneySystem>();
     }
 
     public void UpdateGameEvent(GameEvents gameEvent)
