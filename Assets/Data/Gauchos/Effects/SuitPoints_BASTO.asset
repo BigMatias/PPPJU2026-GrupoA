@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eed3a2ad1fc8cfa4c8e19142ef9083b2, type: 3}
-  m_Name: SuitPoints_ORO
+  m_Name: SuitPoints_BASTO
   m_EditorClassIdentifier: Assembly-CSharp::EffectSuitPoints
-  _targetSuit: 0
+  _targetSuit: 1
   _bonus: 8

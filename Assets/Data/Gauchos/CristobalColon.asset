@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: CristobalColon
   m_EditorClassIdentifier: Assembly-CSharp::JokerDataSO
   prefab: {fileID: 8523803978130920821, guid: 9f4140934d7e6d04a97e4bd142edb2e8, type: 3}
+  prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
   sprite: {fileID: 0}
   jokerName: "Crist\xF3bal Col\xF3n"
   effectDescription: +4 de mult por cada ORO jugado
   funDescription: "No le alcanz\xF3 con todo el oro que rob\xF3"
-  cost: 4
+  cost: 3
   rarity: 0
   effects:
   - {fileID: 11400000, guid: 6bf174f5e69569144acbefe671efee6c, type: 2}
