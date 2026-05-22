@@ -14,6 +14,7 @@ public class RunDataSO : ScriptableObject
     public int handsPlayed;
     public int pointsNeededToWinMesa;
     public int currentMesaPoints;
+    public int chicosNeededToWin = 10;
 
     [Header("Score Base")]
     public float basePoints = 5f;

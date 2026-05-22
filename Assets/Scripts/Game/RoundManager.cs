@@ -6,7 +6,8 @@ public class RoundManager : MonoBehaviour
     public static RoundManager Instance { get; private set; }
 
     public event Action OnMesaWon;
-    public event Action OnMesaLost;
+    public event Action OnLoseGame;
+    public event Action OnWinGame;
     public event Action OnChicoWon;
     public event Action<int, int, int> OnInfoUpdated; // mesa, chico, manosRestantes
     public event Action<float> OnSetNeededScore;
@@ -59,17 +60,20 @@ public class RoundManager : MonoBehaviour
         if (playerWon)
         {
             _currentChico++;
-            _currentMesa = 0;
-            _mesasWonThisChico = 0;
-            OnChicoWon?.Invoke();
-            RunManager.Instance.ShopManager.OpenShop(StartChico);
+            if (_currentChico >= _runData.chicosNeededToWin)
+                OnWinGame?.Invoke();
+            else
+            {
+                _currentMesa = 0;
+                _mesasWonThisChico = 0;
+                OnChicoWon?.Invoke();
+                RunManager.Instance.ShopManager.OpenShop(StartChico);
+            }
         }
         else
-        {
-            OnMesaLost?.Invoke();
-            // pantalla de derrota (sin tienda)
-        }
+            OnLoseGame?.Invoke();
     }
+
     // ── Mesa ───────────────────────────────────────────────────────
     private void StartMesa()
     {
