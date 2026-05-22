@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RunDataSO
   totalHands: 0
   handsPlayed: 0
-  pointsNeededToWin: 200
-  points: 170
+  pointsNeededToWinMesa: 0
+  currentMesaPoints: 0
   basePoints: 5
   baseMult: 1
   handsPerRound: 3
   chanceToBeDealer: 0.5
+  mesasPerChico: 3
   cardPointMultiplier: 1
   envidoPoints: 10
   envidoEnvidoPoints: 20
@@ -28,3 +29,7 @@ MonoBehaviour:
   trucoMult: 1.5
   retrucoMult: 2
   valeCuatroMult: 3
+  pointsOnRoundWon: 0
+  chicos:
+  - pointsPerMesa: 64000000c80000002c010000
+  - pointsPerMesa: e8030000dc050000d0070000

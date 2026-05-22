@@ -13,9 +13,12 @@ public class Hand : MonoBehaviour
     [SerializeField] private Transform[] playerPlayedCardContainers;
     [SerializeField] private Transform[] enemyHandContainers;
     [SerializeField] private Transform[] enemyPlayedCardContainers;
-
+    
+    private List<Card> _playerPlayedCards = new List<Card>();
+    private List<Card> _enemyPlayedCards = new List<Card>();
     private List<Card> _playerHand = new List<Card>();
     private List<Card> _enemyHand = new List<Card>();
+    
     private int _playerTableIndex = 0;
     private int _enemyTableIndex = 0;
 
@@ -61,7 +64,14 @@ public class Hand : MonoBehaviour
         foreach (Transform container in enemyPlayedCardContainers)
         foreach (Transform child in container)
             Destroy(child.gameObject);
-
+        
+        foreach (Card card in _playerHand) { card.cardGO = null; deck.Discard(card); }
+        foreach (Card card in _enemyHand) { card.cardGO = null; deck.Discard(card); }
+        foreach (Card card in _playerPlayedCards) { card.cardGO = null; deck.Discard(card); }
+        foreach (Card card in _enemyPlayedCards) { card.cardGO = null; deck.Discard(card); }
+        
+        _playerPlayedCards.Clear();
+        _enemyPlayedCards.Clear();
         _playerHand.Clear();
         _enemyHand.Clear();
 
@@ -72,12 +82,13 @@ public class Hand : MonoBehaviour
     private void DrawCard(List<Card> hand, Transform container, bool isPlayer)
     {
         Card card = deck.DrawCard();
-        hand.Add(card);
 
         GameObject cardGO = Instantiate(cardPrefab, container);
         CardView view = cardGO.GetComponent<CardView>();
         card.cardGO = cardGO;
+        
         view.Setup(card);
+        hand.Add(card);
 
         if (isPlayer)
         {
@@ -95,21 +106,33 @@ public class Hand : MonoBehaviour
     private void OnPlayerCardPlayed(Card card)
     {
         if (_playerTableIndex >= playerPlayedCardContainers.Length) return;
-        MoveCardToTable(card, playerPlayedCardContainers[_playerTableIndex]);
+
+        Transform slot = playerPlayedCardContainers[_playerTableIndex];
+        MoveCardToTable(card, slot);
         _playerHand.Remove(card);
+        _playerPlayedCards.Add(card);
         _playerTableIndex++;
     }
 
     private void OnEnemyCardPlayed(Card card)
     {
-        if (_enemyTableIndex >= enemyPlayedCardContainers.Length) return; 
+        if (_enemyTableIndex >= enemyPlayedCardContainers.Length) return;
         MoveCardToTable(card, enemyPlayedCardContainers[_enemyTableIndex]);
         _enemyHand.Remove(card);
+        _enemyPlayedCards.Add(card);
         _enemyTableIndex++;
     }
 
     private void MoveCardToTable(Card card, Transform slot)
     {
+        if (card.cardGO == null)
+        {
+            return;
+        }
+        if (slot == null)
+        {
+            return;
+        }
         card.cardGO.transform.SetParent(slot);
         card.cardGO.transform.localPosition = Vector3.zero;
         card.cardGO.transform.localRotation = Quaternion.identity;
