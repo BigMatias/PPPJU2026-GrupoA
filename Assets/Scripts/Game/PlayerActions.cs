@@ -7,19 +7,20 @@ public class PlayerActions : MonoBehaviour
     public List<Card> playerHand = new List<Card>();
     public event Action<Card> OnCardPlayed;
 
+    private bool _isPause;
+
     private GameManager _gm;
 
-    public void Initialize(GameManager gm) => _gm = gm;
-
-    public void AddCard(Card card) => playerHand.Add(card);
-
-    public void ClearHand() => playerHand.Clear();
+    private void OnEnable()
+    {
+        PauseManager.Instance.OnChangePause += OnChangePause_ChangePause;
+    }
 
     private void Update()
     {
         if (_gm.CurrentState != GameState.PlayerTurn) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (!_isPause && Input.GetMouseButtonDown(0))
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
@@ -35,4 +36,17 @@ public class PlayerActions : MonoBehaviour
             }
         }
     }
+
+    private void OnDisable()
+    {
+        PauseManager.Instance.OnChangePause -= OnChangePause_ChangePause;
+    }
+
+    public void Initialize(GameManager gm) => _gm = gm;
+
+    public void AddCard(Card card) => playerHand.Add(card);
+
+    public void ClearHand() => playerHand.Clear();
+
+    private void OnChangePause_ChangePause(bool isPause) => _isPause = isPause;
 }

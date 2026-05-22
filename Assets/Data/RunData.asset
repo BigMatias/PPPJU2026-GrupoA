@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RunDataSO
   totalHands: 0
   handsPlayed: 0
-  money: 0
-  points: 0
-  baseMult: 0
-  envidoPointsStat: 2
-  envidoEnvidoPointsStat: 2
-  realEnvidoPointsStat: 3
-  faltaEnvidoPointsStat: 0
-  trucoPointsStat: 2
-  retrucoPointsStat: 3
-  valeCuatroPointsStat: 4
+  pointsNeededToWin: 200
+  points: 170
+  basePoints: 5
+  baseMult: 1
+  handsPerRound: 3
+  chanceToBeDealer: 0.5
+  cardPointMultiplier: 1
+  envidoPoints: 10
+  envidoEnvidoPoints: 20
+  realEnvidoPoints: 30
+  faltaEnvidoPoints: 50
+  trucoMult: 1.5
+  retrucoMult: 2
+  valeCuatroMult: 3
