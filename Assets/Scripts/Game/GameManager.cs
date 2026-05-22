@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -21,7 +20,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Hand hand;
     [SerializeField] private UIHUD hud;
 
-
     public static GameManager Instance { get; private set; }
 
     public GameState CurrentState { get; private set; }
@@ -37,6 +35,7 @@ public class GameManager : MonoBehaviour
     private Card _enemyCardPlayed;
     private List<RoundWon> _roundResults = new List<RoundWon>();
     private int _currentRound = 0;
+    private int _ante = 0;
     private int _handsPlayedThisRun = 0;
     private bool _playerIsDealer = false;
     private bool _playerIsMano = false;
@@ -96,6 +95,8 @@ public class GameManager : MonoBehaviour
 
     private void StartHand()
     {
+        RunManager.Instance.UpdateGameEvent(GameEvents.RoundStart);
+        OnSetNeededScore?.Invoke(runData.pointsNeededToWin);
         CancelEnemyTurn();
         _scoreSystem.Reset();
         _roundResults.Clear();
@@ -358,6 +359,7 @@ public class GameManager : MonoBehaviour
         _playerCardPlayed = card;
         _playerPlayedThisRound = true;
         AfterCardPlayed();
+        RunManager.Instance.UpdateGameEvent(GameEvents.CardPlayed);
     }
 
     private void OnEnemyCardPlayed(Card card)
@@ -399,7 +401,6 @@ public class GameManager : MonoBehaviour
         _playerPlayedThisRound = false;
         _enemyPlayedThisRound = false;
         _currentRound++;
-
         CheckHandWinner(result);
     }
 
@@ -465,13 +466,13 @@ public class GameManager : MonoBehaviour
     {
         CancelEnemyTurn();
         SetState(GameState.HandOver);
-        hud.gameObject.SetActive(false);
 
         if (playerWon)
         {
             uiConsole.Write("You won the hand", ConsoleOwner.Player);
             _scoreSystem.AddPoints(10f);
             runData.points += (int)_scoreSystem.TotalScore;
+            RunManager.Instance.UpdateGameEvent(GameEvents.RoundEnd);
         }
         else
         {
@@ -510,14 +511,20 @@ public class GameManager : MonoBehaviour
     {
         if (playerWon)
         {
-            OnSetRoundInfo?.Invoke(_currentRound, _handsPlayedThisRun, 0); // change 0 for money
+            runData.pointsNeededToWin += 100;
+            _ante++;
+            OnSetRoundInfo?.Invoke(_currentRound, _ante, 0); // change 0 for money
 
             if (_handsPlayedThisRun >= 10)
             {
                 // ui win screen
             }
             else
-                StartHand();
+            {
+                RunManager.Instance.MoneySystem.AddMoneyForWinningRound(0); // aca hay q pasarle cuantas rounds sobraron, pero no se cual es la variable para hacer la cuenta
+                // open shop
+                StartHand(); // esto deberia llamarse despues, desde el shop, esta aca para probar q ande nomas
+            }
         }
         else
         {

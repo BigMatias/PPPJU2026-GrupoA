@@ -54,7 +54,7 @@ public class UiPoints : MonoBehaviour
 
         _textTotalPoints.text = totalPoints.ToString("0");
 
-        yield return new WaitForSeconds(_timeShowingPoints);
+        yield return new WaitForSeconds(_timeShowingPoints * 2);
 
         _textPoints.text = "0";
         _textMult.text = "0";
@@ -67,6 +67,10 @@ public class UiPoints : MonoBehaviour
         _textRound.text = round.ToString("0");
         _textAnte.text = ante.ToString("0");
         _textMoney.text = money.ToString("0");
+
+        _textTotalPoints.text = "0";
+        _textPoints.text = "0";
+        _textMult.text = "0";
     }
 
     private void SetNeededPoints(float points) => _textNeededPoints.text = points.ToString("0");

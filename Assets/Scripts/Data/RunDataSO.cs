@@ -6,7 +6,6 @@ public class RunDataSO : ScriptableObject
     [Header("Run")]
     public int totalHands;
     public int handsPlayed;
-    public int money;
     public int pointsNeededToWin;
     public int points;
 
