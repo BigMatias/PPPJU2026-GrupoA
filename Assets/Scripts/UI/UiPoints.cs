@@ -67,7 +67,6 @@ public class UiPoints : MonoBehaviour
 
         _textPoints.text = "0";
         _textMult.text = "0";
-        _textTotalPoints.text = "0";
     }
 
     private void UpdateRoundInfo(int mesa, int chico, int manosRestantes)
