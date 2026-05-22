@@ -1,12 +1,12 @@
 using UnityEngine;
 
 /* ----- FACU -----
- * RunManager lo creé porque no entiendo por ahora donde meter esto en el gameManager :p
- * Lo hago singleton, pero solo durante la escena de la run, porque sino guardaría valores de runs anteriores y we don't want that
- * Después, habría que agregarle todos los managers que usemos así en global, porque su función básicamente es:
+ * RunManager lo creï¿½ porque no entiendo por ahora donde meter esto en el gameManager :p
+ * Lo hago singleton, pero solo durante la escena de la run, porque sino guardarï¿½a valores de runs anteriores y we don't want that
+ * Despuï¿½s, habrï¿½a que agregarle todos los managers que usemos asï¿½ en global, porque su funciï¿½n bï¿½sicamente es:
  * RunManager.Instance.AbcManager.DoSmth();
- * Osea, en vez de mil singletons de managers, el run nomás que tenga todos :>
- * Este script debería ir en el mismo GO que los managers, así hace getComponent de todos
+ * Osea, en vez de mil singletons de managers, el run nomï¿½s que tenga todos :>
+ * Este script deberï¿½a ir en el mismo GO que los managers, asï¿½ hace getComponent de todos
 */
 
 public class RunManager : MonoBehaviour
@@ -20,6 +20,11 @@ public class RunManager : MonoBehaviour
     public GauchosManager Gauchos { get; private set; }
     public ShopManager ShopManager { get; private set; }
     public MoneySystem MoneySystem { get; private set; }
+    public RoundManager RoundManager { get; private set; }
+    public ScoreManager ScoreManager { get; private set; }
+    public GameManager GameManager { get; private set; }
+    public TrucoManager TrucoManager { get; private set; }
+    public EnvidoManager EnvidoManager { get; private set; }
 
     private void Awake()
     {
@@ -30,6 +35,11 @@ public class RunManager : MonoBehaviour
         Gauchos = GetComponent<GauchosManager>();
         ShopManager = GetComponent<ShopManager>();
         MoneySystem = GetComponent<MoneySystem>();
+        RoundManager = GetComponent<RoundManager>();
+        ScoreManager = GetComponent<ScoreManager>();
+        GameManager = GetComponent<GameManager>();
+        TrucoManager = GetComponent<TrucoManager>();
+        EnvidoManager = GetComponent<EnvidoManager>();
     }
 
     public void UpdateGameEvent(GameEvents gameEvent)

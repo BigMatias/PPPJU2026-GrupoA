@@ -27,21 +27,19 @@ public class UIHUD : MonoBehaviour
     [SerializeField] private Button _denyButton;
 
     private GameManager _gm;
+    private TrucoManager _tm;
+    private EnvidoManager _em;
 
-    private void Awake()
-    {
-        _gm = GameManager.Instance;
-    }
-
-    private void OnEnable()
-    {
-        _gm.OnEnemySingTruco += TrucoSangByEnemy_ShowUi;
-        _gm.OnEnemySingEnvido += EnvidoSangByEnemy_ShowUi;
-        _gm.OnRoundEnd += OnRoundEnd_ResetHUD;
-    }
 
     private void Start()
     {
+        _gm = RunManager.Instance.GameManager;
+        _tm = RunManager.Instance.TrucoManager;
+        _em = RunManager.Instance.EnvidoManager;
+        _tm.OnEnemySingTruco += TrucoSangByEnemy_ShowUi;
+        _em.OnEnemySingEnvido += EnvidoSangByEnemy_ShowUi;
+        _gm.OnRoundEnd += OnRoundEnd_ResetHUD;
+        
         _trucoButton.onClick.AddListener(() => _gm.PlayerSingsTruco());
         _envidoButton.onClick.AddListener(EnvidoSectionClicked);
         _mazoButton.onClick.AddListener(() => _gm.PlayerFolds());
@@ -62,8 +60,8 @@ public class UIHUD : MonoBehaviour
 
     private void OnDisable()
     {
-        _gm.OnEnemySingTruco -= TrucoSangByEnemy_ShowUi;
-        _gm.OnEnemySingEnvido -= EnvidoSangByEnemy_ShowUi;
+        _tm.OnEnemySingTruco -= TrucoSangByEnemy_ShowUi;
+        _em.OnEnemySingEnvido -= EnvidoSangByEnemy_ShowUi;
         _gm.OnRoundEnd -= OnRoundEnd_ResetHUD;
     }
 

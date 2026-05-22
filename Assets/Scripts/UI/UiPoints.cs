@@ -4,40 +4,38 @@ using UnityEngine;
 
 public class UiPoints : MonoBehaviour
 {
-    [SerializeField] private float _timeShowingPoints = 1f;
+    [SerializeField] private float _timeShowingPoints = 2f;
     [Header("Points")]
     [SerializeField] private TextMeshProUGUI _textNeededPoints;
     [SerializeField] private TextMeshProUGUI _textTotalPoints;
     [SerializeField] private TextMeshProUGUI _textPoints;
     [SerializeField] private TextMeshProUGUI _textMult;
     [Header("Game info")]
-    [SerializeField] private TextMeshProUGUI _textRound;
-    [SerializeField] private TextMeshProUGUI _textAnte;
     [SerializeField] private TextMeshProUGUI _textMoney;
+    [Header("Round Info")]
+    [SerializeField] private TextMeshProUGUI _textMesa;
+    [SerializeField] private TextMeshProUGUI _textChico;
+    [SerializeField] private TextMeshProUGUI _textManosRestantes;
 
-    private IEnumerator _coroutineShowPoints;
+    [SerializeField] private ScoreManager _scoreManager;
+    [SerializeField] private RoundManager _rm;
 
-    private GameManager _gm;
-
-    private void Awake()
-    {
-        _gm = GameManager.Instance;
-    }
+    private Coroutine _coroutineShowPoints;
 
     private void OnEnable()
     {
-        _gm.OnSetRoundInfo += SetRunInfo;
-
-        _gm.OnSetNeededScore += SetNeededPoints;
-        _gm.OnCalculateScore += UpdateScore;
+        _rm.OnSetNeededScore += SetNeededPoints;
+        _scoreManager.OnScoreChanged += UpdateLiveScore;
+        _scoreManager.OnCalculateScore += ShowFinalScore;
+        _rm.OnInfoUpdated += UpdateRoundInfo;
     }
 
     private void OnDisable()
     {
-        _gm.OnSetRoundInfo -= SetRunInfo;
-
-        _gm.OnSetNeededScore -= SetNeededPoints;
-        _gm.OnCalculateScore -= UpdateScore;
+        _rm.OnSetNeededScore -= SetNeededPoints;
+        _scoreManager.OnScoreChanged -= UpdateLiveScore;
+        _scoreManager.OnCalculateScore -= ShowFinalScore;
+        _rm.OnInfoUpdated -= UpdateRoundInfo;
     }
 
     private void OnDestroy()
@@ -45,42 +43,39 @@ public class UiPoints : MonoBehaviour
         StopAllCoroutines();
     }
 
-    private IEnumerator ShowingPoints(float points, float mult, float totalPoints)
+    private void UpdateLiveScore(float points, float mult)
     {
         _textPoints.text = points.ToString("0");
         _textMult.text = mult.ToString("0");
-
-        yield return new WaitForSeconds(_timeShowingPoints);
-
-        _textTotalPoints.text = totalPoints.ToString("0");
-
-        yield return new WaitForSeconds(_timeShowingPoints * 2);
-
-        _textPoints.text = "0";
-        _textMult.text = "0";
-
-        yield return null;
+        _textTotalPoints.text = (points * mult).ToString("0");
     }
 
-    private void SetRunInfo(int round, int ante, int money)
-    {
-        _textRound.text = round.ToString("0");
-        _textAnte.text = ante.ToString("0");
-        _textMoney.text = money.ToString("0");
-
-        _textTotalPoints.text = "0";
-        _textPoints.text = "0";
-        _textMult.text = "0";
-    }
-
-    private void SetNeededPoints(float points) => _textNeededPoints.text = points.ToString("0");
-
-    private void UpdateScore(float points, float mult, float totalPoints)
+    private void ShowFinalScore(float points, float mult, float totalPoints)
     {
         if (_coroutineShowPoints != null)
             StopCoroutine(_coroutineShowPoints);
-
-        _coroutineShowPoints = ShowingPoints(points, mult, totalPoints);
-        StartCoroutine(_coroutineShowPoints);
+        _coroutineShowPoints = StartCoroutine(FinalScoreCoroutine(points, mult, totalPoints));
     }
+
+    private IEnumerator FinalScoreCoroutine(float points, float mult, float totalPoints)
+    {
+        _textPoints.text = points.ToString("0");
+        _textMult.text = mult.ToString("0");
+        _textTotalPoints.text = totalPoints.ToString("0");
+
+        yield return new WaitForSeconds(_timeShowingPoints);
+
+        _textPoints.text = "0";
+        _textMult.text = "0";
+        _textTotalPoints.text = "0";
+    }
+
+    private void UpdateRoundInfo(int mesa, int chico, int manosRestantes)
+    {
+        _textMesa.text = mesa.ToString();
+        _textChico.text = chico.ToString();
+        _textManosRestantes.text = manosRestantes.ToString();
+    }
+
+    private void SetNeededPoints(float points) => _textNeededPoints.text = points.ToString("0");
 }
