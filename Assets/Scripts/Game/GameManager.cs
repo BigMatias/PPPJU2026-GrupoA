@@ -30,17 +30,10 @@ public class GameManager : MonoBehaviour
     private GameState _stateBeforeCall = GameState.PlayerTurn;
 
     public event Action OnRoundEnd;
+    public event Action OnNewHand;
 
     private Coroutine _enemyTurnCoroutine;
 
-    private void Awake()
-    {
-    }
-
-    private void Start()
-    {
-        StartNewHand();
-    }
 
     // ── Coroutine helpers ──────────────────────────────────────────
 
@@ -96,6 +89,8 @@ public class GameManager : MonoBehaviour
 
         if (CurrentState == GameState.EnemyTurn)
             ScheduleEnemyTurn(1f);
+
+        OnNewHand?.Invoke();
     }
 
     // ── Player actions ─────────────────────────────────────────────

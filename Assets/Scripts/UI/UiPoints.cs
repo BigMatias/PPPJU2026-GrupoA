@@ -51,7 +51,6 @@ public class UiPoints : MonoBehaviour
     {
         _textPoints.text = points.ToString("0");
         _textMult.text = mult.ToString("0");
-        _textTotalPoints.text = (points * mult).ToString("0");
     }
 
     private void ShowFinalScore(float points, float mult, float totalPoints)

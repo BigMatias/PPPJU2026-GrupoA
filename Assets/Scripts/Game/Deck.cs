@@ -51,4 +51,11 @@ public class Deck : MonoBehaviour
     {
         discardPile.Add(card.cardDataSO);
     }
+    
+    public void AddCardToDeck(CardDataSO cardData)
+    {
+        int insertIndex = Random.Range(0, drawPile.Count + 1);
+        drawPile.Insert(insertIndex, cardData);
+        Debug.Log($"[Deck] Carta agregada: {cardData.name} en posición {insertIndex}/{drawPile.Count}");
+    }
 }

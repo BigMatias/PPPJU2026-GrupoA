@@ -61,7 +61,6 @@ public class EnvidoManager : MonoBehaviour
         _uiConsole.Write(GetMessage(EnvidoState, type), ConsoleOwner.Player);
         EnvidoState = type;
         _gm.SetCurrentCall(CallType.Envido, CallOwner.Player);
-        _scoreManager.AddPoints(GetEnvidoPoints());
         _gm.WaitEnemyResponse();
     }
 

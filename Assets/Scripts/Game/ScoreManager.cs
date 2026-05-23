@@ -31,6 +31,7 @@ public class ScoreManager : MonoBehaviour
     {
         _currentPoints = _basePoints;
         _currentMult = _baseMult;
+        OnScoreChanged?.Invoke(_currentPoints, _currentMult);
     }
 
     public void AddPoints(float points)

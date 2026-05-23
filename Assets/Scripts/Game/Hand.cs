@@ -58,8 +58,6 @@ public class Hand : MonoBehaviour
 
     private void ClearTable()
     {
-        Debug.Log($"ClearTable - playerPlayed children antes: {playerPlayedCardContainers[0].childCount}, {playerPlayedCardContainers[1].childCount}, {playerPlayedCardContainers[2].childCount}");
-    
         foreach (Transform container in playerHandContainers)
             ClearContainer(container);
         foreach (Transform container in enemyHandContainers)
@@ -68,14 +66,6 @@ public class Hand : MonoBehaviour
             ClearContainer(container);
         foreach (Transform container in enemyPlayedCardContainers)
             ClearContainer(container);
-
-        Debug.Log($"ClearTable - playerPlayed children después: {playerPlayedCardContainers[0].childCount}, {playerPlayedCardContainers[1].childCount}, {playerPlayedCardContainers[2].childCount}");
-
-
-        foreach (Card card in _playerHand) deck.Discard(card);
-        foreach (Card card in _enemyHand) deck.Discard(card);
-        foreach (Card card in _playerPlayedCards) deck.Discard(card);
-        foreach (Card card in _enemyPlayedCards) deck.Discard(card);
 
         _playerHand.Clear();
         _enemyHand.Clear();
@@ -112,8 +102,7 @@ public class Hand : MonoBehaviour
     
     private void OnPlayerCardPlayed(Card card)
     {
-        if (RunManager.Instance.GameManager.CurrentState != GameState.PlayerTurn) return; // ← agregá
-        Debug.Log($"OnPlayerCardPlayed CALLED - index: {_playerTableIndex}");
+        if (RunManager.Instance.GameManager.CurrentState != GameState.PlayerTurn) return; 
         if (_playerTableIndex >= playerPlayedCardContainers.Length) return;
         MoveCardToTable(card, playerPlayedCardContainers[_playerTableIndex]);
         _playerHand.Remove(card);
@@ -165,11 +154,9 @@ public class Hand : MonoBehaviour
                 // Descartar la carta vieja al mazo
                 deck.Discard(oldCard);
 
-                Debug.Log($"[Hand] Swap: {oldCard.cardDataSO.name} → {newCardData.name}");
                 return true;
             }
         }
-        Debug.LogWarning("[Hand] SwapPlayerCard: no se encontró la carta en los containers.");
         return false;
     }
 }
