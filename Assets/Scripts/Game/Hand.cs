@@ -13,12 +13,12 @@ public class Hand : MonoBehaviour
     [SerializeField] private Transform[] playerPlayedCardContainers;
     [SerializeField] private Transform[] enemyHandContainers;
     [SerializeField] private Transform[] enemyPlayedCardContainers;
-    
-    private List<Card> _playerPlayedCards = new List<Card>();
-    private List<Card> _enemyPlayedCards = new List<Card>();
+
     private List<Card> _playerHand = new List<Card>();
     private List<Card> _enemyHand = new List<Card>();
-    
+    private List<Card> _playerPlayedCards = new List<Card>();
+    private List<Card> _enemyPlayedCards = new List<Card>();
+
     private int _playerTableIndex = 0;
     private int _enemyTableIndex = 0;
 
@@ -37,78 +37,74 @@ public class Hand : MonoBehaviour
     public void DealCards()
     {
         ClearTable();
-        playerActions.ClearHand();
-        enemyAI.ClearHand();
 
         for (int i = 0; i < 3; i++)
         {
-            DrawCard(_playerHand, playerHandContainers[i], true);
-            DrawCard(_enemyHand, enemyHandContainers[i], false);
+            Card playerCard = CreateCard(playerHandContainers[i], true);
+            _playerHand.Add(playerCard);
+            playerActions.AddCard(playerCard);
+
+            Card enemyCard = CreateCard(enemyHandContainers[i], false);
+            _enemyHand.Add(enemyCard);
+            enemyAI.AddCard(enemyCard);
         }
+    }
+
+    private void ClearContainer(Transform container)
+    {
+        for (int i = container.childCount - 1; i >= 0; i--)
+            DestroyImmediate(container.GetChild(i).gameObject);
     }
 
     private void ClearTable()
     {
         foreach (Transform container in playerHandContainers)
-        foreach (Transform child in container)
-            Destroy(child.gameObject);
-
+            ClearContainer(container);
         foreach (Transform container in enemyHandContainers)
-        foreach (Transform child in container)
-            Destroy(child.gameObject);
-
+            ClearContainer(container);
         foreach (Transform container in playerPlayedCardContainers)
-        foreach (Transform child in container)
-            Destroy(child.gameObject);
-
+            ClearContainer(container);
         foreach (Transform container in enemyPlayedCardContainers)
-        foreach (Transform child in container)
-            Destroy(child.gameObject);
-        
-        foreach (Card card in _playerHand) { card.cardGO = null; deck.Discard(card); }
-        foreach (Card card in _enemyHand) { card.cardGO = null; deck.Discard(card); }
-        foreach (Card card in _playerPlayedCards) { card.cardGO = null; deck.Discard(card); }
-        foreach (Card card in _enemyPlayedCards) { card.cardGO = null; deck.Discard(card); }
-        
-        _playerPlayedCards.Clear();
-        _enemyPlayedCards.Clear();
+            ClearContainer(container);
+
         _playerHand.Clear();
         _enemyHand.Clear();
+        _playerPlayedCards.Clear();
+        _enemyPlayedCards.Clear();
 
-        _playerTableIndex = 0; 
-        _enemyTableIndex = 0;  
+        playerActions.ClearHand();
+        enemyAI.ClearHand();
+
+        _playerTableIndex = 0;
+        _enemyTableIndex = 0;
     }
 
-    private void DrawCard(List<Card> hand, Transform container, bool isPlayer)
+    private Card CreateCard(Transform container, bool isPlayer)
     {
-        Card card = deck.DrawCard();
+        CardDataSO data = deck.DrawCardData();
+        Card card = new Card(data);
 
         GameObject cardGO = Instantiate(cardPrefab, container);
         CardView view = cardGO.GetComponent<CardView>();
         card.cardGO = cardGO;
-        
         view.Setup(card);
-        hand.Add(card);
 
         if (isPlayer)
-        {
             cardGO.layer = (int)Layers.Player;
-            playerActions.AddCard(card);
-        }
         else
         {
             cardGO.layer = (int)Layers.None;
             view.Flip(card);
-            enemyAI.AddCard(card);
         }
-    }
 
+        return card;
+    }
+    
     private void OnPlayerCardPlayed(Card card)
     {
+        if (RunManager.Instance.GameManager.CurrentState != GameState.PlayerTurn) return; 
         if (_playerTableIndex >= playerPlayedCardContainers.Length) return;
-
-        Transform slot = playerPlayedCardContainers[_playerTableIndex];
-        MoveCardToTable(card, slot);
+        MoveCardToTable(card, playerPlayedCardContainers[_playerTableIndex]);
         _playerHand.Remove(card);
         _playerPlayedCards.Add(card);
         _playerTableIndex++;
@@ -124,14 +120,7 @@ public class Hand : MonoBehaviour
     }
     private void MoveCardToTable(Card card, Transform slot)
     {
-        if (card.cardGO == null)
-        {
-            return;
-        }
-        if (slot == null)
-        {
-            return;
-        }
+        if (card.cardGO == null || slot == null) return;
         card.cardGO.transform.SetParent(slot);
         card.cardGO.transform.localPosition = Vector3.zero;
         card.cardGO.transform.localRotation = Quaternion.identity;
@@ -164,12 +153,10 @@ public class Hand : MonoBehaviour
 
                 // Descartar la carta vieja al mazo
                 deck.Discard(oldCard);
-
-                Debug.Log($"[Hand] Swap: {oldCard.cardDataSO.name} → {newCardData.name}");
+                
                 return true;
             }
         }
-        Debug.LogWarning("[Hand] SwapPlayerCard: no se encontró la carta en los containers.");
         return false;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ public class UiGauchos : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] _textGauchos;
     private int _gauchos = 0;
 
-    private void OnEnable()
+    private void Start()
     {
         RunManager.Instance.Gauchos.OnAddGaucho += AddGaucho;
     }

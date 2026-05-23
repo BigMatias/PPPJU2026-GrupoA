@@ -7,19 +7,26 @@ public class PlayerActions : MonoBehaviour
     public List<Card> playerHand = new List<Card>();
     public event Action<Card> OnCardPlayed;
 
-    private bool _isPause;
-
     private GameManager _gm;
-    private CardDataSO _pendingSwapCard = null;
+    private bool _isPaused;
+    private bool _isSwapMode;
+    private CardDataSO _pendingSwapCard;
 
-    private bool _isSwapMode = false;
     private void Start()
     {
-        RunManager.Instance.PauseManager.OnChangePause += OnChangePause_ChangePause;
+        _gm = RunManager.Instance.GameManager;
+        RunManager.Instance.PauseManager.OnChangePause += OnPauseChanged;
     }
+
+    private void OnDisable()
+    {
+        RunManager.Instance.PauseManager.OnChangePause -= OnPauseChanged;
+    }
+
     private void Update()
     {
-        if (_isPause) return;
+        if (_gm == null) return;
+        if (_isPaused) return;
         if (!Input.GetMouseButtonDown(0)) return;
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -31,13 +38,12 @@ public class PlayerActions : MonoBehaviour
 
         if (_isSwapMode)
         {
-            // Exchange mode: the clicked card is exchanged for the purchased one
             ExecuteSwap(cardView.card);
         }
         else
         {
-            // Normal mode: the clicked card is played
             if (_gm.CurrentState != GameState.PlayerTurn) return;
+            if (_gm.CurrentCall != CallType.None) return;
 
             cardView.SetSelected(true);
             playerHand.Remove(cardView.card);
@@ -45,42 +51,37 @@ public class PlayerActions : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        RunManager.Instance.PauseManager.OnChangePause -= OnChangePause_ChangePause;
-    }
-
-    public void Initialize(GameManager gm) => _gm = gm;
-
     public void AddCard(Card card) => playerHand.Add(card);
-
     public void ClearHand() => playerHand.Clear();
-    public void SetSwapMode(bool active, CardDataSO cardData)
-    {
-        _isSwapMode = active;
-        _pendingSwapCard = cardData;
-        Debug.Log($"[PlayerActions] Swap mode: {active}");
-    }
+
     public void ReplaceCard(Card oldCard, Card newCard)
     {
         int idx = playerHand.IndexOf(oldCard);
-        if (idx >= 0)
-            playerHand[idx] = newCard;
+        if (idx >= 0) playerHand[idx] = newCard;
     }
+
+    public void SetSwapMode(bool active, CardDataSO pendingCard)
+    {
+        _isSwapMode = active;
+        _pendingSwapCard = pendingCard;
+    }
+
     private void ExecuteSwap(Card cardToReplace)
     {
-        // Pedimos a Hand que haga el swap físico
-        bool success = RunManager.Instance.GameManager
-            .GetComponent<Hand>()
-            .SwapPlayerCard(cardToReplace, _pendingSwapCard);
+        if (_pendingSwapCard == null) return;
 
+        Hand hand = RunManager.Instance.GameManager.GetComponent<Hand>();
+        if (hand == null)
+            hand = FindObjectOfType<Hand>();
+
+        bool success = hand.SwapPlayerCard(cardToReplace, _pendingSwapCard);
         if (success)
         {
-            // Limpiamos el estado de swap
+            RunManager.Instance.CardSwapManager.ClearPendingCard();
             _isSwapMode = false;
             _pendingSwapCard = null;
-            RunManager.Instance.CardSwapManager.ClearPendingCard();
         }
     }
-    private void OnChangePause_ChangePause(bool isPause) => _isPause = isPause;
+
+    private void OnPauseChanged(bool isPaused) => _isPaused = isPaused;
 }

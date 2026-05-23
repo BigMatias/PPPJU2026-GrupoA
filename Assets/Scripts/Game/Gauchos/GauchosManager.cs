@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /* ----- FACU -----
- * Este script es el que se encarga de callear a los gauchos activos, que estarían en la lista _activeGauchos}
+ * Este script es el que se encarga de callear a los gauchos activos, que estarï¿½an en la lista _activeGauchos}
  * Se usan 2 foreach, el primero recorre la lista
  * El 2do recorre la lista de efectos del propio gaucho
- * Le agregué unos métodos de get por si necesitamos usarlos
- * Además, le puse el SetNewGaucho para poder agregar los que se compren a la lista, sino ninguno andaría jeje
+ * Le agreguï¿½ unos mï¿½todos de get por si necesitamos usarlos
+ * Ademï¿½s, le puse el SetNewGaucho para poder agregar los que se compren a la lista, sino ninguno andarï¿½a jeje
  */
 
 public class GauchosManager : MonoBehaviour
@@ -17,12 +17,17 @@ public class GauchosManager : MonoBehaviour
     private List<GauchoInstance> _activeGauchosList = new();
     public GauchoContext Context { get; private set; }
 
+    private void Awake()
+    {
+        Context = new GauchoContext();
+    }
+
     public void AddGauchoToRun(GauchoDataSO gauchoSO)
     {
         GauchoInstance newGaucho = new(gauchoSO);
         _activeGauchosList.Add(newGaucho);
         OnAddGaucho?.Invoke(newGaucho.data.name);
-        Debug.Log("Se agregó " + newGaucho.data.name + " a los gauchos activos");
+        Debug.Log("Se agregï¿½ " + newGaucho.data.name + " a los gauchos activos");
     }
 
     public GauchoInstance GetActiveGaucho(GauchoInstance instance)
@@ -61,11 +66,14 @@ public class GauchosManager : MonoBehaviour
 
     public void Trigger(GameEvents gameEvents)
     {
+        if (gameEvents != GameEvents.CardPlayed)
+            Context.playedCard = null;
+
         foreach (GauchoInstance gaucho in _activeGauchosList)
             if (!gaucho.activatedThisTurn)
             {
                 foreach (GauchoEffectSO effect in gaucho.data.effects)
-                    effect.Execute(RunManager.Instance.GauchoContext, gaucho);
+                    effect.Execute(Context, gaucho);
                 gaucho.activatedThisTurn = true;
             }
     }

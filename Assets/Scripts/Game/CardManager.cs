@@ -57,8 +57,14 @@ public class CardManager : MonoBehaviour
         _scoreManager.AddCardPoints(card);
         _playerCardPlayed = card;
         _playerPlayedThisRound = true;
-        AfterCardPlayed();
+
+        RunManager.Instance.Gauchos.SetContext(
+            playedCard: card,
+            hand: _playerActions.playerHand
+        );
+
         RunManager.Instance.UpdateGameEvent(GameEvents.CardPlayed);
+        AfterCardPlayed();
     }
 
     private void OnEnemyCardPlayed(Card card)

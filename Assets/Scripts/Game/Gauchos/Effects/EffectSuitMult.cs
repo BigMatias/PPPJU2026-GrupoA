@@ -8,6 +8,8 @@ public class EffectSuitMult : GauchoEffectSO // 2
 
     public override void Execute(GauchoContext context, GauchoInstance owner)
     {
+        if (context.playedCard == null || context.playedCard.cardDataSO == null) return;
+
         if (context.playedCard.cardDataSO.suit == _targetSuit)
         {
             context.mult += _bonus;

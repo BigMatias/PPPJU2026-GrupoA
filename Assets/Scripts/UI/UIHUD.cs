@@ -39,6 +39,7 @@ public class UIHUD : MonoBehaviour
         _tm.OnEnemySingTruco += TrucoSangByEnemy_ShowUi;
         _em.OnEnemySingEnvido += EnvidoSangByEnemy_ShowUi;
         _gm.OnRoundEnd += OnRoundEnd_ResetHUD;
+        _gm.OnNewHand += OnNewHand_ResetHUD;
         
         _trucoButton.onClick.AddListener(() => _gm.PlayerSingsTruco());
         _envidoButton.onClick.AddListener(EnvidoSectionClicked);
@@ -92,8 +93,6 @@ public class UIHUD : MonoBehaviour
 
         _envidoButton.gameObject.SetActive(!_gm.EnvidoResolved);
         _trucoButton.gameObject.SetActive(!_gm.TrucoPlayedThisRound);
-        
-        Debug.Log($"TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void EnvidoSectionClicked()
@@ -113,8 +112,6 @@ public class UIHUD : MonoBehaviour
 
         _retrucoButton.interactable = (_gm.TrucoState == TrucoState.Truco);
         _valeCuatroButton.interactable = (_gm.TrucoState == TrucoState.Retruco);
-
-        Debug.Log($"TrucoSangByEnemy - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void EnvidoSangByEnemy_ShowUi()
@@ -127,22 +124,18 @@ public class UIHUD : MonoBehaviour
         _realEnvidoButton.interactable = (_gm.EnvidoState == EnvidoState.None || _gm.EnvidoState == EnvidoState.Envido || _gm.EnvidoState == EnvidoState.EnvidoEnvido);
         _faltaEnvidoButton.interactable = (_gm.EnvidoState != EnvidoState.FaltaEnvido);
         _goBackButton.interactable = false;
-
-        Debug.Log($"EnvidoSangByEnemy - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void RetrucoClicked()
     {
         ResetSections();
         _gm.PlayerSingsRetruco();
-        Debug.Log($"RetrucoClicked - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void ValeCuatroClicked()
     {
         ResetSections();
         _gm.PlayerSingsValeCuatro();
-        Debug.Log($"ValeCuatroClicked - TrucoState: {_gm.TrucoState}, EnvidoState: {_gm.EnvidoState}, CallOwner: {_gm.CallOwner}, State: {_gm.CurrentState}");
     }
 
     private void EnvidoButtonClicked()
@@ -185,4 +178,14 @@ public class UIHUD : MonoBehaviour
     }
 
     private void OnRoundEnd_ResetHUD() => ResetSections();
+    
+    private void OnNewHand_ResetHUD()
+    {
+        _baseSection.SetActive(true);
+        _envidoSection.SetActive(false);
+        _trucoSection.SetActive(false);
+        _responsePanel.SetActive(false);
+        _trucoButton.gameObject.SetActive(true);
+        _envidoButton.gameObject.SetActive(true);
+    }
 }

@@ -30,19 +30,10 @@ public class GameManager : MonoBehaviour
     private GameState _stateBeforeCall = GameState.PlayerTurn;
 
     public event Action OnRoundEnd;
-    public event Action<float> OnSetNeededScore;
+    public event Action OnNewHand;
 
     private Coroutine _enemyTurnCoroutine;
 
-    private void Awake()
-    {
-        playerActions.Initialize(this);
-    }
-
-    private void Start()
-    {
-        StartNewHand();
-    }
 
     // ── Coroutine helpers ──────────────────────────────────────────
 
@@ -79,7 +70,6 @@ public class GameManager : MonoBehaviour
     {
         CancelEnemyTurn();
         RunManager.Instance.UpdateGameEvent(GameEvents.RoundStart);
-        OnSetNeededScore?.Invoke(runData.pointsNeededToWinMesa);
         CancelEnemyTurn();
         scoreManager.Reset();
 
@@ -99,6 +89,8 @@ public class GameManager : MonoBehaviour
 
         if (CurrentState == GameState.EnemyTurn)
             ScheduleEnemyTurn(1f);
+
+        OnNewHand?.Invoke();
     }
 
     // ── Player actions ─────────────────────────────────────────────

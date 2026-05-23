@@ -16,10 +16,6 @@ public class WinAndLoseScreen : MonoBehaviour
 
         _btnMainMenu.onClick.AddListener(MainMenuClicked);
         _btnExit.onClick.AddListener(ExitClicked);
-    }
-
-    private void OnEnable()
-    {
         RunManager.Instance.RoundManager.OnWinGame += OnWinGame_ShowUI;
         RunManager.Instance.RoundManager.OnLoseGame += OnLoseGame_ShowUI;
     }

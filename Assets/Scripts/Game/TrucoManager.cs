@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class TrucoManager : MonoBehaviour
 {
-    public event Action OnEnemySingTruco;
-
     [SerializeField] private GameManager _gm;
     [SerializeField] private RunDataSO _runData;
     [SerializeField] private UIConsole _uiConsole;
     [SerializeField] private ScoreManager _scoreManager;
 
+    public event Action OnEnemySingTruco;
+    
     public TrucoState TrucoState { get; private set; } = TrucoState.None;
     public bool TrucoPlayedThisRound { get; private set; } = false;
 
@@ -24,7 +24,7 @@ public class TrucoManager : MonoBehaviour
     public void PlayerSingsTruco()
     {
         if (TrucoPlayedThisRound || _gm.CurrentState != GameState.PlayerTurn) return;
-
+        
         TrucoState = TrucoState.Truco;
         _gm.SetCurrentCall(CallType.Truco, CallOwner.Player);
         TrucoPlayedThisRound = true;
@@ -118,12 +118,11 @@ public class TrucoManager : MonoBehaviour
     {
         switch (TrucoState)
         {
-            case TrucoState.Truco: _scoreManager.MultiplyMult(_runData.trucoMult); break;
-            case TrucoState.Retruco: _scoreManager.MultiplyMult(_runData.retrucoMult); break;
-            case TrucoState.ValeCuatro: _scoreManager.MultiplyMult(_runData.valeCuatroMult); break;
+            case TrucoState.Truco: _scoreManager.ApplyTrucoMult(TrucoState); break;
+            case TrucoState.Retruco: _scoreManager.ApplyTrucoMult(TrucoState); break;
+            case TrucoState.ValeCuatro: _scoreManager.ApplyTrucoMult(TrucoState); break;
         }
         TrucoPlayedThisRound = true;
-        TrucoState = TrucoState.None;
         _gm.SetCurrentCall(CallType.None, CallOwner.None);
     }
 }

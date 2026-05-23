@@ -7,11 +7,13 @@ public class EffectMultForLowestCard : GauchoEffectSO // 7
 
     public override void Execute(GauchoContext context, GauchoInstance owner)
     {
+        if (context.playedCard == null) return; 
         int lowestCard = 999999999;
 
-        if (context.hand != null)
-            foreach (Card card in context.hand)
-                if (card != null && card.cardDataSO.value < lowestCard)
+        if (context.hand != null)                                       
+            foreach (Card card in context.hand)                         
+                if (card != null && card.cardDataSO != null             
+                                 && card.cardDataSO.value < lowestCard) 
                     lowestCard = card.cardDataSO.value;
 
         if (context.playedCard.cardDataSO.value == lowestCard)
