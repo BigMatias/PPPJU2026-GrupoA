@@ -15,10 +15,6 @@ public class PlayerActions : MonoBehaviour
     private void Start()
     {
         _gm = RunManager.Instance.GameManager;
-    }
-
-    private void OnEnable()
-    {
         RunManager.Instance.PauseManager.OnChangePause += OnPauseChanged;
     }
 

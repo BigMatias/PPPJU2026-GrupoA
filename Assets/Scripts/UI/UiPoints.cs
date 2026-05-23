@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -29,6 +30,10 @@ public class UiPoints : MonoBehaviour
         _scoreManager.OnCalculateScore += ShowFinalScore;
         _rm.OnInfoUpdated += UpdateRoundInfo;
 
+    }
+
+    private void Start()
+    {
         RunManager.Instance.MoneySystem.OnUpdateMoney += OnUpdateMoney_UpdateText;
     }
 

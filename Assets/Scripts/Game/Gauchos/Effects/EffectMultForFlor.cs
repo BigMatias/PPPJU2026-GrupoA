@@ -1,13 +1,19 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "MultForFlor", menuName = "Gauchos/Effects/MultForFlor")]
-public class EffectMultForFlor : GauchoEffectSO // 8
+public class EffectMultForFlor : GauchoEffectSO
 {
     [SerializeField] private int _bonus;
 
     public override void Execute(GauchoContext context, GauchoInstance owner)
     {
-        if (context.hand[0].cardDataSO.suit == context.hand[1].cardDataSO.suit && context.hand[0].cardDataSO.suit == context.hand[2].cardDataSO.suit)
+        if (context.hand == null || context.hand.Count < 3) return;
+        if (context.hand[0]?.cardDataSO == null || 
+            context.hand[1]?.cardDataSO == null || 
+            context.hand[2]?.cardDataSO == null) return;
+
+        if (context.hand[0].cardDataSO.suit == context.hand[1].cardDataSO.suit && 
+            context.hand[0].cardDataSO.suit == context.hand[2].cardDataSO.suit)
         {
             context.mult += _bonus;
             Debug.Log("Suit mult for FLOR effect was successful");

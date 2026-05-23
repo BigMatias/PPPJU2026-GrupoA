@@ -28,11 +28,9 @@ public class UIShop : MonoBehaviour
     }
     private void OnContinueClicked()
     {
+        RunManager.Instance.ShopManager.CloseShop(); 
         _shopPanel.SetActive(false);
-
-        RunManager.Instance.ShopManager.CloseShop();
-
-        _onContinue?.Invoke();
+        _onContinue?.Invoke(); 
         _onContinue = null;
     }
     public void RefreshMoney()

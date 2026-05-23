@@ -16,6 +16,7 @@ MonoBehaviour:
   handsPlayed: 0
   pointsNeededToWinMesa: 0
   currentMesaPoints: 0
+  chicosNeededToWin: 10
   basePoints: 5
   baseMult: 1
   handsPerRound: 3
@@ -31,5 +32,5 @@ MonoBehaviour:
   valeCuatroMult: 3
   pointsOnRoundWon: 0
   chicos:
-  - pointsPerMesa: 64000000c80000002c010000
-  - pointsPerMesa: e8030000dc050000d0070000
+  - pointsPerMesa: 320000006400000096000000
+  - pointsPerMesa: c8000000fa0000002c010000

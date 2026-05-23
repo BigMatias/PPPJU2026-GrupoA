@@ -153,7 +153,7 @@ public class Hand : MonoBehaviour
 
                 // Descartar la carta vieja al mazo
                 deck.Discard(oldCard);
-
+                
                 return true;
             }
         }

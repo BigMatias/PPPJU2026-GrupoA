@@ -55,7 +55,7 @@ public class Deck : MonoBehaviour
     public void AddCardToDeck(CardDataSO cardData)
     {
         Card newCard = new Card(cardData);
-        drawPile.Add(newCard);
+        drawPile.Add(newCard.cardDataSO);
         Debug.Log($"[Deck] Carta agregada: {cardData.name}");
     }
 }
