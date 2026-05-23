@@ -151,6 +151,7 @@ public class GameManager : MonoBehaviour
 
     public void EndRound(bool playerWon)
     {
+        RunManager.Instance.Gauchos.OnRoundEnd_ResetGauchos();
         CancelEnemyTurn();
         SetState(GameState.HandOver);
 
@@ -158,7 +159,6 @@ public class GameManager : MonoBehaviour
         {
             uiConsole.Write("You won the hand", ConsoleOwner.Player);
             scoreManager.AddRoundWonPoints();
-            RunManager.Instance.UpdateGameEvent(GameEvents.RoundEnd);
         }
         else
         {
