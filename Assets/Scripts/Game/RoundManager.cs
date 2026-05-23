@@ -6,7 +6,8 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private GameManager _gameManager;
     [SerializeField] private RunDataSO _runData;
     public event Action OnMesaWon;
-    public event Action OnMesaLost;
+    public event Action OnLoseGame;
+    public event Action OnWinGame;
     public event Action OnChicoWon;
     public event Action<int, int, int> OnInfoUpdated; // mesa, chico, manosRestantes
     public event Action<float> OnSetNeededScore;
@@ -28,12 +29,10 @@ public class RoundManager : MonoBehaviour
     {
         _gameManager.OnRoundEnd += OnManoEnd;
     }
-
     private void OnDestroy()
     {
         _gameManager.OnRoundEnd -= OnManoEnd;
     }
-
     private void Start()
     {
         _currentChico = 0;
@@ -42,16 +41,13 @@ public class RoundManager : MonoBehaviour
         _totalChicosPlayed = 0;
         StartChico();
     }
-
     // ── Chico ──────────────────────────────────────────────────────
-
     private void StartChico()
     {
         _mesasWonThisChico = 0;
         _currentMesa = 0;
         StartMesa();
     }
-
     private void EndChico(bool playerWon)
     {
         _totalChicosPlayed++;
@@ -59,20 +55,20 @@ public class RoundManager : MonoBehaviour
         if (playerWon)
         {
             _currentChico++;
-            _currentMesa = 0;
-            _mesasWonThisChico = 0;
-            OnChicoWon?.Invoke();
-            // abrir shop, después llamar StartChico()
+            if (_currentChico >= _runData.chicosNeededToWin)
+                OnWinGame?.Invoke();
+            else
+            {
+                _currentMesa = 0;
+                _mesasWonThisChico = 0;
+                OnChicoWon?.Invoke();
+            }
         }
         else
-        {
-            OnMesaLost?.Invoke();
-            // pantalla de derrota
-        }
+            OnLoseGame?.Invoke();
     }
 
     // ── Mesa ───────────────────────────────────────────────────────
-
     private void StartMesa()
     {
         _currentMesaPoints = 0;
@@ -82,7 +78,6 @@ public class RoundManager : MonoBehaviour
         OnInfoUpdated?.Invoke(_currentMesa + 1, _currentChico + 1, _manosPerMesa - _manosPlayedThisMesa);
         _gameManager.StartNewHand();
     }
-
     private void OnManoEnd()
     {
         _manosPlayedThisMesa++;
@@ -92,6 +87,7 @@ public class RoundManager : MonoBehaviour
 
         if (CheckMesaWon())
         {
+            RunManager.Instance.MoneySystem.AddMoneyForWinningRound(_manosPerMesa - _manosPlayedThisMesa);
             _mesasWonThisChico++;
             _currentMesa++;
             OnMesaWon?.Invoke();
@@ -99,7 +95,7 @@ public class RoundManager : MonoBehaviour
             if (CheckChicoWon())
                 EndChico(true);
             else
-                StartMesa();
+                RunManager.Instance.ShopManager.OpenShop(StartMesa);
         }
         else if (CheckMesaLost())
         {
@@ -107,12 +103,10 @@ public class RoundManager : MonoBehaviour
         }
         else
         {
-            _gameManager.StartNewHand();
+            RunManager.Instance.ShopManager.OpenShop(_gameManager.StartNewHand);
         }
     }
-
     // ── Checks ─────────────────────────────────────────────────────
-
     private bool CheckMesaWon() =>
         _currentMesaPoints >= GetPointsNeededForCurrentMesa();
 
@@ -125,9 +119,7 @@ public class RoundManager : MonoBehaviour
         if (_currentChico >= _runData.chicos.Length) return true;
         return _currentMesa >= _runData.chicos[_currentChico].pointsPerMesa.Length;
     }
-
     // ── RunData helpers ────────────────────────────────────────────
-
     private int GetPointsNeededForCurrentMesa()
     {
         if (_currentChico >= _runData.chicos.Length)
@@ -143,9 +135,7 @@ public class RoundManager : MonoBehaviour
 
         return chico.pointsPerMesa[_currentMesa];
     }
-
     // ── Getters ────────────────────────────────────────────────────
-
     public int CurrentChico => _currentChico;
     public int CurrentMesa => _currentMesa;
     public int MesasWonThisChico => _mesasWonThisChico;

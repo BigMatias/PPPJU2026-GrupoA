@@ -31,6 +31,9 @@ public class UiShopItem : MonoBehaviour
 
     public void Setup(GauchoDataSO data, ShopItem shopItem)
     {
+        if (_btnBuy == null)
+            _btnBuy = GetComponent<Button>();
+
         _shopItem = shopItem;
         _btnBuy.image.sprite = data.sprite;
         _textCost.text = "$" + data.cost.ToString();

@@ -11,16 +11,6 @@ public class AudioManager : MonoBehaviour
     [Header("Music")]
     public AudioClip backgroundMusic;
 
-    [Header("SFX")]
-    public AudioClip enemyAttackSfx;
-    public AudioClip enemyDeathSfx;
-    public AudioClip playerDamageSfx;
-    public AudioClip playerDeathSfx;
-
-    [Header("UI")]
-    public AudioClip buttonUISfx;
-    public AudioClip hoverUISfx;
-
     private void Awake()
     {
         // Destroying duplicates and setting up singleton pattern

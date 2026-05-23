@@ -31,13 +31,13 @@ public class UiPause : MonoBehaviour
     private void PausePressed()
     {
         _panelPause.SetActive(true);
-        PauseManager.Instance.ChangePause();
+        RunManager.Instance.PauseManager.ChangePause();
     }
 
     private void ContinuePressed()
     {
         _panelPause.SetActive(false);
-        PauseManager.Instance.ChangePause();
+        RunManager.Instance.PauseManager.ChangePause();
     }
 
     private void MainMenuPressed() => SceneManager.LoadScene("MainMenu");
