@@ -32,8 +32,9 @@ public class ShopManager : MonoBehaviour
     {
         SelectGauchosToBuy();
         SelectCardsToBuy();
-        _uiShop.Open(onContinue);
+        //_uiShop.Open(onContinue);
     }
+    
     public void CloseShop()
     {
         foreach (ShopGauchoSlot slot in _showingGauchos)
@@ -82,7 +83,7 @@ public class ShopManager : MonoBehaviour
         RunManager.Instance.Gauchos.AddGauchoToRun(slot.data);
         if (slot.go != null) Destroy(slot.go);
         _showingGauchos.Remove(slot);
-        _uiShop.RefreshMoney();
+        //_uiShop.RefreshMoney();
     }
     public void Reroll()
     {
@@ -91,7 +92,7 @@ public class ShopManager : MonoBehaviour
         CloseShop();
         SelectGauchosToBuy();
         SelectCardsToBuy();
-        _uiShop.RefreshMoney();
+        //_uiShop.RefreshMoney();
     }
     // ── Cartas ────────────────────────────────────────────
     private void SelectCardsToBuy()
@@ -137,6 +138,6 @@ public class ShopManager : MonoBehaviour
 
         if (slot.go != null) Destroy(slot.go);
         _showingCards.Remove(slot);
-        _uiShop.RefreshMoney();
+        //_uiShop.RefreshMoney();
     }
 }

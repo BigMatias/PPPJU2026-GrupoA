@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     private GameState _stateBeforeCall = GameState.PlayerTurn;
 
     public event Action OnRoundEnd;
+    public event Action OnNewHand;
     public event Action<float> OnSetNeededScore;
     public event Action<float, float, float> OnCalculateScore;
     public event Action<float, float> OnScoreChanged;
@@ -43,7 +44,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        StartNewHand();
     }
 
     // ── Coroutine helpers ──────────────────────────────────────────
@@ -98,9 +98,11 @@ public class GameManager : MonoBehaviour
         hand.DealCards();
 
         SetState(_playerIsDealer ? GameState.PlayerTurn : GameState.EnemyTurn);
-
+        
         if (CurrentState == GameState.EnemyTurn)
             ScheduleEnemyTurn(1f);
+        
+        OnNewHand?.Invoke();
     }
 
     // ── Player actions ─────────────────────────────────────────────

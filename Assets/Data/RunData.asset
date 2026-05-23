@@ -16,6 +16,7 @@ MonoBehaviour:
   handsPlayed: 0
   pointsNeededToWinMesa: 0
   currentMesaPoints: 0
+  chicosNeededToWin: 10
   basePoints: 5
   baseMult: 1
   handsPerRound: 3

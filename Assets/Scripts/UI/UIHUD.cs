@@ -39,6 +39,7 @@ public class UIHUD : MonoBehaviour
         _tm.OnEnemySingTruco += TrucoSangByEnemy_ShowUi;
         _em.OnEnemySingEnvido += EnvidoSangByEnemy_ShowUi;
         _gm.OnRoundEnd += OnRoundEnd_ResetHUD;
+        _gm.OnNewHand += OnNewHand_ResetHUD; 
         
         _trucoButton.onClick.AddListener(() => _gm.PlayerSingsTruco());
         _envidoButton.onClick.AddListener(EnvidoSectionClicked);
@@ -63,6 +64,7 @@ public class UIHUD : MonoBehaviour
         _tm.OnEnemySingTruco -= TrucoSangByEnemy_ShowUi;
         _em.OnEnemySingEnvido -= EnvidoSangByEnemy_ShowUi;
         _gm.OnRoundEnd -= OnRoundEnd_ResetHUD;
+        _gm.OnNewHand -= OnNewHand_ResetHUD; 
     }
 
     private void OnDestroy()
@@ -185,4 +187,14 @@ public class UIHUD : MonoBehaviour
     }
 
     private void OnRoundEnd_ResetHUD() => ResetSections();
+    
+    private void OnNewHand_ResetHUD()
+    {
+        _baseSection.SetActive(true);
+        _envidoSection.SetActive(false);
+        _trucoSection.SetActive(false);
+        _responsePanel.SetActive(false);
+        _envidoButton.gameObject.SetActive(true); 
+        _trucoButton.gameObject.SetActive(true);  
+    }
 }

@@ -3,60 +3,44 @@ using UnityEngine;
 
 public class Deck : MonoBehaviour
 {
-    [SerializeField] private List<CardDataSO> startingDeck; 
+    [SerializeField] private List<CardDataSO> startingDeck;
 
-    private List<Card> drawPile = new List<Card>();
-    private List<Card> discardPile = new List<Card>();
+    private List<CardDataSO> _drawPile = new List<CardDataSO>();
 
     private void Awake()
     {
         InitializeDeck();
-        Shuffle(drawPile);
     }
-    void InitializeDeck()
-    {
-        drawPile.Clear();
 
-        foreach (var cardData in startingDeck)
-        {
-            drawPile.Add(new Card(cardData));
-        }
-    }
-    private void Reshuffle()
+    private void InitializeDeck()
     {
-        drawPile.AddRange(discardPile);
-        discardPile.Clear();
-        Shuffle(drawPile);
+        _drawPile = new List<CardDataSO>(startingDeck);
+        Shuffle(_drawPile);
     }
-    public void Shuffle(List<Card> list)
+
+    public CardDataSO DrawCardData()
+    {
+        if (_drawPile.Count == 0)
+            InitializeDeck();
+
+        CardDataSO data = _drawPile[0];
+        _drawPile.RemoveAt(0);
+        return data;
+    }
+
+    public void AddCardToDeck(CardDataSO cardData)
+    {
+        int insertIndex = Random.Range(0, _drawPile.Count + 1);
+        _drawPile.Insert(insertIndex, cardData);
+        Debug.Log($"[Deck] Carta agregada: {cardData.name} en posición {insertIndex}/{_drawPile.Count}");
+    }
+
+    private void Shuffle(List<CardDataSO> list)
     {
         for (int i = 0; i < list.Count; i++)
         {
             int rand = Random.Range(i, list.Count);
             (list[i], list[rand]) = (list[rand], list[i]);
         }
-    }
-    public Card DrawCard()
-    {
-        if (drawPile.Count == 0)
-        {
-            Reshuffle();
-        }
-
-        Card card = drawPile[0];
-        drawPile.RemoveAt(0);
-
-        return card;
-    }
-    public void AddCardToDeck(CardDataSO cardData)
-    {
-        Card newCard = new Card(cardData);
-        int insertIndex = Random.Range(0, drawPile.Count + 1);
-        drawPile.Insert(insertIndex, newCard);
-        Debug.Log($"[Deck] Carta agregada: {cardData.name} en posición {insertIndex}/{drawPile.Count}");
-    }
-    public void Discard(Card card)
-    {
-        discardPile.Add(card);
     }
 }

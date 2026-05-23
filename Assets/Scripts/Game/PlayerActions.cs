@@ -19,6 +19,9 @@ public class PlayerActions : MonoBehaviour
     }
     private void Update()
     {
+        if (_gm == null) return;
+        if (_gm.CurrentState != GameState.PlayerTurn) return;
+        if (_gm.CurrentCall != CallType.None) return;
         if (_isPause) return;
         if (!Input.GetMouseButtonDown(0)) return;
 

@@ -8,11 +8,12 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] private RunDataSO _runData;
 
+    private float _totalAccumulatedScore;
     private float _basePoints;
     private float _baseMult;
     private float _currentPoints;
     private float _currentMult;
-
+    public float TotalAccumulatedScore => _totalAccumulatedScore;
     public float CurrentPoints => _currentPoints;
     public float CurrentMult => _currentMult;
     public float TotalScore => _currentPoints * _currentMult;
@@ -31,6 +32,7 @@ public class ScoreManager : MonoBehaviour
     {
         _currentPoints = _basePoints;
         _currentMult = _baseMult;
+        OnScoreChanged?.Invoke(_currentPoints, _currentMult);
     }
 
     public void AddPoints(float points)
@@ -47,7 +49,8 @@ public class ScoreManager : MonoBehaviour
 
     public void NotifyFinalScore()
     {
-        OnCalculateScore?.Invoke(_currentPoints, _currentMult, TotalScore);
+        _totalAccumulatedScore += TotalScore;
+        OnCalculateScore?.Invoke(_currentPoints, _currentMult, _totalAccumulatedScore);
     }
 
     // ── Card ───────────────────────────────────────────────────────
@@ -90,9 +93,11 @@ public class ScoreManager : MonoBehaviour
             AddPoints(GetEnvidoDeniedPoints(state));
     }
 
+
     public void AddRoundWonPoints()
     {
-        AddPoints(_runData.pointsOnRoundWon);
+        _currentPoints += _runData.pointsOnRoundWon;
+        OnScoreChanged?.Invoke(_currentPoints, _currentMult);
     }
 
     public float GetEnvidoPoints(EnvidoState state) => state switch

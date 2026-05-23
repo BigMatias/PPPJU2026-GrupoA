@@ -1,19 +1,21 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
-    public static RoundManager Instance { get; private set; }
-
-    public event Action OnMesaWon;
-    public event Action OnLoseGame;
-    public event Action OnWinGame;
-    public event Action OnChicoWon;
-    public event Action<int, int, int> OnInfoUpdated; // mesa, chico, manosRestantes
-    public event Action<float> OnSetNeededScore;
-
     [SerializeField] private GameManager _gameManager;
     [SerializeField] private RunDataSO _runData;
+    
+    // ── Getters ────────────────────────────────────────────────────
+    public int CurrentChico => _currentChico;
+    public int CurrentMesa => _currentMesa;
+    public int MesasWonThisChico => _mesasWonThisChico;
+    public int ManosPlayedThisMesa => _manosPlayedThisMesa;
+    public int CurrentMesaPoints => _currentMesaPoints;
+    public int ManosPerMesa => _manosPerMesa;
+
+    public void SetManosPerMesa(int value) => _manosPerMesa = value;
 
     // Mesa
     private int _currentMesaPoints;
@@ -28,10 +30,16 @@ public class RoundManager : MonoBehaviour
     // Run
     private int _totalManosPlayed;
     private int _totalChicosPlayed;
+    
+    public event Action OnMesaWon;
+    public event Action OnLoseGame;
+    public event Action OnWinGame;
+    public event Action OnChicoWon;
+    public event Action<int, int, int> OnInfoUpdated; // mesa, chico, manosRestantes
+    public event Action<float> OnSetNeededScore;
 
     private void Awake()
     {
-        Instance = this;
         _gameManager.OnRoundEnd += OnManoEnd;
     }
     private void OnDestroy()
@@ -53,6 +61,7 @@ public class RoundManager : MonoBehaviour
         _currentMesa = 0;
         StartMesa();
     }
+    
     private void EndChico(bool playerWon)
     {
         _totalChicosPlayed++;
@@ -82,8 +91,9 @@ public class RoundManager : MonoBehaviour
         _manosPerMesa = _runData.handsPerRound;
         OnSetNeededScore?.Invoke(GetPointsNeededForCurrentMesa());
         OnInfoUpdated?.Invoke(_currentMesa + 1, _currentChico + 1, _manosPerMesa - _manosPlayedThisMesa);
-        _gameManager.StartNewHand();
+        StartCoroutine(StartNextHandDelayed(2f));
     }
+    
     private void OnManoEnd()
     {
         _manosPlayedThisMesa++;
@@ -108,9 +118,10 @@ public class RoundManager : MonoBehaviour
         }
         else
         {
-            RunManager.Instance.ShopManager.OpenShop(_gameManager.StartNewHand);
+            StartCoroutine(StartNextHandDelayed(2f)); // ← delay
         }
     }
+
     // ── Checks ─────────────────────────────────────────────────────
     private bool CheckMesaWon() =>
         _currentMesaPoints >= GetPointsNeededForCurrentMesa();
@@ -140,13 +151,10 @@ public class RoundManager : MonoBehaviour
 
         return chico.pointsPerMesa[_currentMesa];
     }
-    // ── Getters ────────────────────────────────────────────────────
-    public int CurrentChico => _currentChico;
-    public int CurrentMesa => _currentMesa;
-    public int MesasWonThisChico => _mesasWonThisChico;
-    public int ManosPlayedThisMesa => _manosPlayedThisMesa;
-    public int CurrentMesaPoints => _currentMesaPoints;
-    public int ManosPerMesa => _manosPerMesa;
-
-    public void SetManosPerMesa(int value) => _manosPerMesa = value;
+    
+    private IEnumerator StartNextHandDelayed(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _gameManager.StartNewHand();
+    }
 }
