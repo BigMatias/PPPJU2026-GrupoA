@@ -51,9 +51,8 @@ public class Deck : MonoBehaviour
     public void AddCardToDeck(CardDataSO cardData)
     {
         Card newCard = new Card(cardData);
-        int insertIndex = Random.Range(0, drawPile.Count + 1);
-        drawPile.Insert(insertIndex, newCard);
-        Debug.Log($"[Deck] Carta agregada: {cardData.name} en posición {insertIndex}/{drawPile.Count}");
+        drawPile.Add(newCard);
+        Debug.Log($"[Deck] Carta agregada: {cardData.name}");
     }
     public void Discard(Card card)
     {
