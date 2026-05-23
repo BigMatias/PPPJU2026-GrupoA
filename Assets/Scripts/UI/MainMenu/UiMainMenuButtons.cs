@@ -18,6 +18,10 @@ public class UiMainMenuButtons : MonoBehaviour
     [SerializeField] private Button quitBtn;
     [SerializeField] private Button settingsBtnBack;
     [SerializeField] private Button creditsBtnBack;
+
+    [Header("Sounds")]
+    [SerializeField] private AudioClip buttonClickSfx;
+    [SerializeField] private AudioClip buttonHoverSfx;
     private void Awake()
     {
         playBtn.onClick.AddListener(PlayGame);
@@ -66,13 +70,13 @@ public class UiMainMenuButtons : MonoBehaviour
     }
     private void CloseSettings()
     {
-        AudioManager.Instance.PlayUI(AudioManager.Instance.buttonUISfx);
+        AudioManager.Instance.PlayUI(buttonClickSfx);
         settingsCanvas.SetActive(false);
         mainCanvas.SetActive(true);
     }
     private void CloseCredits()
     {
-        AudioManager.Instance.PlayUI(AudioManager.Instance.buttonUISfx);
+        AudioManager.Instance.PlayUI(buttonClickSfx);
         creditsCanvas.SetActive(false);
         mainCanvas.SetActive(true);
     }
@@ -86,7 +90,7 @@ public class UiMainMenuButtons : MonoBehaviour
         entry.eventID = EventTriggerType.PointerEnter;
         entry.callback.AddListener((eventData) =>
         {
-            AudioManager.Instance?.PlayUI(AudioManager.Instance.hoverUISfx);
+            AudioManager.Instance?.PlayUI(buttonHoverSfx);
         });
 
         trigger.triggers.Add(entry);
