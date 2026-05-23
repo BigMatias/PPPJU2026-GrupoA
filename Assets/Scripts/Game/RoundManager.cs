@@ -67,7 +67,6 @@ public class RoundManager : MonoBehaviour
                 _currentMesa = 0;
                 _mesasWonThisChico = 0;
                 OnChicoWon?.Invoke();
-                RunManager.Instance.ShopManager.OpenShop(StartChico);
             }
         }
         else
@@ -93,6 +92,7 @@ public class RoundManager : MonoBehaviour
 
         if (CheckMesaWon())
         {
+            RunManager.Instance.MoneySystem.AddMoneyForWinningRound(_manosPerMesa - _manosPlayedThisMesa);
             _mesasWonThisChico++;
             _currentMesa++;
             OnMesaWon?.Invoke();

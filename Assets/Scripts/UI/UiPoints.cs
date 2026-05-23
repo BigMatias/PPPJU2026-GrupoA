@@ -28,6 +28,8 @@ public class UiPoints : MonoBehaviour
         _scoreManager.OnScoreChanged += UpdateLiveScore;
         _scoreManager.OnCalculateScore += ShowFinalScore;
         _rm.OnInfoUpdated += UpdateRoundInfo;
+
+        RunManager.Instance.MoneySystem.OnUpdateMoney += OnUpdateMoney_UpdateText;
     }
 
     private void OnDisable()
@@ -36,6 +38,8 @@ public class UiPoints : MonoBehaviour
         _scoreManager.OnScoreChanged -= UpdateLiveScore;
         _scoreManager.OnCalculateScore -= ShowFinalScore;
         _rm.OnInfoUpdated -= UpdateRoundInfo;
+
+        RunManager.Instance.MoneySystem.OnUpdateMoney -= OnUpdateMoney_UpdateText;
     }
 
     private void OnDestroy()
@@ -77,4 +81,6 @@ public class UiPoints : MonoBehaviour
     }
 
     private void SetNeededPoints(float points) => _textNeededPoints.text = points.ToString("0");
+
+    private void OnUpdateMoney_UpdateText() => _textMoney.text = RunManager.Instance.MoneySystem.CurrentMoney.ToString("0");
 }
