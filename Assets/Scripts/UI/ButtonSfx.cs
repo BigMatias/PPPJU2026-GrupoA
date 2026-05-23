@@ -16,11 +16,11 @@ public class ButtonSfx : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (!_button.interactable) return;
-        AudioManager.Instance.PlaySFX(_hoverSound);
+        AudioManager.Instance.PlayUI(_hoverSound);
     }
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!_button.interactable) return;
-        AudioManager.Instance.PlaySFX(_clickSound);
+        AudioManager.Instance.PlayUI(_clickSound);
     }
 }
