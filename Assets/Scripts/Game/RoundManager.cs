@@ -85,6 +85,7 @@ public class RoundManager : MonoBehaviour
     }
     private void OnManoEnd()
     {
+        RunManager.Instance.MoneySystem.AddMoneyForWinningRound(_manosPerMesa - _manosPlayedThisMesa);
         _manosPlayedThisMesa++;
         _totalManosPlayed++;
         _currentMesaPoints = _gameManager.CurrentHandPoints;
@@ -92,7 +93,6 @@ public class RoundManager : MonoBehaviour
 
         if (CheckMesaWon())
         {
-            RunManager.Instance.MoneySystem.AddMoneyForWinningRound(_manosPerMesa - _manosPlayedThisMesa);
             _mesasWonThisChico++;
             _currentMesa++;
             OnMesaWon?.Invoke();
