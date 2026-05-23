@@ -9,9 +9,10 @@ public class EffectMultForLowestCard : GauchoEffectSO // 7
     {
         int lowestCard = 999999999;
 
-        foreach (Card card in context.hand)
-            if (card.cardDataSO.value < lowestCard)
-                lowestCard = card.cardDataSO.value;
+        if (context.hand != null)
+            foreach (Card card in context.hand)
+                if (card != null && card.cardDataSO.value < lowestCard)
+                    lowestCard = card.cardDataSO.value;
 
         if (context.playedCard.cardDataSO.value == lowestCard)
         {

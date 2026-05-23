@@ -31,8 +31,6 @@ public class GameManager : MonoBehaviour
 
     public event Action OnRoundEnd;
     public event Action<float> OnSetNeededScore;
-    public event Action<float, float, float> OnCalculateScore;
-    public event Action<float, float> OnScoreChanged;
 
     private Coroutine _enemyTurnCoroutine;
 
@@ -161,6 +159,7 @@ public class GameManager : MonoBehaviour
 
     public void EndRound(bool playerWon)
     {
+        RunManager.Instance.Gauchos.OnRoundEnd_ResetGauchos();
         CancelEnemyTurn();
         SetState(GameState.HandOver);
 
@@ -168,7 +167,6 @@ public class GameManager : MonoBehaviour
         {
             uiConsole.Write("You won the hand", ConsoleOwner.Player);
             scoreManager.AddRoundWonPoints();
-            RunManager.Instance.UpdateGameEvent(GameEvents.RoundEnd);
         }
         else
         {
