@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94743621fb7cd1b4c8ad142df8f2a769, type: 3}
   m_Name: MoneyData
   m_EditorClassIdentifier: Assembly-CSharp::MoneyDataSO
-  moneyForRound: 3
+  moneyForRound: 5
   moneyForExtraHands: 1
   moneyNeededForInterest: 5

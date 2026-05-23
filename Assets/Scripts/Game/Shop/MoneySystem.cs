@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class MoneySystem : MonoBehaviour
 {
+    public event Action OnUpdateMoney;
+
     [SerializeField] private MoneyDataSO _data;
 
     private int _currentMoney = 0;
@@ -12,19 +15,19 @@ public class MoneySystem : MonoBehaviour
         _currentMoney = 0;
     }
 
-    public int AddMoneyForWinningRound(int extraHands)
+    public void AddMoneyForWinningRound(int extraHands)
     {
         int calculation = _data.moneyForRound + (_data.moneyForRound * extraHands);
         int interest = calculation / _data.moneyNeededForInterest;
 
         _currentMoney += calculation + interest;
 
-        return _currentMoney;
+        OnUpdateMoney?.Invoke();
     }
 
-    public int SubstractMoney(int moneyToSubstract)
+    public void SubstractMoney(int moneyToSubstract)
     {
         _currentMoney -= moneyToSubstract;
-        return _currentMoney;
+        OnUpdateMoney?.Invoke();
     }
 }
