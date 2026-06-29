@@ -18,17 +18,9 @@ public class Cheats : MonoBehaviour
             MoneyPressed();
     }
 
-    private void WinPressed()
-    {
-    }
+    private void WinPressed() => RunManager.Instance.RoundManager.CheatCallWin();
 
-    private void LosePressed()
-    {
+    private void LosePressed() =>  RunManager.Instance.RoundManager.CheatCallLose();
 
-    }
-
-    private void MoneyPressed()
-    {
-
-    }
+    private void MoneyPressed() => RunManager.Instance.MoneySystem.AddMoney(99999);
 }
