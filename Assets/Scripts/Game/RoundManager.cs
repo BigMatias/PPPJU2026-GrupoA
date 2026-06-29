@@ -156,4 +156,7 @@ public class RoundManager : MonoBehaviour
     }
 
     public void SetManosPerMesa(int value) => _manosPerMesa = value;
+
+    public void CheatCallWin() => OnWinGame?.Invoke();
+    public void CheatCallLose() => OnLoseGame?.Invoke();
 }

@@ -1,12 +1,12 @@
 using UnityEngine;
 
 /* ----- FACU -----
- * RunManager lo cre� porque no entiendo por ahora donde meter esto en el gameManager :p
- * Lo hago singleton, pero solo durante la escena de la run, porque sino guardar�a valores de runs anteriores y we don't want that
- * Despu�s, habr�a que agregarle todos los managers que usemos as� en global, porque su funci�n b�sicamente es:
+ * RunManager lo cree porque no entiendo por ahora donde meter esto en el gameManager :p
+ * Lo hago singleton, pero solo durante la escena de la run, porque sino guardara valores de runs anteriores y we don't want that
+ * Despues, habria que agregarle todos los managers que usemos asi en global, porque su funcion basicamente es:
  * RunManager.Instance.AbcManager.DoSmth();
- * Osea, en vez de mil singletons de managers, el run nom�s que tenga todos :>
- * Este script deber�a ir en el mismo GO que los managers, as� hace getComponent de todos
+ * Osea, en vez de mil singletons de managers, el run nomas que tenga todos :>
+ * Este script deberia ir en el mismo GO que los managers, asi hace getComponent o addComponent de todos
 */
 
 public class RunManager : MonoBehaviour

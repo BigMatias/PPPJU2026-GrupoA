@@ -25,6 +25,12 @@ public class MoneySystem : MonoBehaviour
         OnUpdateMoney?.Invoke();
     }
 
+    public void AddMoney(int money)
+    {
+        _currentMoney += money;
+        OnUpdateMoney?.Invoke();
+    }
+
     public void SubstractMoney(int moneyToSubstract)
     {
         _currentMoney -= moneyToSubstract;
