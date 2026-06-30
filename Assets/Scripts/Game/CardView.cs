@@ -8,13 +8,12 @@ public class CardView : MonoBehaviour
     [SerializeField] private Sprite flippedCardImage;
     [SerializeField] private Vector3 _maxSize = new(1.3f, 1.3f, 1.3f);
     [SerializeField] private float _time = 0.5f;
+    [SerializeField] private ParticleSystem _particles;
 
     public Card card;
     private SpriteRenderer sprite;
     private SpriteRenderer outlineSR;
     private bool isFlipped = false;
-
-    private ParticleSystem _particles;
 
     private Color yellowColor = Color.yellow;
 
@@ -25,7 +24,6 @@ public class CardView : MonoBehaviour
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
-        _particles = GetComponent<ParticleSystem>();
         CreateOutline();
     }
 
