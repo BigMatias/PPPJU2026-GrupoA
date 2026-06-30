@@ -45,7 +45,7 @@ public class PlayerActions : MonoBehaviour
             if (_gm.CurrentState != GameState.PlayerTurn) return;
             if (_gm.CurrentCall != CallType.None) return;
 
-            cardView.SetSelected(true);
+            cardView.SetSelected();
             playerHand.Remove(cardView.card);
             OnCardPlayed?.Invoke(cardView.card);
         }
