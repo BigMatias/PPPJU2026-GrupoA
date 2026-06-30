@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ public class CardView : MonoBehaviour
     private SpriteRenderer outlineSR;
     private bool isFlipped = false;
 
+    private ParticleSystem _particles;
+
     private Color yellowColor = Color.yellow;
 
     private Vector3 _initSize;
@@ -22,6 +25,7 @@ public class CardView : MonoBehaviour
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
+        _particles = GetComponent<ParticleSystem>();
         CreateOutline();
     }
 
@@ -83,6 +87,7 @@ public class CardView : MonoBehaviour
         DOTween.Clear();
         transform.localScale = Vector3.one;
         SetOutline(false);
+        SetOffParticles();
     }
 
     private void OnMouseEnter()
@@ -114,4 +119,8 @@ public class CardView : MonoBehaviour
     }
 
     public void SetForPlayer() => _canBeSelected = true;
+
+    private void SetOffParticles() => _particles.Play();
+
+    public void SetCardToWinner() { }
 }
