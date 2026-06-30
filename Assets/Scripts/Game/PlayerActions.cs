@@ -42,10 +42,13 @@ public class PlayerActions : MonoBehaviour
         }
         else
         {
-            if (_gm.CurrentState != GameState.PlayerTurn) return;
-            if (_gm.CurrentCall != CallType.None) return;
+            if (_gm.CurrentState != GameState.PlayerTurn || _gm.CurrentCall != CallType.None)
+            {
+                cardView.CardDenided();
+                return;
+            }
 
-            cardView.SetSelected(true);
+            cardView.SetSelected();
             playerHand.Remove(cardView.card);
             OnCardPlayed?.Invoke(cardView.card);
         }

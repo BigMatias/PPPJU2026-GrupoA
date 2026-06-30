@@ -1,8 +1,14 @@
+using DG.Tweening;
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CardView : MonoBehaviour
 {
     [SerializeField] private Sprite flippedCardImage;
+    [SerializeField] private Vector3 _maxSize = new(1.3f, 1.3f, 1.3f);
+    [SerializeField] private float _time = 0.5f;
+    [SerializeField] private ParticleSystem _particles;
 
     public Card card;
     private SpriteRenderer sprite;
@@ -11,10 +17,28 @@ public class CardView : MonoBehaviour
 
     private Color yellowColor = Color.yellow;
 
+    private Vector3 _initPos;
+    private Vector3 _initSize;
+
+    private bool _canBeSelected = false;
+
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
         CreateOutline();
+    }
+
+    private void Start()
+    {
+        DOTween.Init();
+        _initPos = transform.localPosition;
+        _initSize = transform.localScale;
+        _maxSize += transform.localScale;
+    }
+
+    private void OnDestroy()
+    {
+        DOTween.Clear();
     }
 
     // Children game object with SpriteRenderer for outline effect
@@ -57,10 +81,13 @@ public class CardView : MonoBehaviour
         }
     }
 
-    public void SetSelected(bool value)
+    public void SetSelected()
     {
-        transform.localScale = value ? Vector3.one * 1.2f : Vector3.one;
+        _canBeSelected = false;
+        DOTween.Clear();
+        transform.localScale = Vector3.one;
         SetOutline(false);
+        SetOffParticles();
     }
 
     private void OnMouseEnter()
@@ -69,16 +96,48 @@ public class CardView : MonoBehaviour
         if (gameObject.layer != (int)Layers.Player) return;
 
         SetOutline(true);
+        OnCardPointed_ChangeSize(true);
     }
 
     private void OnMouseExit()
     {
         SetOutline(false);
+        OnCardPointed_ChangeSize(false);
     }
 
     private void SetOutline(bool visible)
     {
         if (outlineSR != null)
             outlineSR.gameObject.SetActive(visible);
+    }
+
+    private void OnCardPointed_ChangeSize(bool isPointerEnter)
+    {
+        if (!_canBeSelected) return;
+        Vector3 goal = isPointerEnter ? _maxSize : _initSize;
+        transform.DOScale(goal, _time);
+    }
+
+    public void SetForPlayer() => _canBeSelected = true;
+
+    private void SetOffParticles() => _particles.Play();
+
+    public void SetCardToWinner() { }
+
+    public void CardDenided()
+    {
+        transform.DOKill();
+        transform.localPosition = _initPos;
+
+        float duration = 0.25f;
+
+        float rand = UnityEngine.Random.value;
+        Vector3 moveHor;
+        if (rand < 0.5f)
+            moveHor = new(0.2f, 0f, 0f);
+        else
+            moveHor = new(-0.2f, 0f, 0f);
+
+        transform.DOPunchPosition(moveHor, duration);
     }
 }

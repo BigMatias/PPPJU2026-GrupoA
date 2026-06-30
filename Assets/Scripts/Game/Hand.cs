@@ -90,7 +90,10 @@ public class Hand : MonoBehaviour
         view.Setup(card);
 
         if (isPlayer)
+        {
             cardGO.layer = (int)Layers.Player;
+            view.SetForPlayer();
+        }
         else
         {
             cardGO.layer = (int)Layers.None;
