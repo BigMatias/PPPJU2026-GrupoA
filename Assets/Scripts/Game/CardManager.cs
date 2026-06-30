@@ -115,14 +115,30 @@ public class CardManager : MonoBehaviour
         int enemyStrength = GetCardStrength(_enemyCardPlayed);
 
         RoundWon result;
+        Card winningCard = null;
+
         if (playerStrength > enemyStrength)
+        {
             result = RoundWon.Player;
+            winningCard = _playerCardPlayed;
+        }
         else if (enemyStrength > playerStrength)
+        {
             result = RoundWon.Enemy;
+            winningCard = _enemyCardPlayed;
+        }
         else
             result = RoundWon.Tie;
 
+        if (winningCard != null && winningCard.cardGO != null)
+        {
+            CardView view = winningCard.cardGO.GetComponent<CardView>();
+            view.SetCardToWinner();
+            winningCard.cardGO.GetComponent<SpriteRenderer>().sortingOrder += 1;
+        }
+
         _roundResults.Add(result);
+
         _playerCardPlayed = null;
         _enemyCardPlayed = null;
         _playerPlayedThisRound = false;

@@ -88,7 +88,9 @@ public class EnemyAI : MonoBehaviour
         if (enemyHand.Count == 0) return;
         Card card = enemyHand[0];
         enemyHand.RemoveAt(0);
-        card.cardGO.GetComponent<CardView>().Flip(card);
+        CardView view = card.cardGO.GetComponent<CardView>();
+        view.Flip(card);
+        view.SetSelected();
         OnCardPlayed?.Invoke(card);
     }
 }
