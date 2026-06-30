@@ -6005,6 +6005,8 @@ MonoBehaviour:
   _keyWin: 112
   _keyLose: 108
   _keyMoney: 13
+  _keyAccept: 0
+  _keyDeny: 0
 --- !u!4 &1059285912
 Transform:
   m_ObjectHideFlags: 0
