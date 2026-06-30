@@ -17,6 +17,7 @@ public class CardView : MonoBehaviour
 
     private Color yellowColor = Color.yellow;
 
+    private Vector3 _initPos;
     private Vector3 _initSize;
 
     private bool _canBeSelected = false;
@@ -30,6 +31,7 @@ public class CardView : MonoBehaviour
     private void Start()
     {
         DOTween.Init();
+        _initPos = transform.localPosition;
         _initSize = transform.localScale;
         _maxSize += transform.localScale;
     }
@@ -121,4 +123,21 @@ public class CardView : MonoBehaviour
     private void SetOffParticles() => _particles.Play();
 
     public void SetCardToWinner() { }
+
+    public void CardDenided()
+    {
+        transform.DOKill();
+        transform.localPosition = _initPos;
+
+        float duration = 0.25f;
+
+        float rand = UnityEngine.Random.value;
+        Vector3 moveHor;
+        if (rand < 0.5f)
+            moveHor = new(0.2f, 0f, 0f);
+        else
+            moveHor = new(-0.2f, 0f, 0f);
+
+        transform.DOPunchPosition(moveHor, duration);
+    }
 }
