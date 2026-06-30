@@ -12,9 +12,11 @@ public class ScoreManager : MonoBehaviour
     private float _baseMult;
     private float _currentPoints;
     private float _currentMult;
+    private float _currentScore = 0;
 
     public float CurrentPoints => _currentPoints;
     public float CurrentMult => _currentMult;
+    public float CurrentScore => _currentScore;
     public float TotalScore => _currentPoints * _currentMult;
     public int CurrentHandPoints => (int)TotalScore;
 
@@ -34,6 +36,8 @@ public class ScoreManager : MonoBehaviour
         OnScoreChanged?.Invoke(_currentPoints, _currentMult);
     }
 
+    public void ResetTotalScore() => _currentScore = 0;
+
     public void AddPoints(float points)
     {
         _currentPoints += points;
@@ -48,7 +52,8 @@ public class ScoreManager : MonoBehaviour
 
     public void NotifyFinalScore()
     {
-        OnCalculateScore?.Invoke(_currentPoints, _currentMult, TotalScore);
+        _currentScore += TotalScore;
+        OnCalculateScore?.Invoke(_currentPoints, _currentMult, _currentScore);
     }
 
     // ── Card ───────────────────────────────────────────────────────
