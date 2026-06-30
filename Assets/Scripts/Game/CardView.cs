@@ -1,17 +1,16 @@
-using DG.Tweening;
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
+using DG.Tweening;
 
 public class CardView : MonoBehaviour
 {
     [SerializeField] private Sprite flippedCardImage;
-    [SerializeField] private Vector3 _maxSize = new(1.3f, 1.3f, 1.3f);
+    [SerializeField] private float _maxIncreaseInSize = 1.3f;
     [SerializeField] private float _time = 0.5f;
+    [SerializeField] private Vector3 _tableSize = new(1f, 1f, 1f);
     [SerializeField] private ParticleSystem _particles;
 
     public Card card;
-    private SpriteRenderer sprite;
+    private SpriteRenderer _renderer;
     private SpriteRenderer outlineSR;
     private bool isFlipped = false;
 
@@ -19,12 +18,13 @@ public class CardView : MonoBehaviour
 
     private Vector3 _initPos;
     private Vector3 _initSize;
+    private Vector3 _maxSize;
 
     private bool _canBeSelected = false;
 
     private void Awake()
     {
-        sprite = GetComponent<SpriteRenderer>();
+        _renderer = GetComponent<SpriteRenderer>();
         CreateOutline();
     }
 
@@ -33,12 +33,12 @@ public class CardView : MonoBehaviour
         DOTween.Init();
         _initPos = transform.localPosition;
         _initSize = transform.localScale;
-        _maxSize += transform.localScale;
+        _maxSize = transform.localScale * _maxIncreaseInSize;
     }
 
     private void OnDestroy()
     {
-        DOTween.Clear();
+        DOTween.Kill(this);
     }
 
     // Children game object with SpriteRenderer for outline effect
@@ -51,8 +51,8 @@ public class CardView : MonoBehaviour
 
         outlineSR = outlineGO.AddComponent<SpriteRenderer>();
         outlineSR.color = yellowColor;
-        outlineSR.sortingLayerName = sprite.sortingLayerName;
-        outlineSR.sortingOrder = sprite.sortingOrder - 1; // Behind card
+        outlineSR.sortingLayerName = _renderer.sortingLayerName;
+        outlineSR.sortingOrder = _renderer.sortingOrder - 1; // Behind card
 
         outlineGO.SetActive(false);
     }
@@ -60,7 +60,7 @@ public class CardView : MonoBehaviour
     public void Setup(Card card)
     {
         this.card = card;
-        sprite.sprite = card.cardDataSO.artwork;
+        _renderer.sprite = card.cardDataSO.artwork;
         outlineSR.sprite = card.cardDataSO.artwork; // Same sprite, yellow tint
     }
 
@@ -69,13 +69,13 @@ public class CardView : MonoBehaviour
         this.card = card;
         if (!isFlipped)
         {
-            sprite.sprite = flippedCardImage;
+            _renderer.sprite = flippedCardImage;
             outlineSR.sprite = flippedCardImage;
             isFlipped = true;
         }
         else
         {
-            sprite.sprite = card.cardDataSO.artwork;
+            _renderer.sprite = card.cardDataSO.artwork;
             outlineSR.sprite = card.cardDataSO.artwork;
             isFlipped = false;
         }
@@ -84,8 +84,8 @@ public class CardView : MonoBehaviour
     public void SetSelected()
     {
         _canBeSelected = false;
-        DOTween.Clear();
-        transform.localScale = Vector3.one;
+        transform.DOKill();
+        transform.DOScale(_tableSize, 0.15f);
         SetOutline(false);
         SetOffParticles();
     }
@@ -114,6 +114,7 @@ public class CardView : MonoBehaviour
     private void OnCardPointed_ChangeSize(bool isPointerEnter)
     {
         if (!_canBeSelected) return;
+        transform.DOKill();
         Vector3 goal = isPointerEnter ? _maxSize : _initSize;
         transform.DOScale(goal, _time);
     }
@@ -122,7 +123,12 @@ public class CardView : MonoBehaviour
 
     private void SetOffParticles() => _particles.Play();
 
-    public void SetCardToWinner() { }
+    public void SetCardToWinner()
+    {
+        transform.DOKill();
+        transform.localScale = _tableSize;
+        transform.DOPunchScale(_tableSize * 1.05f, 1f, 3, .35f);
+    }
 
     public void CardDenided()
     {
@@ -131,7 +137,7 @@ public class CardView : MonoBehaviour
 
         float duration = 0.25f;
 
-        float rand = UnityEngine.Random.value;
+        float rand = Random.value;
         Vector3 moveHor;
         if (rand < 0.5f)
             moveHor = new(0.2f, 0f, 0f);
