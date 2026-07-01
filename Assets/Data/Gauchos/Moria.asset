@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: ElChiqui
+  m_Name: Moria
   m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
   prefab: {fileID: 0}
   prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
-  sprite: {fileID: 0}
-  jokerName: ElChiqui
-  effectDescription: +8 puntos por cada COPA jugada
-  funDescription: El Chiqui siempre tiene una copa para dar
+  sprite: {fileID: -1024399648, guid: cdbdcd5cac106234cb7ffd2fde0c1e36, type: 3}
+  jokerName: Moria
+  effectDescription: +8 puntos por cada ORO jugado
+  funDescription: "\xBFQui\xE9nes son?"
   cost: 3
   rarity: 0
   effects:
-  - {fileID: 11400000, guid: f3221fbaa9dd11a43843667bd9fc103e, type: 2}
+  - {fileID: 11400000, guid: 233777ba6b458664fa90b1d9636918a1, type: 2}
