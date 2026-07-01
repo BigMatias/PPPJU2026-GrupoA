@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: Belgrano
+  m_Name: Menotti
   m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
   prefab: {fileID: 0}
   prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
-  sprite: {fileID: 0}
-  jokerName: Belgrano
+  sprite: {fileID: 1838832005, guid: cdbdcd5cac106234cb7ffd2fde0c1e36, type: 3}
+  jokerName: Menotti
   effectDescription: +8 puntos por cada ESPADA jugada
-  funDescription: "Manuel Jos\xE9 Joaqu\xEDn del Coraz\xF3n de Jes\xFAs Belgrano"
+  funDescription: "El que es campe\xF3n hace lo que quiere"
   cost: 3
   rarity: 0
   effects:

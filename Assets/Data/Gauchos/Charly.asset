@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: ElNoba
+  m_Name: Charly
   m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
   prefab: {fileID: 0}
   prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
-  sprite: {fileID: 0}
-  jokerName: El noba
-  effectDescription: +10 de mult si se tiene FLOR
-  funDescription: Y de FLORencio Varela...
+  sprite: {fileID: -838082972, guid: cdbdcd5cac106234cb7ffd2fde0c1e36, type: 3}
+  jokerName: Charly
+  effectDescription: 1 en 4 chances de otorgar x8 de mult
+  funDescription: "Qu\xE9 hara para pasar su tiempo?"
   cost: 3
   rarity: 0
   effects:
-  - {fileID: 11400000, guid: f0cf170c9e626b0458169b2d0c800d84, type: 2}
+  - {fileID: 11400000, guid: a642b147fbf3e1c4e962ff574ba56c5d, type: 2}

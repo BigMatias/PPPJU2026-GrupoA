@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: ElLleno
-  m_EditorClassIdentifier: Assembly-CSharp::JokerDataSO
-  prefab: {fileID: 8523803978130920821, guid: 9f4140934d7e6d04a97e4bd142edb2e8, type: 3}
+  m_Name: Messi
+  m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
+  prefab: {fileID: 0}
   prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
-  sprite: {fileID: 0}
-  jokerName: El lleno
-  effectDescription: +4 de mult por cada BASTO jugado
-  funDescription: "No da m\xE1s abasto"
+  sprite: {fileID: 7035640827511919432, guid: cdbdcd5cac106234cb7ffd2fde0c1e36, type: 3}
+  jokerName: Messi
+  effectDescription: +8 puntos por cada COPA jugada
+  funDescription: "Ya gan\xF3 todo con la pelota, ahora le toca en el truco"
   cost: 3
   rarity: 0
   effects:
-  - {fileID: 11400000, guid: 55b852b7b75c20f47be4617b4feee8c3, type: 2}
+  - {fileID: 11400000, guid: f3221fbaa9dd11a43843667bd9fc103e, type: 2}

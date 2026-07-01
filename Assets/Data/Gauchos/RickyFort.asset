@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c87d499415db6ef489d25adec91ee71a, type: 3}
-  m_Name: MartinFierro
-  m_EditorClassIdentifier: Assembly-CSharp::JokerDataSO
-  prefab: {fileID: 8523803978130920821, guid: 9f4140934d7e6d04a97e4bd142edb2e8, type: 3}
+  m_Name: RickyFort
+  m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
+  prefab: {fileID: 0}
   prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
   sprite: {fileID: 0}
-  jokerName: Martin Fierro
-  effectDescription: x4 de mult cada 3 rondas
-  funDescription: "Aqu\xED me pongo a jugar\nal comp\xE1s del cenicero\nun truco
-    que me desvela\nuna pena estrodinaria"
-  cost: 4
+  jokerName: Ricardo Fort
+  effectDescription: +10 de mult si se tiene FLOR
+  funDescription: Miameee
+  cost: 3
   rarity: 0
   effects:
-  - {fileID: 11400000, guid: ab16d8c61b9606f4f86a64c0d853a91f, type: 2}
+  - {fileID: 11400000, guid: f0cf170c9e626b0458169b2d0c800d84, type: 2}

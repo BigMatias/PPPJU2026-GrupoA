@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GauchoDataSO
   prefab: {fileID: 0}
   prefabShop: {fileID: 6261329697118764690, guid: 777c6b85157f15a4aa25f2af0ca56eee, type: 3}
-  sprite: {fileID: 0}
+  sprite: {fileID: 1574695901, guid: cdbdcd5cac106234cb7ffd2fde0c1e36, type: 3}
   jokerName: La Mano de Dios
   effectDescription: "+10 puntos si se perdi\xF3 en la mano anterior"
   funDescription: Diegooo, Diegooo
