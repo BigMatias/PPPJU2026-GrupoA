@@ -12,7 +12,7 @@ using UnityEngine;
 
 public class GauchosManager : MonoBehaviour
 {
-    public event Action<string> OnAddGaucho;
+    public event Action<Sprite> OnAddGaucho;
 
     private List<GauchoInstance> _activeGauchosList = new();
     public GauchoContext Context { get; private set; }
@@ -26,7 +26,7 @@ public class GauchosManager : MonoBehaviour
     {
         GauchoInstance newGaucho = new(gauchoSO);
         _activeGauchosList.Add(newGaucho);
-        OnAddGaucho?.Invoke(newGaucho.data.name);
+        OnAddGaucho?.Invoke(newGaucho.data.sprite);
         Debug.Log("Se agreg� " + newGaucho.data.name + " a los gauchos activos");
     }
 
